@@ -1,6 +1,4 @@
 {
-  "/contact/page": "app/contact/page.js",
-  "/works/solo/page": "app/works/solo/page.js",
-  "/about/page": "app/about/page.js",
-  "/projects/kaphca-trio/page": "app/projects/kaphca-trio/page.js"
+  "/page": "app/page.js",
+  "/contact/page": "app/contact/page.js"
 }

@@ -83,7 +83,7 @@ export default function ContactPage() {
           <h2 className="text-xl font-semibold mb-2">Email</h2>
           <a 
             href="mailto:francisco@example.com" 
-            className="text-lg text-gray-300 hover:text-white transition-colors"
+            className="text-lg text-gray-300 hover:text-white transition-colors underline"
           >
             francisco@example.com
           </a>
@@ -113,7 +113,7 @@ export default function ContactPage() {
             <div>
               <a 
                 href="#" 
-                className="text-lg text-gray-300 hover:text-white transition-colors block"
+                className="links"
               >
                 Academia.edu Profile
               </a>
@@ -121,7 +121,7 @@ export default function ContactPage() {
             <div>
               <a 
                 href="#" 
-                className="text-lg text-gray-300 hover:text-white transition-colors block"
+                className="links"
               >
                 ORCID Profile
               </a>
@@ -129,7 +129,7 @@ export default function ContactPage() {
             <div>
               <a 
                 href="#" 
-                className="text-lg text-gray-300 hover:text-white transition-colors block"
+                className="links"
               >
                 ResearchGate Profile
               </a>
