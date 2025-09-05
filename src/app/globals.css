@@ -2,13 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Avenir Light';
+  src: url('/fonts/Avenir-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
+    /* Add Avenir to font family utilities */
+    .font-avenir {
+        font-family: 'Avenir Light', 'Avenir', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 300;
+    }
+    
     .nav-item {
-        @apply px-4 py-1.5 rounded-full text-white/70 text-sm font-semibold hover:bg-white/10 hover:text-white transition duration-300;
+        @apply px-4 py-1.5 rounded-full text-[#D3CEAD]/70 text-sm font-semibold hover:bg-white/10 hover:text-[#C3BE9D] transition duration-200;
     }
 
     .menu-style{
-        @apply block px-3 py-2 text-sm hover:bg-white/10 rounded transition-colors
+        @apply block px-3 py-2 text-sm rounded transition-colors text-black hover:bg-black/10;
     }
 
     .links{

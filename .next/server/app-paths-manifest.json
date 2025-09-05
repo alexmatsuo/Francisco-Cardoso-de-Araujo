@@ -1,4 +1,10 @@
 {
   "/page": "app/page.js",
-  "/contact/page": "app/contact/page.js"
+  "/works/solo/page": "app/works/solo/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/works/duos-trios/page": "app/works/duos-trios/page.js",
+  "/about/page": "app/about/page.js",
+  "/works/chamber-ensembles/page": "app/works/chamber-ensembles/page.js",
+  "/works/large-ensembles/page": "app/works/large-ensembles/page.js",
+  "/works/multimedia-installations/page": "app/works/multimedia-installations/page.js"
 }

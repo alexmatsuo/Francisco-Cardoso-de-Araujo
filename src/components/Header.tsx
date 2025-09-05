@@ -22,7 +22,7 @@ export const Header = () => {
           
           {/* Dropdown menu */}
           <div className="absolute top-full mt-2 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-            <div className="bg-white/10 backdrop-blur border border-white/15 rounded-lg p-1 shadow-lg">
+            <div className="border border-white/15 rounded-lg p-1 shadow-lg" style={{ backgroundColor: '#D3CEAD' }}>
               <Link href="/works/solo" className="menu-style">
                 Solo
               </Link>
@@ -57,7 +57,7 @@ export const Header = () => {
           
           {/* Dropdown menu */}
           <div className="absolute top-full mt-2 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-            <div className="bg-white/10 backdrop-blur border border-white/15 rounded-lg p-1 shadow-lg">
+            <div className="border border-white/15 rounded-lg p-1 shadow-lg" style={{ backgroundColor: '#D3CEAD' }}>
               <Link href="/projects/kaphca-trio" className="menu-style">
                 Kaphca Trio
               </Link>
