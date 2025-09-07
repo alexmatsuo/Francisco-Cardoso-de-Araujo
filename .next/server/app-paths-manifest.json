@@ -4,7 +4,5 @@
   "/about/page": "app/about/page.js",
   "/projects/kaphca-trio/page": "app/projects/kaphca-trio/page.js",
   "/contact/page": "app/contact/page.js",
-  "/api/works/solo/route": "app/api/works/solo/route.js",
-  "/writings/page": "app/writings/page.js",
-  "/works/page": "app/works/page.js"
+  "/api/works/solo/route": "app/api/works/solo/route.js"
 }
