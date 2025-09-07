@@ -1,27 +1,58 @@
+'use client'
+
+import { useState, useEffect } from "react";
+
+interface Work {
+  id: number;
+  title: string;
+  year: number;
+  instruments: string;
+}
+
 export default function SoloWorks() {
-  const songs = [
-    "Ao Adeus-à-deus A (2025) - soprano sax (in progress)",
-    "Adeus-à-deus A (2024) - oboe",
-    "Lucarne-res-recess (2022) - clarinet and live electronics",
-    "Brin (2020) - double bass",
-    "…E o Lirismo dos Bêbados (2020) - violin",
-    "Flamboiã (2018) - clarinet",
-  ];
+  const [works, setWorks] = useState<Work[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchWorks();
+  }, []);
+
+  const fetchWorks = async () => {
+    try {
+      const response = await fetch('/api/works/solo');
+      if (!response.ok) throw new Error('Failed to fetch');
+      
+      const data = await response.json();
+      setWorks(data.works || []);
+    } catch (error) {
+      console.error('Error fetching works:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <main className="p-12 max-w-4xl mx-auto">
+        <div className="text-center">Loading compositions...</div>
+      </main>
+    );
+  }
 
   return (
     <main className="p-12 max-w-4xl mx-auto">
       <h1 className="text-4xl font-bold mb-8">Compositions</h1>
       
       <div className="space-y-3">
-        {songs.map((song, index) => (
-          <div key={index} className="text-lg text-gray-300 hover:text-white transition-colors">
-            {song}
+        {works.map((work) => (
+          <div key={work.id} className="text-lg text-gray-300 hover:text-white transition-colors">
+            {work.title} ({work.year}) - {work.instruments}
           </div>
         ))}
       </div>
       
       <div className="mt-12 text-sm text-gray-400">
-        Total compositions: {songs.length}
+        Total compositions: {works.length}
       </div>
     </main>
   );
