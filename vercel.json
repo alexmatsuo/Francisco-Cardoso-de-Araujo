@@ -1,10 +1,4 @@
 {
-    "builds": [
-      {
-        "src": "package.json",
-        "use": "@vercel/node"
-      }
-    ],
     "env": {
       "PRISMA_CLI_BINARY_TARGETS": "native,rhel-openssl-1.0.x"
     }
