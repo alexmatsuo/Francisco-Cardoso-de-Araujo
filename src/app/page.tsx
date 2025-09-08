@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <div>
-      <h1 className="text-center mt-20 text-6xl">
+      <h1 className="text-center mt-48 text-6xl">
         <span>
           Francisco Cardoso de Araujo
         </span>
