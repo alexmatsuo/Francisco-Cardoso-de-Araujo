@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export const Header = () => {
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWorksOpen, setIsWorksOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
@@ -18,28 +20,45 @@ export const Header = () => {
     setIsProjectsOpen(false);
   };
 
+  const isActive = (href: string) => pathname === href;
+
   return (
     <>
       {/* Desktop Navigation */}
-      <div className="hidden md:flex justify-center items-center relative top-3 z-[10000]">
-        <nav className="flex gap-1 p-0.5 border border-white/15 rounded-full bg-white/10 backdrop-blur">
-          <Link href="/" className="nav-item">Home</Link>
-          <Link href="/about" className="nav-item">About</Link>
+      <div className="hidden md:flex justify-center items-center top-3 z-[10000]">
+        <nav className="flex justify-center gap-32 px-8 py-6 border border-white/15 bg-black backdrop-blur w-full">
+          <Link 
+            href="/" 
+            className={`nav-item ${isActive("/") ? "text-[#D3CEAD]" : ""}`}
+          >
+            Home
+          </Link>
+          <Link 
+            href="/about" 
+            className={`nav-item ${isActive("/about") ? "text-[#D3CEAD]" : ""}`}
+          >
+            About
+          </Link>
           
           {/* Works dropdown */}
           <div className="relative group">
-            <Link href="/works" className="nav-item flex items-center">
+            <Link 
+              href="/works" 
+              className={`nav-item flex items-center ${
+                pathname.startsWith("/works") ? "text-[#D3CEAD]" : ""
+              }`}
+            >
               Works
               <svg
-                className="ml-1 w-3 h-3 transition-transform group-hover:rotate-180"
+                className="ml-2 w-3 h-3 transition-transform group-hover:rotate-180"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </Link>
-            <div className="absolute top-full mt-2 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[50]">
-              <div className="border border-white/15 rounded-lg p-1 shadow-lg" style={{ backgroundColor: '#D3CEAD' }}>
+            <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[50]">
+              <div className="border border-white/15 p-1 shadow-lg " style={{ backgroundColor: '#D3CEAD' }}>
                 <Link href="/works/solo" className="menu-style">Solo</Link>
                 <Link href="/works/duos-trios" className="menu-style">Duos & Trios</Link>
                 <Link href="/works/chamber-ensembles" className="menu-style">Chamber Ensembles</Link>
@@ -51,18 +70,23 @@ export const Header = () => {
           
           {/* Projects dropdown */}
           <div className="relative group">
-            <Link href="/projects" className="nav-item flex items-center">
+            <Link 
+              href="/projects" 
+              className={`nav-item flex items-center ${
+                pathname.startsWith("/projects") ? "text-[#D3CEAD]" : ""
+              }`}
+            >
               Projects
               <svg
-                className="ml-1 w-3 h-3 transition-transform group-hover:rotate-180"
+                className="ml-2 w-3 h-3 transition-transform group-hover:rotate-180"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </Link>
-            <div className="absolute top-full mt-2 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[50]">
-              <div className="border border-white/15 rounded-lg p-1 shadow-lg" style={{ backgroundColor: '#D3CEAD' }}>
+            <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[50]">
+              <div className="border border-white/15 p-1 shadow-lg " style={{ backgroundColor: '#D3CEAD' }}>
                 <Link href="/projects/kaphca-trio" className="menu-style">Kaphca Trio</Link>
                 <Link href="/projects/circulo-invencao-musical" className="menu-style">Círculo de Invenção Musical</Link>
                 <Link href="/projects/poetry-visual-arts" className="menu-style">Poetry and Visual Arts</Link>
@@ -70,8 +94,18 @@ export const Header = () => {
             </div>
           </div>
           
-          <Link href="/writings" className="nav-item">Writings</Link>
-          <Link href="/contact" className="nav-item">Contact</Link>
+          <Link 
+            href="/writings" 
+            className={`nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}
+          >
+            Writings
+          </Link>
+          <Link 
+            href="/contact" 
+            className={`nav-item ${isActive("/contact") ? "text-[#D3CEAD]" : ""}`}
+          >
+            Contact
+          </Link>
         </nav>
       </div>
 
@@ -81,7 +115,7 @@ export const Header = () => {
         <div className="flex justify-left ml-6">
           <button
             onClick={toggleMobileMenu}
-            className="p-2 border border-white/15 rounded-full bg-white/10 backdrop-blur"
+            className="p-3 border border-white/15 rounded-full bg-white/10 backdrop-blur"
             aria-label="Toggle mobile menu"
           >
             <svg
@@ -111,12 +145,20 @@ export const Header = () => {
         <div className={`absolute top-full mt-2 left-4 right-4 transition-all duration-300 ${
           isMobileMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'
         }`}>
-          <nav className="border border-white/15 rounded-lg p-4 shadow-lg bg-white/10 backdrop-blur">
-            <div className="flex flex-col gap-3">
-              <Link href="/" onClick={closeMobileMenu} className="mobile-nav-item">
+          <nav className="border border-white/15 rounded-lg p-6 shadow-lg bg-white/10 backdrop-blur">
+            <div className="flex flex-col gap-4">
+              <Link 
+                href="/" 
+                onClick={closeMobileMenu} 
+                className={`mobile-nav-item ${isActive("/") ? "text-[#D3CEAD]" : ""}`}
+              >
                 Home
               </Link>
-              <Link href="/about" onClick={closeMobileMenu} className="mobile-nav-item">
+              <Link 
+                href="/about" 
+                onClick={closeMobileMenu} 
+                className={`mobile-nav-item ${isActive("/about") ? "text-[#D3CEAD]" : ""}`}
+              >
                 About
               </Link>
               
@@ -124,7 +166,9 @@ export const Header = () => {
               <div>
                 <button
                   onClick={() => setIsWorksOpen(!isWorksOpen)}
-                  className="mobile-nav-item w-full flex items-center justify-between"
+                  className={`mobile-nav-item w-full flex items-center justify-between ${
+                    pathname.startsWith("/works") ? "text-[#D3CEAD]" : ""
+                  }`}
                 >
                   Works
                   <svg
@@ -136,20 +180,40 @@ export const Header = () => {
                   </svg>
                 </button>
                 {isWorksOpen && (
-                  <div className="ml-4 mt-2 flex flex-col gap-2">
-                    <Link href="/works/solo" onClick={closeMobileMenu} className="mobile-submenu-item">
+                  <div className="ml-4 mt-3 flex flex-col gap-3">
+                    <Link 
+                      href="/works/solo" 
+                      onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/works/solo") ? "text-[#D3CEAD]" : ""}`}
+                    >
                       Solo
                     </Link>
-                    <Link href="/works/duos-trios" onClick={closeMobileMenu} className="mobile-submenu-item">
+                    <Link 
+                      href="/works/duos-trios" 
+                      onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/works/duos-trios") ? "text-[#D3CEAD]" : ""}`}
+                    >
                       Duos & Trios
                     </Link>
-                    <Link href="/works/chamber-ensembles" onClick={closeMobileMenu} className="mobile-submenu-item">
+                    <Link 
+                      href="/works/chamber-ensembles" 
+                      onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/works/chamber-ensembles") ? "text-[#D3CEAD]" : ""}`}
+                    >
                       Chamber Ensembles
                     </Link>
-                    <Link href="/works/large-ensembles" onClick={closeMobileMenu} className="mobile-submenu-item">
+                    <Link 
+                      href="/works/large-ensembles" 
+                      onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/works/large-ensembles") ? "text-[#D3CEAD]" : ""}`}
+                    >
                       Large Ensembles
                     </Link>
-                    <Link href="/works/multimedia-installations" onClick={closeMobileMenu} className="mobile-submenu-item">
+                    <Link 
+                      href="/works/multimedia-installations" 
+                      onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/works/multimedia-installations") ? "text-[#D3CEAD]" : ""}`}
+                    >
                       Multimedia & Installations
                     </Link>
                   </div>
@@ -160,7 +224,9 @@ export const Header = () => {
               <div>
                 <button
                   onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-                  className="mobile-nav-item w-full flex items-center justify-between"
+                  className={`mobile-nav-item w-full flex items-center justify-between ${
+                    pathname.startsWith("/projects") ? "text-[#D3CEAD]" : ""
+                  }`}
                 >
                   Projects
                   <svg
@@ -172,24 +238,44 @@ export const Header = () => {
                   </svg>
                 </button>
                 {isProjectsOpen && (
-                  <div className="ml-4 mt-2 flex flex-col gap-2">
-                    <Link href="/projects/kaphca-trio" onClick={closeMobileMenu} className="mobile-submenu-item">
+                  <div className="ml-4 mt-3 flex flex-col gap-3">
+                    <Link 
+                      href="/projects/kaphca-trio" 
+                      onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/projects/kaphca-trio") ? "text-[#D3CEAD]" : ""}`}
+                    >
                       Kaphca Trio
                     </Link>
-                    <Link href="/projects/circulo-invencao-musical" onClick={closeMobileMenu} className="mobile-submenu-item">
+                    <Link 
+                      href="/projects/circulo-invencao-musical" 
+                      onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/projects/circulo-invencao-musical") ? "text-[#D3CEAD]" : ""}`}
+                    >
                       Círculo de Invenção Musical
                     </Link>
-                    <Link href="/projects/poetry-visual-arts" onClick={closeMobileMenu} className="mobile-submenu-item">
+                    <Link 
+                      href="/projects/poetry-visual-arts" 
+                      onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/projects/poetry-visual-arts") ? "text-[#D3CEAD]" : ""}`}
+                    >
                       Poetry and Visual Arts
                     </Link>
                   </div>
                 )}
               </div>
 
-              <Link href="/writings" onClick={closeMobileMenu} className="mobile-nav-item">
+              <Link 
+                href="/writings" 
+                onClick={closeMobileMenu} 
+                className={`mobile-nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}
+              >
                 Writings
               </Link>
-              <Link href="/contact" onClick={closeMobileMenu} className="mobile-nav-item">
+              <Link 
+                href="/contact" 
+                onClick={closeMobileMenu} 
+                className={`mobile-nav-item ${isActive("/contact") ? "text-[#D3CEAD]" : ""}`}
+              >
                 Contact
               </Link>
             </div>
@@ -199,10 +285,10 @@ export const Header = () => {
 
       <style jsx>{`
         .mobile-nav-item {
-          @apply block py-2 px-3 rounded-md hover:bg-black/10 transition-colors text-left text-black;
+          @apply block py-3 px-4 rounded-md hover:bg-black/10 transition-colors text-left text-black;
         }
         .mobile-submenu-item {
-          @apply block py-1.5 px-3 rounded-md hover:bg-black/10 transition-colors text-sm opacity-80 hover:opacity-100 text-black;
+          @apply block py-2 px-4 rounded-md hover:bg-black/10 transition-colors text-sm opacity-80 hover:opacity-100 text-black;
         }
       `}</style>
     </>

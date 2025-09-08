@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Save, Edit } from "lucide-react";
+import { Plus, Trash2, Save, Edit, ArrowUp, ArrowDown } from "lucide-react";
 
 interface Work {
   id: number;
@@ -38,7 +38,6 @@ export default function AdminSoloWorks() {
   const saveWorks = async () => {
     setIsSaving(true);
     try {
-      // Send works as objects directly to the database
       const response = await fetch('/api/works/solo', {
         method: 'POST',
         headers: {
@@ -57,7 +56,6 @@ export default function AdminSoloWorks() {
       alert('Works saved successfully!');
       setIsEditing(false);
       
-      // Refresh the works from database to get proper IDs
       await fetchWorks();
       
     } catch (error) {
@@ -94,6 +92,16 @@ export default function AdminSoloWorks() {
     setWorks(works.map(work => 
       work.id === id ? { ...work, [field]: value } : work
     ));
+  };
+
+  const moveWork = (index: number, direction: "up" | "down") => {
+    const newWorks = [...works];
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+
+    if (targetIndex < 0 || targetIndex >= works.length) return;
+
+    [newWorks[index], newWorks[targetIndex]] = [newWorks[targetIndex], newWorks[index]];
+    setWorks(newWorks);
   };
 
   if (isLoading) {
@@ -133,7 +141,7 @@ export default function AdminSoloWorks() {
                 <button
                   onClick={() => {
                     setIsEditing(false);
-                    fetchWorks(); // Reload original data
+                    fetchWorks();
                   }}
                   className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
                 >
@@ -160,7 +168,7 @@ export default function AdminSoloWorks() {
                 placeholder="Year"
                 value={newWork.year}
                 onChange={(e) => setNewWork({ ...newWork, year: parseInt(e.target.value) || new Date().getFullYear() })}
-                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none min-w-[100px]"
               />
               <input
                 type="text"
@@ -186,9 +194,9 @@ export default function AdminSoloWorks() {
               <thead className="bg-gray-700">
                 <tr>
                   <th className="text-left text-white font-medium p-4">Title</th>
-                  <th className="text-left text-white font-medium p-4 w-24">Year</th>
+                  <th className="text-left text-white font-medium p-4 w-32">Year</th>
                   <th className="text-left text-white font-medium p-4">Instruments</th>
-                  {isEditing && <th className="text-left text-white font-medium p-4 w-16">Actions</th>}
+                  {isEditing && <th className="text-left text-white font-medium p-4 w-32">Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -206,13 +214,13 @@ export default function AdminSoloWorks() {
                         <span className="text-gray-300">{work.title}</span>
                       )}
                     </td>
-                    <td className="p-4">
+                    <td className="p-4 w-32">
                       {isEditing ? (
                         <input
                           type="number"
                           value={work.year}
                           onChange={(e) => updateWork(work.id, 'year', parseInt(e.target.value) || work.year)}
-                          className="w-full bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                          className="w-full bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 focus:border-blue-500 focus:outline-none min-w-[80px]"
                         />
                       ) : (
                         <span className="text-gray-300">{work.year}</span>
@@ -231,7 +239,21 @@ export default function AdminSoloWorks() {
                       )}
                     </td>
                     {isEditing && (
-                      <td className="p-4">
+                      <td className="p-4 flex items-center gap-2">
+                        <button
+                          onClick={() => moveWork(index, "up")}
+                          disabled={index === 0}
+                          className="text-blue-400 hover:text-blue-300 disabled:text-gray-600 transition-colors"
+                        >
+                          <ArrowUp className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => moveWork(index, "down")}
+                          disabled={index === works.length - 1}
+                          className="text-blue-400 hover:text-blue-300 disabled:text-gray-600 transition-colors"
+                        >
+                          <ArrowDown className="w-4 h-4" />
+                        </button>
                         <button
                           onClick={() => removeWork(work.id)}
                           className="text-red-400 hover:text-red-300 transition-colors"

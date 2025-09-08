@@ -34,14 +34,14 @@ export default function SoloWorks() {
   if (isLoading) {
     return (
       <main className="p-12 max-w-4xl mx-auto">
-        <div className="text-center">Loading compositions...</div>
+        <div className="text-center">Loading ...</div>
       </main>
     );
   }
 
   return (
     <main className="p-12 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8">Compositions</h1>
+      <h1 className="text-4xl font-bold mb-8">Solo Compositions</h1>
       
       <div className="space-y-3">
         {works.map((work) => (
