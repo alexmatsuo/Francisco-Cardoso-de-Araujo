@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/Header";
+import { ConditionalHeader } from "@/components/ConditionalHeader";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-black opacity-60"></div>
         </div>
         
-        <Header />
+        <ConditionalHeader />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

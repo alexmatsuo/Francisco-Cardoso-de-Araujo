@@ -46,7 +46,7 @@ export default function Login() {
         document.cookie = `authToken=${data.token}; path=/; max-age=86400; SameSite=Lax`;
         
         // Redirect to admin dashboard
-        window.location.href = '/admin/works/solo';
+        window.location.href = '/admin';
       } else {
         setError(data.error || 'Invalid credentials');
       }
