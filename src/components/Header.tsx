@@ -26,7 +26,7 @@ export const Header = () => {
     <>
       {/* Desktop Navigation */}
       <div className="hidden md:flex justify-center items-center top-3 z-[10000]">
-        <nav className="flex justify-center gap-32 px-8 py-6 border border-white/15 bg-black backdrop-blur w-full">
+        <nav className="flex justify-center gap-24 px-8 py-6 border border-white/15 bg-black backdrop-blur w-full">
           <Link 
             href="/" 
             className={`nav-item ${isActive("/") ? "text-[#D3CEAD]" : ""}`}
@@ -100,6 +100,14 @@ export const Header = () => {
           >
             Writings
           </Link>
+
+          <Link 
+            href="/events" 
+            className={`nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}
+          >
+            Events
+          </Link>
+
           <Link 
             href="/contact" 
             className={`nav-item ${isActive("/contact") ? "text-[#D3CEAD]" : ""}`}
@@ -270,6 +278,13 @@ export const Header = () => {
                 className={`mobile-nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}
               >
                 Writings
+              </Link>
+              <Link 
+                href="/events" 
+                onClick={closeMobileMenu} 
+                className={`mobile-nav-item ${isActive("/events") ? "text-[#D3CEAD]" : ""}`}
+              >
+                Events
               </Link>
               <Link 
                 href="/contact" 

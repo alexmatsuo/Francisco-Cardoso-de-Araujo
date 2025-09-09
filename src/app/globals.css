@@ -42,4 +42,27 @@
     .links{
         @apply text-lg text-gray-300 hover:text-white transition-colors block underline
     }
+    
 }
+
+@keyframes scrollBackground {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 0 100vh;
+    }
+  }
+  
+  .scrolling-background {
+    animation: scrollBackground 20s linear infinite;
+    background-attachment: local;
+  }
+  
+  /* Alternative parallax effect using CSS only */
+  .parallax-background {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: repeat;
+    background-size: cover;
+  }

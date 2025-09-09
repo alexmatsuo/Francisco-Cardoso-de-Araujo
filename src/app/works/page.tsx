@@ -87,7 +87,7 @@ export default function AllWorks() {
         <div className="space-y-3">
           {worksArray.map((work) => (
             <div key={work.id} className="text-lg text-gray-300 hover:text-white transition-colors pl-4">
-              {work.title} ({work.year}) - {work.instruments}
+              {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
             </div>
           ))}
         </div>
@@ -100,15 +100,15 @@ export default function AllWorks() {
 
   if (isLoading) {
     return (
-      <main className="p-12 max-w-4xl mx-auto">
+      <main className="p-12 ml-16">
         <div className="text-center">Loading all compositions...</div>
       </main>
     );
   }
 
   return (
-    <main className="p-12 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-12">Complete Works Catalog</h1>
+    <main className="p-12 ml-16">
+      <h1 className="text-4xl font-bold mb-12">Full Catalog</h1>
       
       {renderWorksSection("Solo Compositions", works.solo)}
       {renderWorksSection("Duos & Trios", works.duosTrios)}
@@ -118,7 +118,7 @@ export default function AllWorks() {
       
       <div className="mt-16 pt-8 border-t border-gray-600">
         <div className="text-lg text-gray-300 font-medium">
-          Total compositions across all categories: {getTotalWorks()}
+          Total works across all categories: {getTotalWorks()}
         </div>
         <div className="mt-4 text-sm text-gray-400 space-y-1">
           <div>Solo: {works.solo.length}</div>

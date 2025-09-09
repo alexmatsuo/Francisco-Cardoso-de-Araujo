@@ -33,26 +33,26 @@ export default function LargeEnsembleWorks() {
 
   if (isLoading) {
     return (
-      <main className="p-12 max-w-4xl mx-auto">
+      <main className="p-12 ml-16">
         <div className="text-center">Loading ...</div>
       </main>
     );
   }
 
   return (
-    <main className="p-12 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8">Large Ensembles</h1>
+    <main className="p-12 ml-16">
+      <h1 className="text-4xl font-bold mb-12">Large Ensembles</h1>
       
-      <div className="space-y-3">
+      <div className="space-y-4">
         {works.map((work) => (
           <div key={work.id} className="text-lg text-gray-300 hover:text-white transition-colors">
-            {work.title} ({work.year}) - {work.instruments}
+            {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
           </div>
         ))}
       </div>
       
       <div className="mt-12 text-sm text-gray-400">
-        Total compositions: {works.length}
+        Total Large Ensembles Works: {works.length}
       </div>
     </main>
   );

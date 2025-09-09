@@ -48,7 +48,7 @@ export const AdminHeader = () => {
           {/* Works dropdown */}
           <div className="relative group">
             <Link
-              href="/admin/works"
+              href="/admin/"
               className={`nav-item flex items-center ${
                 pathname.startsWith("/admin/works") ? "text-[#D3CEAD]" : ""
               }`}
@@ -90,7 +90,7 @@ export const AdminHeader = () => {
           {/* Projects dropdown */}
           <div className="relative group">
             <Link
-              href="/admin/projects"
+              href="/admin"
               className={`nav-item flex items-center ${
                 pathname.startsWith("/admin/projects") ? "text-[#D3CEAD]" : ""
               }`}

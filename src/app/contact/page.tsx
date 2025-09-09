@@ -1,91 +1,22 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
-
-function ContactForm() {
-  const searchParams = useSearchParams();
-  const success = searchParams.get('success');
-  const error = searchParams.get('error');
-
-  return (
-    <>
-      {success && (
-        <div className="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300">
-          Thank you! Your message has been sent successfully.
-        </div>
-      )}
-      {error && (
-        <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300">
-          Sorry, there was an error sending your message. Please try again.
-        </div>
-      )}
-      
-      <form action="/api/submit" method="POST" className="space-y-4 max-w-lg">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium mb-1">Name</label>
-          <input 
-            type="text" 
-            id="name" 
-            name="name"
-            className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-lg focus:outline-none focus:border-white/30 transition-colors"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email"
-            className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-lg focus:outline-none focus:border-white/30 transition-colors"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="subject" className="block text-sm font-medium mb-1">Subject</label>
-          <input 
-            type="text" 
-            id="subject" 
-            name="subject"
-            className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-lg focus:outline-none focus:border-white/30 transition-colors"
-          />
-        </div>
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium mb-1">Message</label>
-          <textarea 
-            id="message" 
-            name="message"
-            rows={5}
-            className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-lg focus:outline-none focus:border-white/30 transition-colors resize-vertical"
-            required
-          ></textarea>
-        </div>
-        <button 
-          type="submit"
-          className="px-6 py-2 bg-white/20 hover:bg-white/30 border border-white/15 rounded-lg transition-colors"
-        >
-          Send Message
-        </button>
-      </form>
-    </>
-  );
-}
+import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { SiSoundcloud } from 'react-icons/si';
 
 export default function ContactPage() {
   return (
-    <main className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8">Contact</h1>
+    <main className="p-12 ml-16">
+      <h1 className="text-4xl font-bold mb-12">Contact</h1>
       
       <div className="space-y-8">
         {/* Email */}
         <div>
           <h2 className="text-xl font-semibold mb-2">Email</h2>
           <a 
-            href="mailto:francisco@example.com" 
+            href="mailto:franciscocardoso.composer@gmail.com" 
             className="text-lg text-gray-300 hover:text-white transition-colors underline"
           >
-            francisco@example.com
+            franciscocardoso.composer@gmail.com
           </a>
         </div>
 
@@ -93,47 +24,61 @@ export default function ContactPage() {
         <div>
           <h2 className="text-xl font-semibold mb-2">Location</h2>
           <p className="text-lg text-gray-300">
-            Curitiba, Paraná, Brazil
+          Nashville, Tennessee, USA [Based] <br />
+          Atlanta, Georgia, USA <br />
+          Curitiba, Parana, Brazil
           </p>
         </div>
 
-        {/* Professional Affiliations */}
+        {/* Affiliations */}
         <div>
-          <h2 className="text-xl font-semibold mb-2">Professional Affiliations</h2>
+          <h2 className="text-xl font-semibold mb-2">Affiliations</h2>
           <div className="space-y-1">
             <p className="text-lg text-gray-300">Círculo de Invenção Musical (Founding Member)</p>
             <p className="text-lg text-gray-300">Atlanta Contemporary Music Collective (Member)</p>
           </div>
         </div>
 
-        {/* Social/Academic Links */}
+        {/* Social Media */}
         <div>
-          <h2 className="text-xl font-semibold mb-2">Links</h2>
-          <div className="space-y-2">
-            <div>
-              <a 
-                href="#" 
-                className="links"
-              >
-                Academia.edu Profile
-              </a>
-            </div>
-            <div>
-              <a 
-                href="#" 
-                className="links"
-              >
-                ORCID Profile
-              </a>
-            </div>
-            <div>
-              <a 
-                href="#" 
-                className="links"
-              >
-                ResearchGate Profile
-              </a>
-            </div>
+          <h2 className="text-xl font-semibold mb-2">Social Media</h2>
+          <div className="flex space-x-4">
+            <a 
+              href="https://www.instagram.com/fco.crd/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105 group"
+              aria-label="Instagram"
+            >
+              <FaInstagram className="w-6 h-6 group-hover:text-white transition-colors" />
+            </a>
+            <a 
+              href="https://www.linkedin.com/in/francisco-cardoso-de-araujo-a96b7010a/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105 group"
+              aria-label="LinkedIn"
+            >
+              <FaLinkedin className="w-6 h-6 group-hover:text-white transition-colors" />
+            </a>
+            <a 
+              href="https://soundcloud.com/franciscocardosodearaujo" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105 group"
+              aria-label="SoundCloud"
+            >
+              <SiSoundcloud className="w-6 h-6 group-hover:text-white transition-colors" />
+            </a>
+            <a 
+              href="https://www.youtube.com/@franciscocardoso-composer" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105 group"
+              aria-label="YouTube"
+            >
+              <FaYoutube className="w-6 h-6 group-hover:text-white transition-colors" />
+            </a>
           </div>
         </div>
       </div>
