@@ -18,7 +18,7 @@
     }
     
     .nav-item {
-    @apply relative px-6 py-3 text-xl text-[#D3CEAD]/70 font-semibold transition duration-300;
+        @apply relative px-6 py-3 text-xl text-[#D3CEAD]/70 font-semibold transition duration-300;
     }   
 
     .nav-item::before {
@@ -34,35 +34,153 @@
         @apply text-[#C3BE9D];
     }
 
-
-    .menu-style{
+    .menu-style {
         @apply block px-3 text-lg py-2 transition-colors text-black hover:bg-black/10;
     }
 
-    .links{
-        @apply text-lg text-gray-300 hover:text-white transition-colors block underline
+    .links {
+        @apply text-lg text-gray-300 hover:text-white transition-colors block underline;
+    }
+}
+
+@layer components {
+    /* PDF Viewer Styles */
+    .pdf-modal {
+        @apply fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4;
     }
     
+    .pdf-container {
+        @apply bg-white rounded-lg w-full max-w-6xl h-full max-h-[95vh] flex flex-col shadow-2xl;
+    }
+    
+    .pdf-header {
+        @apply flex justify-between items-center p-4 border-b border-[#D3CEAD]/30 bg-[#F8F7F0] rounded-t-lg;
+    }
+    
+    .pdf-title {
+        @apply text-xl font-semibold text-[#2A2920];
+    }
+    
+    .pdf-controls {
+        @apply flex items-center gap-3;
+    }
+    
+    .control-group {
+        @apply flex items-center gap-2 bg-[#F0EEE3] rounded-lg px-3 py-1;
+    }
+    
+    .control-button {
+        @apply p-1 hover:bg-[#E5E2D4] rounded disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+    
+    .control-text {
+        @apply text-sm font-medium min-w-[60px] text-center text-[#2A2920];
+    }
+    
+    .pdf-content {
+        @apply flex-1 bg-[#F5F4EB] overflow-auto flex items-center justify-center p-4;
+    }
+    
+    .pdf-footer {
+        @apply px-4 py-2 bg-[#F8F7F0] border-t border-[#D3CEAD]/30 rounded-b-lg text-center;
+    }
+    
+    .pdf-footer-text {
+        @apply text-sm text-[#6B6857];
+    }
+    
+    /* Work List Styles */
+    .works-container {
+        @apply p-12 ml-16;
+    }
+    
+    .works-title {
+        @apply text-4xl font-bold mb-12 text-[#D3CEAD];
+    }
+    
+    .work-item {
+        @apply text-lg text-[#D3CEAD]/80 hover:text-[#D3CEAD] transition-colors flex items-center gap-3 p-2 rounded;
+    }
+    
+    .work-item-hover {
+        @apply hover:bg-[#2A2920]/50 cursor-pointer;
+    }
+    
+    .work-instruments {
+        @apply text-sm text-[#C3BE9D];
+    }
+    
+    .works-count {
+        @apply mt-12 text-sm text-[#D3CEAD]/60;
+    }
+    
+    /* Loading and Error States */
+    .loading-spinner {
+        @apply animate-spin rounded-full h-8 w-8 border-b-2 border-[#D3CEAD];
+    }
+    
+    .loading-text {
+        @apply ml-3 text-[#6B6857];
+    }
+    
+    .error-message {
+        @apply text-center;
+    }
+    
+    .error-text {
+        @apply text-[#B87333] mb-2;
+    }
+    
+    .error-details {
+        @apply text-sm text-[#6B6857];
+    }
+    
+    .fallback-button {
+        @apply mt-4 px-4 py-2 bg-[#D3CEAD] text-[#2A2920] rounded hover:bg-[#C3BE9D];
+    }
+    
+    /* Warning Banner */
+    .warning-banner {
+        @apply mb-4 p-3 bg-[#FFFBEA] border border-[#F2E6B0] rounded text-[#8D7A2E] text-sm;
+    }
 }
 
 @keyframes scrollBackground {
     from {
-      background-position: 0 0;
+        background-position: 0 0;
     }
     to {
-      background-position: 0 100vh;
+        background-position: 0 100vh;
     }
-  }
-  
-  .scrolling-background {
+}
+
+.scrolling-background {
     animation: scrollBackground 20s linear infinite;
     background-attachment: local;
-  }
-  
-  /* Alternative parallax effect using CSS only */
-  .parallax-background {
+}
+
+/* Alternative parallax effect using CSS only */
+.parallax-background {
     background-attachment: fixed;
     background-position: center;
     background-repeat: repeat;
     background-size: cover;
-  }
+}
+
+/* Custom scrollbar for PDF content */
+.pdf-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.pdf-content::-webkit-scrollbar-track {
+    background: #F0EEE3;
+}
+
+.pdf-content::-webkit-scrollbar-thumb {
+    background: #D3CEAD;
+    border-radius: 4px;
+}
+
+.pdf-content::-webkit-scrollbar-thumb:hover {
+    background: #C3BE9D;
+}

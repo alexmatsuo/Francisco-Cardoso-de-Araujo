@@ -25,7 +25,7 @@ export default function RootLayout({
           }}
         >
           {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black opacity-20"></div>
+          <div className="absolute inset-0 bg-black opacity-40"></div>
         </div>
         
         <ConditionalHeader />

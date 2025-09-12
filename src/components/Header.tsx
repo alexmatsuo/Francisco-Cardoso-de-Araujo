@@ -25,7 +25,7 @@ export const Header = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <div className="hidden md:flex justify-center items-center top-3 z-[10000]">
+      <div className="hidden md:flex justify-center items-center top-3 z-50">
         <nav className="flex justify-center gap-24 px-8 py-6 border border-white/15 bg-black backdrop-blur w-full">
           <Link 
             href="/" 
@@ -57,7 +57,7 @@ export const Header = () => {
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </Link>
-            <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[50]">
+            <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="border border-white/15 p-1 shadow-lg " style={{ backgroundColor: '#D3CEAD' }}>
                 <Link href="/works/solo" className="menu-style">Solo</Link>
                 <Link href="/works/duos-trios" className="menu-style">Duos & Trios</Link>
@@ -85,7 +85,7 @@ export const Header = () => {
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </Link>
-            <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[50]">
+            <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="border border-white/15 p-1 shadow-lg " style={{ backgroundColor: '#D3CEAD' }}>
                 <Link href="/projects/kaphca-trio" className="menu-style">Kaphca Trio</Link>
                 <Link href="/projects/circulo-invencao-musical" className="menu-style">Círculo de Invenção Musical</Link>
@@ -118,7 +118,7 @@ export const Header = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden relative top-3 z-[10000]">
+      <div className="md:hidden relative top-3 z-40">
         {/* Mobile Menu Button */}
         <div className="flex justify-left ml-6">
           <button
@@ -144,13 +144,13 @@ export const Header = () => {
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30"
             onClick={closeMobileMenu}
           />
         )}
 
         {/* Mobile Menu */}
-        <div className={`absolute top-full mt-2 left-4 right-4 transition-all duration-300 ${
+        <div className={`absolute top-full mt-2 left-4 right-4 transition-all duration-300 z-40 ${
           isMobileMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'
         }`}>
           <nav className="border border-white/15 rounded-lg p-6 shadow-lg bg-white/10 backdrop-blur">

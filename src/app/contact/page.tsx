@@ -187,11 +187,13 @@ export default function ContactPage() {
             <button
               onClick={handleSubmit}
               disabled={isSubmitting || !isFormValid}
-              className="relative flex items-center justify-center space-x-2 w-full md:w-auto px-6 py-3 text-xl text-[#D3CEAD]/70 font-semibold transition-all duration-300 bg-white/10 hover:bg-white/20 hover:text-[#C3BE9D] disabled:bg-white/5 disabled:text-[#D3CEAD]/30 disabled:cursor-not-allowed overflow-hidden group"
+              className="relative flex items-center justify-center space-x-2 w-full md:w-auto px-6 py-3 text-xl
+              text-[#D3CEAD]/70 font-semibold transition-all duration-300 bg-white/10 hover:bg-white/20 hover:text-[#C3BE9D]
+              disabled:bg-white/5 disabled:text-[#D3CEAD]/30 disabled:cursor-not-allowed overflow-hidden group"
             >
               <span className="absolute inset-0 bg-white/10 opacity-0 transition duration-300 group-hover:opacity-100 group-disabled:opacity-0"></span>
               <FaPaperPlane className={`w-5 h-5 relative z-10 ${isSubmitting ? 'animate-pulse' : ''}`} />
-              <span className="relative z-10">{isSubmitting ? 'Sending...' : 'Send Message'}</span>
+              <span className="relative z-10">{isSubmitting ? 'Submiting...' : 'Submit'}</span>
             </button>
             
             {submitStatus === 'success' && (

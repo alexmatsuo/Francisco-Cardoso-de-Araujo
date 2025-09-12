@@ -5,7 +5,15 @@ export async function GET() {
   try {
     const works = await prisma.work.findMany({
       where: { category: 'solo' },
-      orderBy: { year: 'desc' }
+      orderBy: { year: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        year: true,
+        instruments: true,
+        pdfFileName: true,
+        // Don't select pdfData in GET requests to avoid large payloads
+      }
     });
 
     return NextResponse.json({ works });
@@ -33,13 +41,34 @@ export async function POST(request: Request) {
 
     // Use transaction to ensure data consistency
     const result = await prisma.$transaction(async (tx) => {
+      // Get existing works with their PDF data before deleting
+      const existingWorks = await tx.work.findMany({
+        where: { category: 'solo' },
+        select: {
+          id: true,
+          title: true,
+          year: true,
+          instruments: true,
+          pdfData: true,
+          pdfFileName: true,
+          pdfMimeType: true,
+        }
+      });
+
+      // Create a map of existing works by their identifying characteristics
+      const existingWorksMap = new Map();
+      existingWorks.forEach(work => {
+        const key = `${work.title}-${work.year}-${work.instruments}`;
+        existingWorksMap.set(key, work);
+      });
+
       // Delete existing solo works
       console.log('Deleting existing solo works...');
       await tx.work.deleteMany({
         where: { category: 'solo' }
       });
 
-      // Create new works
+      // Create new works, preserving PDF data where possible
       const createdWorks = [];
       for (const workData of works) {
         console.log('Processing work:', workData);
@@ -70,12 +99,20 @@ export async function POST(request: Request) {
           continue;
         }
 
+        // Check if this work existed before and had PDF data
+        const workKey = `${title.trim()}-${year}-${instruments.trim()}`;
+        const existingWork = existingWorksMap.get(workKey);
+
         const work = await tx.work.create({
           data: {
             title: title.trim(),
             category: 'solo',
             year: parseInt(year.toString()),
-            instruments: instruments.trim()
+            instruments: instruments.trim(),
+            // Preserve PDF data if it existed
+            pdfData: existingWork?.pdfData || null,
+            pdfFileName: existingWork?.pdfFileName || null,
+            pdfMimeType: existingWork?.pdfMimeType || null,
           }
         });
         
@@ -90,7 +127,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ 
       message: 'Works updated successfully',
-      works: result,
+      works: result.map(work => ({
+        id: work.id,
+        title: work.title,
+        year: work.year,
+        instruments: work.instruments,
+        pdfFileName: work.pdfFileName,
+      })),
       count: result.length
     });
     

@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect } from "react";
-import { Plus, Trash2, Save, Edit, ArrowUp, ArrowDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Trash2, Save, Edit, ArrowUp, ArrowDown, FileText, Upload, X } from "lucide-react";
 
 interface Work {
   id: number;
   title: string;
   year: number;
   instruments: string;
+  pdfFileName?: string;
 }
 
 export default function AdminSoloWorks() {
@@ -16,6 +17,9 @@ export default function AdminSoloWorks() {
   const [isSaving, setIsSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [newWork, setNewWork] = useState({ title: '', year: new Date().getFullYear(), instruments: '' });
+  const [uploadingPdf, setUploadingPdf] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [currentUploadId, setCurrentUploadId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchWorks();
@@ -102,6 +106,97 @@ export default function AdminSoloWorks() {
 
     [newWorks[index], newWorks[targetIndex]] = [newWorks[targetIndex], newWorks[index]];
     setWorks(newWorks);
+  };
+
+  const handleFileUpload = (workId: number) => {
+    setCurrentUploadId(workId);
+    fileInputRef.current?.click();
+  };
+
+  const onFileSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !currentUploadId) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Please select a PDF file');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      alert('File size must be less than 10MB');
+      return;
+    }
+
+    setUploadingPdf(currentUploadId);
+
+    try {
+      const formData = new FormData();
+      formData.append('pdf', file);
+      formData.append('workId', currentUploadId.toString());
+
+      const response = await fetch('/api/works/solo/pdf', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to upload PDF');
+      }
+
+      const data = await response.json();
+      
+      // Update the work with PDF info
+      setWorks(works.map(work => 
+        work.id === currentUploadId ? { 
+          ...work, 
+          pdfFileName: data.fileName 
+        } : work
+      ));
+
+      alert('PDF uploaded successfully!');
+      
+    } catch (error) {
+      console.error('Error uploading PDF:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      alert(`Error uploading PDF: ${errorMessage}`);
+    } finally {
+      setUploadingPdf(null);
+      setCurrentUploadId(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const removePdf = async (workId: number) => {
+    if (!confirm('Are you sure you want to remove this PDF?')) return;
+
+    try {
+      const response = await fetch(`/api/works/solo/pdf/${workId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to remove PDF');
+      }
+
+      // Update the work to remove PDF info
+      setWorks(works.map(work => 
+        work.id === workId ? { 
+          ...work, 
+          pdfFileName: undefined 
+        } : work
+      ));
+
+      alert('PDF removed successfully!');
+      
+    } catch (error) {
+      console.error('Error removing PDF:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      alert(`Error removing PDF: ${errorMessage}`);
+    }
   };
 
   if (isLoading) {
@@ -196,6 +291,7 @@ export default function AdminSoloWorks() {
                   <th className="text-left text-white font-medium p-4">Title</th>
                   <th className="text-left text-white font-medium p-4 w-32">Year</th>
                   <th className="text-left text-white font-medium p-4">Instruments</th>
+                  <th className="text-left text-white font-medium p-4 w-32">PDF</th>
                   {isEditing && <th className="text-left text-white font-medium p-4 w-32">Actions</th>}
                 </tr>
               </thead>
@@ -238,6 +334,37 @@ export default function AdminSoloWorks() {
                         <span className="text-gray-300">{work.instruments}</span>
                       )}
                     </td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        {work.pdfFileName ? (
+                          <>
+                            <FileText className="w-4 h-4 text-green-400" />
+                            <span className="text-xs text-gray-400">{work.pdfFileName}</span>
+                            {isEditing && (
+                              <button
+                                onClick={() => removePdf(work.id)}
+                                className="text-red-400 hover:text-red-300 transition-colors"
+                                title="Remove PDF"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            )}
+                          </>
+                        ) : (
+                          isEditing && (
+                            <button
+                              onClick={() => handleFileUpload(work.id)}
+                              disabled={uploadingPdf === work.id}
+                              className="flex items-center gap-1 text-blue-400 hover:text-blue-300 disabled:text-gray-600 transition-colors text-xs"
+                              title="Upload PDF"
+                            >
+                              <Upload className="w-3 h-3" />
+                              {uploadingPdf === work.id ? 'Uploading...' : 'Upload PDF'}
+                            </button>
+                          )
+                        )}
+                      </div>
+                    </td>
                     {isEditing && (
                       <td className="p-4 flex items-center gap-2">
                         <button
@@ -272,6 +399,15 @@ export default function AdminSoloWorks() {
         <div className="mt-6 text-sm text-gray-400">
           Total works: {works.length}
         </div>
+
+        {/* Hidden file input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".pdf"
+          onChange={onFileSelected}
+          className="hidden"
+        />
       </main>
     </>
   );
