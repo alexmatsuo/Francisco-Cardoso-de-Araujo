@@ -33,9 +33,20 @@ model User {
   @@map("users")
 }
 
-model Location {
+model Event {
   id          Int      @id @default(autoincrement())
-  location       String
+  title       String
+  date        DateTime
+  location    String   // or reference to Location model
+  venue       String?  // specific venue name
+  description String?
+  eventType   String   // "concert", "premiere", "workshop", etc.
+  works       String?  // works performed (could be JSON or comma-separated)
+  performers  String?  // other performers/collaborators
+  website     String?  // event website/link
+  isUpcoming  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@map("locations")
+  @@map("events")
 }

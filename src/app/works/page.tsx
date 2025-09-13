@@ -100,15 +100,15 @@ export default function AllWorks() {
 
   if (isLoading) {
     return (
-      <main className="p-12 ml-16">
+      <main className="works-container">
         <div className="text-center">Loading all compositions...</div>
       </main>
     );
   }
 
   return (
-    <main className="p-12 ml-16">
-      <h1 className="text-4xl font-bold mb-12">Full Catalog</h1>
+    <main className="works-container">
+      <h1 className="works-title">Full Catalog</h1>
       
       {renderWorksSection("Solo Compositions", works.solo)}
       {renderWorksSection("Duos & Trios", works.duosTrios)}

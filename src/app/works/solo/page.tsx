@@ -20,7 +20,7 @@ interface Work {
   pdfFileName?: string;
 }
 
-export default function SoloWorksReactPDF() {
+export default function SoloWorks() {
   const [works, setWorks] = useState<Work[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
@@ -152,7 +152,7 @@ export default function SoloWorksReactPDF() {
   return (
     <>
       <main className="works-container">
-        <h1 className="works-title">Solo Instrumentations</h1>
+        <h1 className="works-title">Solo Compositions</h1>
 
         <div className="space-y-4">
           {works.map((work) => (
@@ -202,7 +202,7 @@ export default function SoloWorksReactPDF() {
                     <button
                       onClick={goToPrevPage}
                       disabled={pageNumber <= 1}
-                      className="control-button"
+                      className="px-3 py-2 text-black bg-white hover:bg-gray-200 rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </button>
@@ -212,7 +212,7 @@ export default function SoloWorksReactPDF() {
                     <button
                       onClick={goToNextPage}
                       disabled={pageNumber >= numPages}
-                      className="control-button"
+                      className="px-3 py-2 text-black bg-white hover:bg-gray-200 rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
@@ -224,7 +224,7 @@ export default function SoloWorksReactPDF() {
                   <button
                     onClick={zoomOut}
                     disabled={scale <= 0.5}
-                    className="control-button"
+                    className="px-3 py-2 text-black bg-white hover:bg-gray-200 rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ZoomOut className="w-4 h-4" />
                   </button>
@@ -234,7 +234,7 @@ export default function SoloWorksReactPDF() {
                   <button
                     onClick={zoomIn}
                     disabled={scale >= 3.0}
-                    className="control-button"
+                    className="px-3 py-2 text-black bg-white hover:bg-gray-200 rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ZoomIn className="w-4 h-4" />
                   </button>
@@ -244,14 +244,14 @@ export default function SoloWorksReactPDF() {
                 <div className="flex items-center gap-1">
                   <button
                     onClick={rotate}
-                    className="control-button"
+                    className="px-3 py-2 text-black bg-white hover:bg-gray-200 rounded border border-gray-300"
                     title="Rotate 90°"
                   >
                     <RotateCw className="w-4 h-4" />
                   </button>
                   <button
                     onClick={resetView}
-                    className="px-3 py-2 text-sm hover:bg-[#E5E2D4] rounded"
+                    className="px-3 py-2 text-sm text-black bg-white hover:bg-gray-200 rounded border border-gray-300"
                     title="Reset view"
                   >
                     Reset
@@ -262,7 +262,7 @@ export default function SoloWorksReactPDF() {
                 <a
                   href={`/api/works/solo/pdf/${selectedWork.id}`}
                   download={selectedWork.pdfFileName}
-                  className="control-button"
+                  className="px-3 py-2 text-black bg-white hover:bg-gray-200 rounded border border-gray-300 inline-flex items-center justify-center"
                   title="Download PDF"
                 >
                   <Download className="w-4 h-4" />
@@ -271,7 +271,7 @@ export default function SoloWorksReactPDF() {
                 {/* Close */}
                 <button
                   onClick={closePdfModal}
-                  className="control-button ml-2"
+                  className="px-3 py-2 text-black bg-white hover:bg-gray-200 rounded border border-gray-300 ml-2"
                   title="Close"
                 >
                   <X className="w-4 h-4" />

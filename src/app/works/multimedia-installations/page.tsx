@@ -33,15 +33,15 @@ export default function MultimediaInstallationsWorks() {
 
   if (isLoading) {
     return (
-      <main className="p-12 ml-16">
+      <main className="works-container">
         <div className="text-center">Loading ...</div>
       </main>
     );
   }
 
   return (
-    <main className="p-12 ml-16">
-      <h1 className="text-4xl font-bold mb-12">Multimedia & Installations</h1>
+    <main className="works-container">
+      <h1 className="works-title">Multimedia & Installations</h1>
       
       <div className="space-y-4">
         {works.map((work) => (

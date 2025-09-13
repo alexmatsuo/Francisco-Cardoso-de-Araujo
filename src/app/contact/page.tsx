@@ -111,7 +111,7 @@ export default function ContactPage() {
   const isFormValid = formData.from_name && formData.from_email && formData.subject && formData.message;
 
   return (
-    <main className="p-12 ml-16">
+    <main className="p-12 ml-4">
       <h1 className="text-4xl font-bold mb-12">Contact</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

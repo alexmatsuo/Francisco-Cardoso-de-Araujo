@@ -131,6 +131,15 @@ export const AdminHeader = () => {
           >
             Writings
           </Link>
+
+          <Link
+            href="/admin/events"
+            className={`nav-item ${
+              isActive("/admin/writings") ? "text-[#D3CEAD]" : ""
+            }`}
+          >
+            Events
+          </Link>
         </nav>
       </div>
 
