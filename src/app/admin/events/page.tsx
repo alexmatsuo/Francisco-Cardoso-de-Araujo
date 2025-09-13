@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Edit, Trash2, Save, X, Plus, Calendar, MapPin, Clock } from "lucide-react";
 
-interface Event {
+interface AdminEvent {
   id: number;
   title: string;
   date: string;
@@ -11,6 +11,7 @@ interface Event {
   eventType: string;
   isUpcoming: boolean;
   time?: string;
+  venue?: string;
   works?: string;
   performers?: string;
   website?: string;
@@ -18,9 +19,9 @@ interface Event {
 }
 
 export default function AdminEvents() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<AdminEvent[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [draft, setDraft] = useState<Partial<Event>>({});
+  const [draft, setDraft] = useState<Partial<AdminEvent>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [newEvent, setNewEvent] = useState({
@@ -56,7 +57,7 @@ export default function AdminEvents() {
     }
   };
 
-  const startEdit = (event: Event) => {
+  const startEdit = (event: AdminEvent) => {
     setEditingId(event.id);
     
     // Extract date and time from ISO string
@@ -169,7 +170,7 @@ export default function AdminEvents() {
     const eventDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 
                               parseInt(hours), parseInt(minutes));
 
-    const event: Event = {
+    const event: AdminEvent = {
       id: Date.now(),
       title: newEvent.title.trim(),
       date: eventDate.toISOString(),
@@ -221,7 +222,7 @@ export default function AdminEvents() {
     }
   };
 
-  const updateDraft = (field: keyof Event, value: string) => {
+  const updateDraft = (field: keyof AdminEvent, value: string) => {
     setDraft((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -367,7 +368,7 @@ export default function AdminEvents() {
               rows={3}
               placeholder="Event description"
             />
-          </div>
+            </div>
           <div className="flex gap-2">
             <button
               onClick={addEvent}
@@ -501,7 +502,7 @@ export default function AdminEvents() {
                             onChange={(e) => updateDraft("eventType", e.target.value)}
                             className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                           >
-                            <option value="concert">Concert</option>
+                            <option value="concert">Concept</option>
                             <option value="premiere">Premiere</option>
                             <option value="workshop">Workshop</option>
                             <option value="masterclass">Masterclass</option>

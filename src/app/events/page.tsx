@@ -190,14 +190,6 @@ export default function EventsPage() {
         )}
       </div>
 
-      <div className="works-count">
-        Total Events: {filteredEvents.length}
-        {filter !== 'all' && (
-          <span className="text-gray-400 ml-2">
-            ({events.length} total)
-          </span>
-        )}
-      </div>
     </main>
   );
 }
