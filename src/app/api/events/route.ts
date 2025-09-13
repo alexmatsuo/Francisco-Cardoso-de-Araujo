@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         const event = await tx.event.create({
           data: {
             title: eventData.title.trim(),
-            date: new Date(eventData.date),
+            date: new Date(eventData.date), // Already in ISO format from the client
             location: eventData.location.trim(),
             venue: eventData.venue?.trim() || null,
             description: eventData.description?.trim() || null,

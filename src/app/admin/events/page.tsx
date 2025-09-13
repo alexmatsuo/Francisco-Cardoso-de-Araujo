@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Edit, Trash2, Save, X, Plus, Calendar, MapPin } from "lucide-react";
+import { Edit, Trash2, Save, X, Plus, Calendar, MapPin, Clock } from "lucide-react";
 
 interface Event {
   id: number;
@@ -10,7 +10,7 @@ interface Event {
   location: string;
   eventType: string;
   isUpcoming: boolean;
-  venue?: string;
+  time?: string;
   works?: string;
   performers?: string;
   website?: string;
@@ -25,7 +25,8 @@ export default function AdminEvents() {
   const [isSaving, setIsSaving] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: '',
-    date: new Date().toISOString().split('T')[0],
+    date: '',
+    time: '19:30',
     location: '',
     venue: '',
     description: '',
@@ -47,7 +48,7 @@ export default function AdminEvents() {
       if (!res.ok) throw new Error('Failed to fetch');
       
       const data = await res.json();
-      setEvents(data.events || []); // Handle the { events: [...] } structure
+      setEvents(data.events || []);
     } catch (error) {
       console.error('Error fetching events:', error);
     } finally {
@@ -57,7 +58,17 @@ export default function AdminEvents() {
 
   const startEdit = (event: Event) => {
     setEditingId(event.id);
-    setDraft({ ...event }); // copy DB values into draft
+    
+    // Extract date and time from ISO string
+    const eventDate = new Date(event.date);
+    const date = eventDate.toISOString().split('T')[0]; // YYYY-MM-DD
+    const time = eventDate.toTimeString().substring(0, 5); // HH:MM
+    
+    setDraft({ 
+      ...event,
+      date: date,
+      time: time
+    });
   };
 
   const cancelEdit = () => {
@@ -70,19 +81,34 @@ export default function AdminEvents() {
     
     setIsSaving(true);
     try {
-      // Update the specific event in the events array
+      // Combine date and time into ISO string
+      const dateStr = draft.date || events.find(e => e.id === editingId)?.date || '';
+      const timeStr = draft.time || '12:00';
+      
+      let isoDateString = '';
+      if (dateStr) {
+        const [year, month, day] = dateStr.split('-');
+        const [hours, minutes] = timeStr.split(':');
+        
+        // Create date in local timezone but output as ISO string
+        const eventDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 
+                                  parseInt(hours), parseInt(minutes));
+        
+        isoDateString = eventDate.toISOString();
+      }
+
+      const updatedDraft = {
+        ...draft,
+        date: isoDateString,
+        isUpcoming: dateStr ? new Date(dateStr + 'T' + timeStr) > new Date() : undefined
+      };
+
       const updatedEvents = events.map(event => 
         event.id === editingId 
-          ? { 
-              ...event, 
-              ...draft,
-              // Update isUpcoming when date changes
-              isUpcoming: draft.date ? new Date(draft.date) > new Date() : event.isUpcoming
-            }
+          ? { ...event, ...updatedDraft }
           : event
       );
 
-      // Save all events using your existing API endpoint
       const response = await fetch('/api/events', {
         method: 'POST',
         headers: {
@@ -96,7 +122,7 @@ export default function AdminEvents() {
         throw new Error(errorData.error || 'Failed to save events');
       }
 
-      await fetchEvents(); // refresh events from DB
+      await fetchEvents();
       cancelEdit();
     } catch (error) {
       console.error('Error saving event:', error);
@@ -131,15 +157,22 @@ export default function AdminEvents() {
   };
 
   const addEvent = async () => {
-    if (!newEvent.title.trim() || !newEvent.location.trim()) {
-      alert('Please fill in title and location');
+    if (!newEvent.title.trim() || !newEvent.location.trim() || !newEvent.date) {
+      alert('Please fill in title, date, and location');
       return;
     }
 
+    // Combine date and time into ISO string
+    const [year, month, day] = newEvent.date.split('-');
+    const [hours, minutes] = newEvent.time.split(':');
+    
+    const eventDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 
+                              parseInt(hours), parseInt(minutes));
+
     const event: Event = {
-      id: Date.now(), // Temporary ID
+      id: Date.now(),
       title: newEvent.title.trim(),
-      date: newEvent.date,
+      date: eventDate.toISOString(),
       location: newEvent.location.trim(),
       venue: newEvent.venue.trim() || undefined,
       description: newEvent.description.trim() || undefined,
@@ -147,7 +180,7 @@ export default function AdminEvents() {
       works: newEvent.works.trim() || undefined,
       performers: newEvent.performers.trim() || undefined,
       website: newEvent.website.trim() || undefined,
-      isUpcoming: new Date(newEvent.date) > new Date()
+      isUpcoming: eventDate > new Date()
     };
 
     try {
@@ -166,12 +199,13 @@ export default function AdminEvents() {
         throw new Error(errorData.error || 'Failed to save event');
       }
 
-      await fetchEvents(); // refresh events from DB
+      await fetchEvents();
       
       // Reset form
       setNewEvent({
         title: '',
-        date: new Date().toISOString().split('T')[0],
+        date: '',
+        time: '19:30',
         location: '',
         venue: '',
         description: '',
@@ -191,11 +225,14 @@ export default function AdminEvents() {
     setDraft((prev) => ({ ...prev, [field]: value }));
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
@@ -241,6 +278,15 @@ export default function AdminEvents() {
                 type="date"
                 value={newEvent.date}
                 onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+                className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">Time *</label>
+              <input
+                type="time"
+                value={newEvent.time}
+                onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
                 className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
               />
             </div>
@@ -346,7 +392,7 @@ export default function AdminEvents() {
           <thead className="bg-gray-800">
             <tr>
               <th className="p-3 text-left text-sm text-gray-400">Event</th>
-              <th className="p-3 text-left text-sm text-gray-400">Date</th>
+              <th className="p-3 text-left text-sm text-gray-400">Date & Time</th>
               <th className="p-3 text-left text-sm text-gray-400">Location</th>
               <th className="p-3 text-left text-sm text-gray-400">Type</th>
               <th className="p-3 text-left text-sm text-gray-400">Status</th>
@@ -366,7 +412,7 @@ export default function AdminEvents() {
                   <td className="p-3">
                     <div className="flex items-center gap-1 text-sm">
                       <Calendar className="w-3 h-3 text-gray-400" />
-                      {formatDate(event.date)}
+                      {formatDateTime(event.date)}
                     </div>
                   </td>
                   <td className="p-3">
@@ -436,6 +482,15 @@ export default function AdminEvents() {
                             type="date"
                             value={draft.date || ""}
                             onChange={(e) => updateDraft("date", e.target.value)}
+                            className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Time</label>
+                          <input
+                            type="time"
+                            value={draft.time || ""}
+                            onChange={(e) => updateDraft("time", e.target.value)}
                             className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                           />
                         </div>

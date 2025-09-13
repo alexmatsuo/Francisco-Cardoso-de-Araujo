@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { Calendar, MapPin, ExternalLink, Music, Users } from "lucide-react";
+import { Calendar, MapPin, ExternalLink, Music, Users, Clock } from "lucide-react";
 
 interface Event {
   id: number;
@@ -46,12 +46,15 @@ export default function EventsPage() {
     return true;
   });
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
@@ -142,7 +145,7 @@ export default function EventsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                 <div className="flex items-center gap-2 text-[#D3CEAD]">
                   <Calendar className="w-4 h-4 flex-shrink-0" />
-                  <span className="work-instruments">{formatDate(event.date)}</span>
+                  <span className="work-instruments">{formatDateTime(event.date)}</span>
                 </div>
 
                 <div className="flex items-center gap-2 text-[#D3CEAD]">
