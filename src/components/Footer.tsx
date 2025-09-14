@@ -3,7 +3,7 @@ export const Footer = () =>{
 
   return (
     <footer className="w-full text-center">
-      <p>&copy; {year} Francisco Cardoso de Araujo. All rights reserved.</p>
+      <p>&copy; {year} Francisco Cardoso de Araujo. © All rights reserved.</p>
     </footer>
   );
 }

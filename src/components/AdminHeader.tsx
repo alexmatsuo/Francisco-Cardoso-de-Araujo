@@ -45,6 +45,15 @@ export const AdminHeader = () => {
             Dashboard
           </Link>
 
+          <Link
+            href="/admin/about"
+            className={`nav-item ${
+              isActive("/admin/about") ? "text-[#D3CEAD]" : ""
+            }`}
+          >
+            About
+          </Link>
+
           {/* Works dropdown */}
           <div className="relative group">
             <Link
@@ -135,7 +144,7 @@ export const AdminHeader = () => {
           <Link
             href="/admin/events"
             className={`nav-item ${
-              isActive("/admin/writings") ? "text-[#D3CEAD]" : ""
+              isActive("/admin/events") ? "text-[#D3CEAD]" : ""
             }`}
           >
             Events

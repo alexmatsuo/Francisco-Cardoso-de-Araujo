@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Music, Users, FileText, Calendar, ArrowRight } from 'lucide-react';
+import { Music, Users, FileText, Calendar, ArrowRight, User } from 'lucide-react';
 
 export default function AdminDashboard() {
   const worksSections = [
@@ -25,41 +25,38 @@ export default function AdminDashboard() {
         <p className="text-gray-300">Manage your website content from here</p>
       </div>
 
+      {/* About Section */}
+      <section className="mb-12">
+        <div className="flex items-center mb-6">
+          <User className="w-6 h-6 text-[#D3CEAD] mr-3" />
+          <h2 className="text-2xl font-bold text-white">About Section</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link
+            href="/admin/about"
+            className="group bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-all duration-200 border border-gray-700 hover:border-[#D3CEAD]/50"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-white group-hover:text-[#D3CEAD] transition-colors">
+                Manage About
+              </h3>
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-[#D3CEAD] group-hover:translate-x-1 transition-all" />
+            </div>
+            <p className="text-gray-400 text-sm">Update biography and personal information</p>
+          </Link>
+        </div>
+      </section>
+
       {/* Works Section */}
       <section className="mb-12">
         <div className="flex items-center mb-6">
-          <Music className="w-6 h-6 text-[#D3CEAD] mr-3" />
+          <Music className="w-6 h-6 text-blue-500 mr-3" />
           <h2 className="text-2xl font-bold text-white">Works Management</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {worksSections.map((section) => (
-            <Link
-              key={section.href}
-              href={section.href}
-              className="group bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-all duration-200 border border-gray-700 hover:border-[#D3CEAD]/50"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-white group-hover:text-[#D3CEAD] transition-colors">
-                  {section.title}
-                </h3>
-                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-[#D3CEAD] group-hover:translate-x-1 transition-all" />
-              </div>
-              <p className="text-gray-400 text-sm">{section.description}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section className="mb-12">
-        <div className="flex items-center mb-6">
-          <Users className="w-6 h-6 text-blue-500 mr-3" />
-          <h2 className="text-2xl font-bold text-white">Projects Management</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projectsSections.map((section) => (
             <Link
               key={section.href}
               href={section.href}
@@ -77,7 +74,33 @@ export default function AdminDashboard() {
         </div>
       </section>
 
-      {/* Events Section - Simplified */}
+      {/* Projects Section */}
+      <section className="mb-12">
+        <div className="flex items-center mb-6">
+          <Users className="w-6 h-6 text-green-500 mr-3" />
+          <h2 className="text-2xl font-bold text-white">Projects Management</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projectsSections.map((section) => (
+            <Link
+              key={section.href}
+              href={section.href}
+              className="group bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-all duration-200 border border-gray-700 hover:border-green-500/50"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold text-white group-hover:text-green-500 transition-colors">
+                  {section.title}
+                </h3>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-500 group-hover:translate-x-1 transition-all" />
+              </div>
+              <p className="text-gray-400 text-sm">{section.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Events Section */}
       <section className="mb-12">
         <div className="flex items-center mb-6">
           <Calendar className="w-6 h-6 text-purple-500 mr-3" />
@@ -103,20 +126,20 @@ export default function AdminDashboard() {
       {/* Writings Section */}
       <section className="mb-12">
         <div className="flex items-center mb-6">
-          <FileText className="w-6 h-6 text-green-500 mr-3" />
+          <FileText className="w-6 h-6 text-orange-500 mr-3" />
           <h2 className="text-2xl font-bold text-white">Writings Management</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Link
             href="/admin/writings"
-            className="group bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-all duration-200 border border-gray-700 hover:border-green-500/50"
+            className="group bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-all duration-200 border border-gray-700 hover:border-orange-500/50"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-white group-hover:text-green-500 transition-colors">
+              <h3 className="text-xl font-semibold text-white group-hover:text-orange-500 transition-colors">
                 All Writings
               </h3>
-              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-500 group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
             </div>
             <p className="text-gray-400 text-sm">Manage articles, essays, and other written content</p>
           </Link>
