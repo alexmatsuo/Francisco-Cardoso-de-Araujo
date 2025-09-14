@@ -1,14 +1,20 @@
 'use client'
 
-import { useState, useEffect, useRef } from "react";
-import { Plus, Trash2, Save, Edit, ArrowUp, ArrowDown, FileText, Upload, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Trash2, Save, Edit, ArrowUp, ArrowDown, Eye, X } from "lucide-react";
 
 interface Work {
   id: number;
   title: string;
   year: number;
   instruments: string;
-  pdfFileName?: string;
+  duration: string;
+  information: string;
+  programNotes: string;
+  imageFileName: string;
+  videoUrl: string;
+  soundcloudUrl: string;
+  slug: string;
 }
 
 export default function AdminSoloWorks() {
@@ -16,10 +22,19 @@ export default function AdminSoloWorks() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [newWork, setNewWork] = useState({ title: '', year: new Date().getFullYear(), instruments: '' });
-  const [uploadingPdf, setUploadingPdf] = useState<number | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [currentUploadId, setCurrentUploadId] = useState<number | null>(null);
+  const [editingWork, setEditingWork] = useState<Work | null>(null);
+  const [newWork, setNewWork] = useState({ 
+    title: '', 
+    year: new Date().getFullYear(), 
+    instruments: '',
+    duration: '',
+    information: '',
+    programNotes: '',
+    imageFileName: '',
+    videoUrl: '',
+    soundcloudUrl: '',
+    slug: ''
+  });
 
   useEffect(() => {
     fetchWorks();
@@ -81,11 +96,29 @@ export default function AdminSoloWorks() {
       id: Date.now(), // Temporary ID
       title: newWork.title.trim(),
       year: newWork.year,
-      instruments: newWork.instruments.trim()
+      instruments: newWork.instruments.trim(),
+      duration: newWork.duration.trim(),
+      information: newWork.information.trim(),
+      programNotes: newWork.programNotes.trim(),
+      imageFileName: newWork.imageFileName.trim(),
+      videoUrl: newWork.videoUrl.trim(),
+      soundcloudUrl: newWork.soundcloudUrl.trim(),
+      slug: newWork.slug.trim() || slugify(newWork.title.trim())
     };
 
     setWorks([...works, work]);
-    setNewWork({ title: '', year: new Date().getFullYear(), instruments: '' });
+    setNewWork({ 
+      title: '', 
+      year: new Date().getFullYear(), 
+      instruments: '',
+      duration: '',
+      information: '',
+      programNotes: '',
+      imageFileName: '',
+      videoUrl: '',
+      soundcloudUrl: '',
+      slug: ''
+    });
   };
 
   const removeWork = (id: number) => {
@@ -108,95 +141,62 @@ export default function AdminSoloWorks() {
     setWorks(newWorks);
   };
 
-  const handleFileUpload = (workId: number) => {
-    setCurrentUploadId(workId);
-    fileInputRef.current?.click();
+  const openEditModal = (work: Work) => {
+    setEditingWork({ ...work });
   };
 
-  const onFileSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !currentUploadId) return;
+  const closeEditModal = () => {
+    setEditingWork(null);
+  };
 
-    if (file.type !== 'application/pdf') {
-      alert('Please select a PDF file');
+  const saveEditedWork = () => {
+    if (!editingWork) return;
+    
+    if (!editingWork.title.trim() || !editingWork.instruments.trim()) {
+      alert('Please fill in title and instruments');
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) { // 10MB limit
-      alert('File size must be less than 10MB');
-      return;
-    }
+    const updatedWork = {
+      ...editingWork,
+      title: editingWork.title.trim(),
+      instruments: editingWork.instruments.trim(),
+      duration: editingWork.duration.trim(),
+      information: editingWork.information.trim(),
+      programNotes: editingWork.programNotes.trim(),
+      imageFileName: editingWork.imageFileName.trim(),
+      videoUrl: editingWork.videoUrl.trim(),
+      soundcloudUrl: editingWork.soundcloudUrl.trim(),
+      slug: editingWork.slug.trim() || slugify(editingWork.title.trim())
+    };
 
-    setUploadingPdf(currentUploadId);
-
-    try {
-      const formData = new FormData();
-      formData.append('pdf', file);
-      formData.append('workId', currentUploadId.toString());
-
-      const response = await fetch('/api/works/solo/pdf', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to upload PDF');
-      }
-
-      const data = await response.json();
-      
-      // Update the work with PDF info
-      setWorks(works.map(work => 
-        work.id === currentUploadId ? { 
-          ...work, 
-          pdfFileName: data.fileName 
-        } : work
-      ));
-
-      alert('PDF uploaded successfully!');
-      
-    } catch (error) {
-      console.error('Error uploading PDF:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      alert(`Error uploading PDF: ${errorMessage}`);
-    } finally {
-      setUploadingPdf(null);
-      setCurrentUploadId(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
+    setWorks(works.map(work => 
+      work.id === editingWork.id ? updatedWork : work
+    ));
+    closeEditModal();
   };
 
-  const removePdf = async (workId: number) => {
-    if (!confirm('Are you sure you want to remove this PDF?')) return;
+  const updateEditingWork = (field: keyof Work, value: string | number) => {
+    if (!editingWork) return;
+    setEditingWork({ ...editingWork, [field]: value });
+  };
 
-    try {
-      const response = await fetch(`/api/works/solo/pdf/${workId}`, {
-        method: 'DELETE',
-      });
+  const viewWork = (work: Work) => {
+    // Navigate to the work's page - adjust the URL structure as needed
+    const url = `/works/solo/${work.slug || work.id}`;
+    window.open(url, '_blank');
+  };
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to remove PDF');
-      }
-
-      // Update the work to remove PDF info
-      setWorks(works.map(work => 
-        work.id === workId ? { 
-          ...work, 
-          pdfFileName: undefined 
-        } : work
-      ));
-
-      alert('PDF removed successfully!');
-      
-    } catch (error) {
-      console.error('Error removing PDF:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      alert(`Error removing PDF: ${errorMessage}`);
-    }
+  // Simple slugify function
+  const slugify = (text: string): string => {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
   };
 
   if (isLoading) {
@@ -250,36 +250,87 @@ export default function AdminSoloWorks() {
         {isEditing && (
           <div className="bg-gray-800 rounded-lg p-6 mb-8">
             <h2 className="text-xl font-semibold text-white mb-4">Add New Work</h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
               <input
                 type="text"
-                placeholder="Title"
+                placeholder="Title *"
                 value={newWork.title}
                 onChange={(e) => setNewWork({ ...newWork, title: e.target.value })}
                 className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
               />
               <input
                 type="number"
-                placeholder="Year"
+                placeholder="Year *"
                 value={newWork.year}
                 onChange={(e) => setNewWork({ ...newWork, year: parseInt(e.target.value) || new Date().getFullYear() })}
                 className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none min-w-[100px]"
               />
               <input
                 type="text"
-                placeholder="Instruments"
+                placeholder="Instruments *"
                 value={newWork.instruments}
                 onChange={(e) => setNewWork({ ...newWork, instruments: e.target.value })}
                 className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
               />
-              <button
-                onClick={addWork}
-                className="flex items-center justify-center gap-2 bg-[#D3CEAD] hover:bg-[#D3CEAD]/70 text-black px-4 py-2 rounded transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Add
-              </button>
+              <input
+                type="text"
+                placeholder="Duration (e.g., 5:30)"
+                value={newWork.duration}
+                onChange={(e) => setNewWork({ ...newWork, duration: e.target.value })}
+                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Video URL"
+                value={newWork.videoUrl}
+                onChange={(e) => setNewWork({ ...newWork, videoUrl: e.target.value })}
+                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+              />
+              <input
+                type="text"
+                placeholder="SoundCloud URL"
+                value={newWork.soundcloudUrl}
+                onChange={(e) => setNewWork({ ...newWork, soundcloudUrl: e.target.value })}
+                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+              />
             </div>
+            <div className="grid grid-cols-1 gap-4 mb-4">
+              <input
+                type="text"
+                placeholder="Image filename"
+                value={newWork.imageFileName}
+                onChange={(e) => setNewWork({ ...newWork, imageFileName: e.target.value })}
+                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Slug (auto-generated if empty)"
+                value={newWork.slug}
+                onChange={(e) => setNewWork({ ...newWork, slug: e.target.value })}
+                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+              />
+              <textarea
+                placeholder="Information"
+                value={newWork.information}
+                onChange={(e) => setNewWork({ ...newWork, information: e.target.value })}
+                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                rows={2}
+              />
+              <textarea
+                placeholder="Program Notes"
+                value={newWork.programNotes}
+                onChange={(e) => setNewWork({ ...newWork, programNotes: e.target.value })}
+                className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                rows={2}
+              />
+            </div>
+            <button
+              onClick={addWork}
+              className="flex items-center justify-center gap-2 bg-[#D3CEAD] hover:bg-[#D3CEAD]/70 text-black px-4 py-2 rounded transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Add Work
+            </button>
           </div>
         )}
 
@@ -291,8 +342,8 @@ export default function AdminSoloWorks() {
                   <th className="text-left text-white font-medium p-4">Title</th>
                   <th className="text-left text-white font-medium p-4 w-32">Year</th>
                   <th className="text-left text-white font-medium p-4">Instruments</th>
-                  <th className="text-left text-white font-medium p-4 w-32">PDF</th>
-                  {isEditing && <th className="text-left text-white font-medium p-4 w-32">Actions</th>}
+                  <th className="text-left text-white font-medium p-4 w-32">Duration</th>
+                  <th className="text-left text-white font-medium p-4 w-48">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -334,61 +385,63 @@ export default function AdminSoloWorks() {
                         <span className="text-gray-300">{work.instruments}</span>
                       )}
                     </td>
+                    <td className="p-4 w-32">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={work.duration}
+                          onChange={(e) => updateWork(work.id, 'duration', e.target.value)}
+                          className="w-full bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                        />
+                      ) : (
+                        <span className="text-gray-300">{work.duration || '-'}</span>
+                      )}
+                    </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
-                        {work.pdfFileName ? (
+                        <button
+                          onClick={() => viewWork(work)}
+                          className="text-green-400 hover:text-green-300 transition-colors"
+                          title="View work page"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => openEditModal(work)}
+                          className="text-blue-400 hover:text-blue-300 transition-colors"
+                          title="Edit work details"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        {isEditing && (
                           <>
-                            <FileText className="w-4 h-4 text-green-400" />
-                            <span className="text-xs text-gray-400">{work.pdfFileName}</span>
-                            {isEditing && (
-                              <button
-                                onClick={() => removePdf(work.id)}
-                                className="text-red-400 hover:text-red-300 transition-colors"
-                                title="Remove PDF"
-                              >
-                                <X className="w-3 h-3" />
-                              </button>
-                            )}
-                          </>
-                        ) : (
-                          isEditing && (
                             <button
-                              onClick={() => handleFileUpload(work.id)}
-                              disabled={uploadingPdf === work.id}
-                              className="flex items-center gap-1 text-blue-400 hover:text-blue-300 disabled:text-gray-600 transition-colors text-xs"
-                              title="Upload PDF"
+                              onClick={() => moveWork(index, "up")}
+                              disabled={index === 0}
+                              className="text-blue-400 hover:text-blue-300 disabled:text-gray-600 transition-colors"
+                              title="Move up"
                             >
-                              <Upload className="w-3 h-3" />
-                              {uploadingPdf === work.id ? 'Uploading...' : 'Upload PDF'}
+                              <ArrowUp className="w-4 h-4" />
                             </button>
-                          )
+                            <button
+                              onClick={() => moveWork(index, "down")}
+                              disabled={index === works.length - 1}
+                              className="text-blue-400 hover:text-blue-300 disabled:text-gray-600 transition-colors"
+                              title="Move down"
+                            >
+                              <ArrowDown className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => removeWork(work.id)}
+                              className="text-red-400 hover:text-red-300 transition-colors"
+                              title="Delete work"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
                         )}
                       </div>
                     </td>
-                    {isEditing && (
-                      <td className="p-4 flex items-center gap-2">
-                        <button
-                          onClick={() => moveWork(index, "up")}
-                          disabled={index === 0}
-                          className="text-blue-400 hover:text-blue-300 disabled:text-gray-600 transition-colors"
-                        >
-                          <ArrowUp className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => moveWork(index, "down")}
-                          disabled={index === works.length - 1}
-                          className="text-blue-400 hover:text-blue-300 disabled:text-gray-600 transition-colors"
-                        >
-                          <ArrowDown className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => removeWork(work.id)}
-                          className="text-red-400 hover:text-red-300 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
-                    )}
                   </tr>
                 ))}
               </tbody>
@@ -400,14 +453,119 @@ export default function AdminSoloWorks() {
           Total works: {works.length}
         </div>
 
-        {/* Hidden file input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".pdf"
-          onChange={onFileSelected}
-          className="hidden"
-        />
+        {/* Edit Work Modal */}
+        {editingWork && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-semibold text-white">Edit Work</h2>
+                <button
+                  onClick={closeEditModal}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Title *</label>
+                  <input
+                    type="text"
+                    value={editingWork.title}
+                    onChange={(e) => updateEditingWork('title', e.target.value)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Year *</label>
+                  <input
+                    type="number"
+                    value={editingWork.year}
+                    onChange={(e) => updateEditingWork('year', parseInt(e.target.value) || editingWork.year)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Instruments *</label>
+                  <input
+                    type="text"
+                    value={editingWork.instruments}
+                    onChange={(e) => updateEditingWork('instruments', e.target.value)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Duration</label>
+                  <input
+                    type="text"
+                    value={editingWork.duration}
+                    onChange={(e) => updateEditingWork('duration', e.target.value)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+        
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Video URL</label>
+                  <input
+                    type="text"
+                    value={editingWork.videoUrl}
+                    onChange={(e) => updateEditingWork('videoUrl', e.target.value)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">SoundCloud URL</label>
+                  <input
+                    type="text"
+                    value={editingWork.soundcloudUrl}
+                    onChange={(e) => updateEditingWork('soundcloudUrl', e.target.value)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Information</label>
+                  <textarea
+                    value={editingWork.information}
+                    onChange={(e) => updateEditingWork('information', e.target.value)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Program Notes</label>
+                  <textarea
+                    value={editingWork.programNotes}
+                    onChange={(e) => updateEditingWork('programNotes', e.target.value)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    rows={4}
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-4 justify-end">
+                <button
+                  onClick={closeEditModal}
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={saveEditedWork}
+                  className="px-4 py-2 bg-[#D3CEAD] hover:bg-[#D3CEAD]/70 text-black rounded transition-colors"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </>
   );

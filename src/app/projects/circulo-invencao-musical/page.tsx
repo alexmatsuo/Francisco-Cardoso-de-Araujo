@@ -18,7 +18,7 @@ export default function CIMAboutPage() {
             </div>
           </div>
 
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 text-gray-300">
             <p className="mt-4 text-lg">
               Founded in 2015, the <strong>Círculo de Invenção Musical</strong> (Circle of Musical Invention) is a collective
               of composers, performers, conductors, and music educators that has continuously organized concerts,
@@ -44,9 +44,9 @@ export default function CIMAboutPage() {
 
         <div id="partnerships" className="p-8 sm:p-12">
           <h2 className="text-2xl font-semibold">Notable participations</h2>
-          <p className="mt-4">In addition to independent productions, the group has taken part in:</p>
+          <p className="mt-4 text-gray-300">In addition to independent productions, the group has taken part in:</p>
 
-          <ol className="mt-4 list-decimal list-inside space-y-2">
+          <ol className="mt-4 list-decimal list-inside space-y-2 text-gray-300">
             <li>Two editions of the Bienal Música Hoje</li>
             <li>Three editions of the International Symposium of New Music</li>
           </ol>
@@ -54,9 +54,9 @@ export default function CIMAboutPage() {
 
         <div id="founders" className="p-8 sm:p-12">
           <h2 className="text-2xl font-semibold">Founding members & direction</h2>
-          <p className="mt-4">Francisco, together with Willian Lentz and Paul Wegmann, is a founding member and co-artistic director of the collective.</p>
+          <p className="mt-4 text-gray-300">Francisco, together with Willian Lentz and Paul Wegmann, is a founding member and co-artistic director of the collective.</p>
 
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-gray-300">
             <div className="p-4 rounded-lg border">
               <div className="font-semibold">Francisco</div>
               <div className="text-sm mt-1">Co-artistic director, composer and organizer.</div>
@@ -74,7 +74,7 @@ export default function CIMAboutPage() {
           </div>
         </div>
 
-        <footer className="p-6 text-center text-sm">
+        <footer className="p-6 text-center text-sm text-gray-300">
           © Círculo de Invenção Musical — founded 2015
         </footer>
       </section>

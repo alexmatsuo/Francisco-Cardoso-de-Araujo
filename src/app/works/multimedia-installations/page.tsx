@@ -1,12 +1,20 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Work {
   id: number;
   title: string;
   year: number;
   instruments: string;
+  slug: string | null;
+  duration: string | null;
+  information: string | null;
+  programNotes: string | null;
+  imageFileName: string | null;
+  videoUrl: string | null;
+  soundcloudUrl: string | null;
 }
 
 export default function MultimediaInstallationsWorks() {
@@ -31,6 +39,12 @@ export default function MultimediaInstallationsWorks() {
     }
   };
 
+  // Check if a work has additional details to determine if it should be linked
+  const hasDetails = (work: Work) => {
+    return work.duration || work.information || work.programNotes || 
+           work.imageFileName || work.videoUrl || work.soundcloudUrl;
+  };
+
   if (isLoading) {
     return (
       <main className="works-container">
@@ -46,7 +60,15 @@ export default function MultimediaInstallationsWorks() {
       <div className="space-y-4">
         {works.map((work) => (
           <div key={work.id} className="text-lg text-gray-300 hover:text-white transition-colors">
-            {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
+            {hasDetails(work) && work.slug ? (
+              <Link href={`/works/multimedia-installations/${work.slug}`} className="hover:underline">
+                {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
+              </Link>
+            ) : (
+              <>
+                {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
+              </>
+            )}
           </div>
         ))}
       </div>

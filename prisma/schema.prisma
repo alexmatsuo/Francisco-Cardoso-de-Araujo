@@ -16,6 +16,15 @@ model Work {
   category    String
   year        Int
   instruments String
+
+  duration    String?     // e.g., "5:30", "12 minutes"
+  information String?     // General information about the piece
+  programNotes String?    // Program notes text
+  imageFileName String?   // For uploaded images
+  videoUrl    String?     // YouTube, Vimeo, etc.
+  soundcloudUrl String?   // SoundCloud embed URL
+  slug        String?     @unique // URL-friendly version of title
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

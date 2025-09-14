@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
     // Use transaction to ensure data consistency
     const result = await prisma.$transaction(async (tx) => {
-      // Delete existing chamber-ensembles works
+      // Delete existing chamber-ensemble works
       console.log('Deleting existing chamber-ensembles works...');
       await tx.work.deleteMany({
         where: { category: 'chamber-ensembles' }
@@ -44,26 +44,19 @@ export async function POST(request: Request) {
       for (const workData of works) {
         console.log('Processing work:', workData);
         
-        // Handle both object format and string format
-        let title, year, instruments;
-        
-        if (typeof workData === 'object') {
-          // New format: work object
-          title = workData.title;
-          year = workData.year;
-          instruments = workData.instruments;
-        } else {
-          // Legacy format: work string "Title (Year) - Instruments"
-          const match = workData.match(/^(.+?)\s*\((\d{4})\)\s*-\s*(.+)$/);
-          
-          if (match) {
-            [, title, year, instruments] = match;
-            year = parseInt(year);
-          } else {
-            console.warn('Could not parse work string:', workData);
-            continue;
-          }
-        }
+        // Extract all fields from the work object
+        const {
+          title,
+          year,
+          instruments,
+          duration,
+          information,
+          programNotes,
+          imageFileName,
+          videoUrl,
+          soundcloudUrl,
+          slug
+        } = workData;
         
         if (!title || !year || !instruments) {
           console.warn('Missing required fields for work:', workData);
@@ -75,7 +68,14 @@ export async function POST(request: Request) {
             title: title.trim(),
             category: 'chamber-ensembles',
             year: parseInt(year.toString()),
-            instruments: instruments.trim()
+            instruments: instruments.trim(),
+            duration: duration?.trim() || null,
+            information: information?.trim() || null,
+            programNotes: programNotes?.trim() || null,
+            imageFileName: imageFileName?.trim() || null,
+            videoUrl: videoUrl?.trim() || null,
+            soundcloudUrl: soundcloudUrl?.trim() || null,
+            slug: slug?.trim() || slugify(title.trim())
           }
         });
         
@@ -104,4 +104,16 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+}
+
+// Slugify function
+function slugify(text: string): string {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
 }
