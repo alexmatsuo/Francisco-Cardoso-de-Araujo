@@ -44,10 +44,15 @@ export default function AdminDuosTriosWorks() {
       if (!response.ok) throw new Error('Failed to fetch');
       
       const data = await response.json();
-      // Ensure videoUrls is always an array
+      // Ensure videoUrls is always an array and handle null values
       const processedWorks = data.works?.map((work: any) => ({
         ...work,
-        videoUrls: Array.isArray(work.videoUrls) ? work.videoUrls : []
+        videoUrls: Array.isArray(work.videoUrls) ? work.videoUrls : [],
+        duration: work.duration || '',
+        information: work.information || '',
+        programNotes: work.programNotes || '',
+        soundcloudUrl: work.soundcloudUrl || '',
+        slug: work.slug || ''
       })) || [];
       setWorks(processedWorks);
     } catch (error) {
@@ -128,7 +133,13 @@ export default function AdminDuosTriosWorks() {
   const openEditModal = (work: Work) => {
     setEditingWork({ 
       ...work, 
-      videoUrls: work.videoUrls.length > 0 ? [...work.videoUrls] : ['']
+      videoUrls: work.videoUrls.length > 0 ? [...work.videoUrls] : [''],
+      // Ensure all string fields are not null
+      duration: work.duration || '',
+      information: work.information || '',
+      programNotes: work.programNotes || '',
+      soundcloudUrl: work.soundcloudUrl || '',
+      slug: work.slug || ''
     });
   };
 
@@ -148,12 +159,12 @@ export default function AdminDuosTriosWorks() {
       ...editingWork,
       title: editingWork.title.trim(),
       instruments: editingWork.instruments.trim(),
-      duration: editingWork.duration.trim(),
-      information: editingWork.information.trim(),
-      programNotes: editingWork.programNotes.trim(),
+      duration: (editingWork.duration || '').trim(),
+      information: (editingWork.information || '').trim(),
+      programNotes: (editingWork.programNotes || '').trim(),
       videoUrls: editingWork.videoUrls.filter(url => url.trim()), // Remove empty URLs
-      soundcloudUrl: editingWork.soundcloudUrl.trim(),
-      slug: editingWork.slug.trim() || slugify(editingWork.title.trim())
+      soundcloudUrl: (editingWork.soundcloudUrl || '').trim(),
+      slug: (editingWork.slug || '').trim() || slugify(editingWork.title.trim())
     };
 
     setWorks(works.map(work => 
@@ -235,7 +246,7 @@ export default function AdminDuosTriosWorks() {
   return (
     <main className="p-8 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-white">Admin - Duos & Trios Works</h1>
+        <h1 className="text-4xl font-bold text-white">Admin - Duos & Trios</h1>
         <div className="flex gap-4">
           {!isEditing ? (
             <button
@@ -408,15 +419,15 @@ export default function AdminDuosTriosWorks() {
                       >
                         <Eye className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={() => openEditModal(work)}
-                        className="text-blue-400 hover:text-blue-300 transition-colors"
-                        title="Edit work details"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
                       {isEditing && (
                         <>
+                          <button
+                            onClick={() => openEditModal(work)}
+                            className="text-blue-400 hover:text-blue-300 transition-colors"
+                            title="Edit work details"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
                           <button
                             onClick={() => moveWork(index, "up")}
                             disabled={index === 0}
@@ -501,7 +512,7 @@ export default function AdminDuosTriosWorks() {
                 <label className="block text-sm font-medium text-gray-300 mb-2">Duration</label>
                 <input
                   type="text"
-                  value={editingWork.duration}
+                  value={editingWork.duration || ''}
                   onChange={(e) => updateEditingWork('duration', e.target.value)}
                   className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                 />
@@ -510,7 +521,7 @@ export default function AdminDuosTriosWorks() {
                 <label className="block text-sm font-medium text-gray-300 mb-2">SoundCloud URL</label>
                 <input
                   type="text"
-                  value={editingWork.soundcloudUrl}
+                  value={editingWork.soundcloudUrl || ''}
                   onChange={(e) => updateEditingWork('soundcloudUrl', e.target.value)}
                   className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                 />
@@ -555,7 +566,7 @@ export default function AdminDuosTriosWorks() {
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Information</label>
                 <textarea
-                  value={editingWork.information}
+                  value={editingWork.information || ''}
                   onChange={(e) => updateEditingWork('information', e.target.value)}
                   className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   rows={3}
@@ -564,7 +575,7 @@ export default function AdminDuosTriosWorks() {
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Program Notes</label>
                 <textarea
-                  value={editingWork.programNotes}
+                  value={editingWork.programNotes || ''}
                   onChange={(e) => updateEditingWork('programNotes', e.target.value)}
                   className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   rows={4}
@@ -581,9 +592,10 @@ export default function AdminDuosTriosWorks() {
               </button>
               <button
                 onClick={saveEditedWork}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                disabled={isSaving}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-800 text-white rounded transition-colors"
               >
-                Save Changes
+                {isSaving ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>

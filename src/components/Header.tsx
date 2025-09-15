@@ -103,7 +103,7 @@ export const Header = () => {
 
           <Link 
             href="/events" 
-            className={`nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}
+            className={`nav-item ${isActive("/events") ? "text-[#D3CEAD]" : ""}`}
           >
             Events
           </Link>

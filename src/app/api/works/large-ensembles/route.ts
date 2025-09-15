@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   try {
     const works = await prisma.work.findMany({
-      where: { category: 'solo' },
+      where: { category: 'large-ensembles' },
       orderBy: { year: 'desc' }
     });
 
@@ -39,10 +39,10 @@ export async function POST(request: Request) {
 
     // Use transaction to ensure data consistency
     const result = await prisma.$transaction(async (tx) => {
-      // Delete existing solo works
-      console.log('Deleting existing solo works...');
+      // Delete existing large-ensembles works
+      console.log('Deleting existing large-ensembles works...');
       await tx.work.deleteMany({
-        where: { category: 'solo' }
+        where: { category: 'large-ensembles' }
       });
 
       // Create new works
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
         const work = await tx.work.create({
           data: {
             title: title.trim(),
-            category: 'solo',
+            category: 'large-ensembles',
             year: parseInt(year.toString()),
             instruments: instruments.trim(),
             duration: duration?.trim() || null,
