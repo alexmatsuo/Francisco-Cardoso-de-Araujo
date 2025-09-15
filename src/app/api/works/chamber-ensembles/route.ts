@@ -4,11 +4,17 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   try {
     const works = await prisma.work.findMany({
-      where: { category: 'chamber-ensembles' },
+      where: { category: 'solo' },
       orderBy: { year: 'desc' }
     });
 
-    return NextResponse.json({ works });
+    // Process works to ensure videoUrls is always an array
+    const processedWorks = works.map(work => ({
+      ...work,
+      videoUrls: Array.isArray(work.videoUrls) ? work.videoUrls : []
+    }));
+
+    return NextResponse.json({ works: processedWorks });
   } catch (error) {
     console.error('Error fetching works:', error);
     return NextResponse.json(
@@ -33,10 +39,10 @@ export async function POST(request: Request) {
 
     // Use transaction to ensure data consistency
     const result = await prisma.$transaction(async (tx) => {
-      // Delete existing chamber-ensemble works
-      console.log('Deleting existing chamber-ensembles works...');
+      // Delete existing solo works
+      console.log('Deleting existing solo works...');
       await tx.work.deleteMany({
-        where: { category: 'chamber-ensembles' }
+        where: { category: 'solo' }
       });
 
       // Create new works
@@ -53,7 +59,7 @@ export async function POST(request: Request) {
           information,
           programNotes,
           imageFileName,
-          videoUrl,
+          videoUrls, // Now expects an array
           soundcloudUrl,
           slug
         } = workData;
@@ -63,17 +69,22 @@ export async function POST(request: Request) {
           continue;
         }
 
+        // Ensure videoUrls is an array and filter out empty URLs
+        const processedVideoUrls = Array.isArray(videoUrls) 
+          ? videoUrls.filter(url => url && url.trim()) 
+          : [];
+
         const work = await tx.work.create({
           data: {
             title: title.trim(),
-            category: 'chamber-ensembles',
+            category: 'solo',
             year: parseInt(year.toString()),
             instruments: instruments.trim(),
             duration: duration?.trim() || null,
             information: information?.trim() || null,
             programNotes: programNotes?.trim() || null,
             imageFileName: imageFileName?.trim() || null,
-            videoUrl: videoUrl?.trim() || null,
+            videoUrls: processedVideoUrls, // Store as JSON array
             soundcloudUrl: soundcloudUrl?.trim() || null,
             slug: slug?.trim() || slugify(title.trim())
           }

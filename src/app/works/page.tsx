@@ -1,12 +1,20 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Work {
   id: number;
   title: string;
   year: number;
   instruments: string;
+  slug: string | null;
+  duration: string | null;
+  information: string | null;
+  programNotes: string | null;
+  imageFileName: string | null;
+  videoUrl: string | null;
+  soundcloudUrl: string | null;
 }
 
 interface WorksByCategory {
@@ -78,18 +86,56 @@ export default function AllWorks() {
            works.multimediaInstallations.length;
   };
 
-  const renderWorksSection = (title: string, worksArray: Work[]) => {
+  // Check if a work has additional details to determine if it should be linked
+  const hasDetails = (work: Work) => {
+    return work.duration || work.information || work.programNotes || 
+           work.imageFileName || work.videoUrl || work.soundcloudUrl;
+  };
+
+  // Get the appropriate link path based on category
+  const getLinkPath = (work: Work, category: string) => {
+    if (!hasDetails(work) || !work.slug) return null;
+    
+    switch (category) {
+      case 'solo':
+        return `/works/solo/${work.slug}`;
+      case 'duosTrios':
+        return `/works/duos-trios/${work.slug}`;
+      case 'chamberEnsembles':
+        return `/works/chamber-ensembles/${work.slug}`;
+      case 'largeEnsembles':
+        return `/works/large-ensembles/${work.slug}`;
+      case 'multimediaInstallations':
+        return `/works/multimedia-installations/${work.slug}`;
+      default:
+        return null;
+    }
+  };
+
+  const renderWorksSection = (title: string, worksArray: Work[], category: string) => {
     if (worksArray.length === 0) return null;
     
     return (
       <div className="mb-12">
         <h2 className="text-2xl font-semibold mb-6">{title}</h2>
         <div className="space-y-3">
-          {worksArray.map((work) => (
-            <div key={work.id} className="text-lg text-gray-300 hover:text-white transition-colors pl-4">
-              {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
-            </div>
-          ))}
+          {worksArray.map((work) => {
+            const linkPath = getLinkPath(work, category);
+            
+            return (
+              <div key={work.id} className="text-lg text-gray-300 hover:text-white transition-colors pl-4">
+                {linkPath ? (
+                  <Link href={linkPath} className="hover:underline">
+                    {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
+                  </Link>
+                ) : (
+                  <>
+                    {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
+                  </>
+                )}
+              </div>
+            );
+          })}
         </div>
         <div className="mt-4 text-sm text-gray-500 pl-4">
           {worksArray.length} composition{worksArray.length !== 1 ? 's' : ''}
@@ -110,11 +156,11 @@ export default function AllWorks() {
     <main className="works-container">
       <h1 className="works-title">Full Catalog</h1>
       
-      {renderWorksSection("Solo Compositions", works.solo)}
-      {renderWorksSection("Duos & Trios", works.duosTrios)}
-      {renderWorksSection("Chamber Ensembles", works.chamberEnsembles)}
-      {renderWorksSection("Large Ensembles", works.largeEnsembles)}
-      {renderWorksSection("Multimedia & Installations", works.multimediaInstallations)}
+      {renderWorksSection("Solo Compositions", works.solo, "solo")}
+      {renderWorksSection("Duos & Trios", works.duosTrios, "duosTrios")}
+      {renderWorksSection("Chamber Ensembles", works.chamberEnsembles, "chamberEnsembles")}
+      {renderWorksSection("Large Ensembles", works.largeEnsembles, "largeEnsembles")}
+      {renderWorksSection("Multimedia & Installations", works.multimediaInstallations, "multimediaInstallations")}
       
       <div className="mt-16 pt-8 border-t border-gray-600">
         <div className="text-lg text-gray-300 font-medium">

@@ -7,7 +7,7 @@ export default function CIMAboutPage() {
       <section className="max-w-4xl mx-auto rounded-2xl overflow-hidden">
         <div className="p-8 sm:p-12 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-1 flex items-center ">
-            <div className="w-48 h-48 relative">
+            <div className="w-72 h-72 relative">
               <Image
                 src="/LOGO-CIM-P.png"
                 alt="Círculo de Invenção Musical logo"
@@ -28,29 +28,11 @@ export default function CIMAboutPage() {
             <p className="mt-4">
               Over its ten years of uninterrupted activity, CIM has collaborated with numerous Brazilian and international
               musicians, embracing diverse artistic paths and aesthetic pluralities within experimental contemporary
-              concert music.
+              concert music.In addition to its independent productions, the group has taken part in two editions of the Bienal Música Hoje and three editions of the International Symposium of New Music. Francisco, together with Willian Lentz and Paul Wegmann, is a founding member and co-artistic director of the collective.
             </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="#founders"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium hover:bg-[#D3CEAD] hover:text-black"
-              >
-                Founding members
-              </a>
-            </div>
           </div>
         </div>
 
-        <div id="partnerships" className="p-8 sm:p-12">
-          <h2 className="text-2xl font-semibold">Notable participations</h2>
-          <p className="mt-4 text-gray-300">In addition to independent productions, the group has taken part in:</p>
-
-          <ol className="mt-4 list-decimal list-inside space-y-2 text-gray-300">
-            <li>Two editions of the Bienal Música Hoje</li>
-            <li>Three editions of the International Symposium of New Music</li>
-          </ol>
-        </div>
 
         <div id="founders" className="p-8 sm:p-12">
           <h2 className="text-2xl font-semibold">Founding members & direction</h2>
@@ -58,18 +40,18 @@ export default function CIMAboutPage() {
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-gray-300">
             <div className="p-4 rounded-lg border">
-              <div className="font-semibold">Francisco</div>
-              <div className="text-sm mt-1">Co-artistic director, composer and organizer.</div>
+              <div className="font-semibold underline"><a href="https://francisco-cardoso-de-araujo-n9hs.vercel.app/">Francisco Cardoso de Araujo</a></div>
+              <div className="text-sm mt-1">Co-Artistic Director, Composer, Coordinator, and Producer</div>
             </div>
 
             <div className="p-4 rounded-lg border">
-              <div className="font-semibold">Willian Lentz</div>
-              <div className="text-sm mt-1">Co-artistic director and collaborator.</div>
+              <div className="font-semibold underline"><a href="https://www.willianlentz.com/">Willian Lentz</a></div>
+              <div className="text-sm mt-1">Co-Artistic Director, Composer, Coordinator, and Producer</div>
             </div>
 
             <div className="p-4 rounded-lg border">
               <div className="font-semibold">Paul Wegmann</div>
-              <div className="text-sm mt-1">Co-artistic director and collaborator.</div>
+              <div className="text-sm mt-1">Co-Artistic Director, Composer, Coordinator, and Producer</div>
             </div>
           </div>
         </div>

@@ -20,7 +20,13 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ work });
+    // Process work to ensure videoUrls is always an array
+    const processedWork = {
+      ...work,
+      videoUrls: Array.isArray(work.videoUrls) ? work.videoUrls : []
+    };
+
+    return NextResponse.json({ work: processedWork });
   } catch (error) {
     console.error('Error fetching work:', error);
     return NextResponse.json(

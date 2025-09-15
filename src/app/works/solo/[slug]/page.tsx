@@ -13,7 +13,7 @@ interface WorkDetail {
   information: string | null;
   programNotes: string | null;
   imageFileName: string | null;
-  videoUrl: string | null;
+  videoUrls: string[]; // Array of video URLs
   soundcloudUrl: string | null;
   slug: string | null;
 }
@@ -33,7 +33,12 @@ export default function WorkDetailPage() {
       if (!response.ok) throw new Error('Failed to fetch work');
       
       const data = await response.json();
-      setWork(data.work);
+      // Ensure videoUrls is always an array
+      const processedWork = {
+        ...data.work,
+        videoUrls: Array.isArray(data.work.videoUrls) ? data.work.videoUrls : []
+      };
+      setWork(processedWork);
     } catch (error) {
       console.error('Error fetching work:', error);
     } finally {
@@ -62,12 +67,19 @@ export default function WorkDetailPage() {
     
     // Basic SoundCloud URL conversion to embed
     if (url.includes('soundcloud.com')) {
-      // For SoundCloud, we need to use their widget API
-      // This will be handled by the SoundCloud widget
       return url;
     }
     
     return null;
+  };
+
+  // Get all valid video embed URLs
+  const getVideoEmbedUrls = () => {
+    if (!work || !work.videoUrls) return [];
+    return work.videoUrls
+      .filter(url => url && url.trim())
+      .map(url => getYouTubeEmbedUrl(url))
+      .filter(url => url !== null);
   };
 
   if (isLoading) {
@@ -89,36 +101,44 @@ export default function WorkDetailPage() {
     );
   }
 
-  const youtubeEmbedUrl = getYouTubeEmbedUrl(work.videoUrl);
+  const videoEmbedUrls = getVideoEmbedUrls();
   const soundcloudUrl = getSoundCloudEmbedUrl(work.soundcloudUrl);
 
   return (
-    <main className="p-8 max-w-4xl mx-auto">
+    <main className="p-8 max-w-6xl mx-auto">
       <Link href="/works/solo" className="text-[#D3CEAD] hover:underline mb-6 inline-block">
         ← Back to Solo Works
       </Link>
       
       <h1 className="text-4xl font-bold text-white mb-2">{work.title} ({work.year})</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
         {/* Media Section */}
-        <div>
-          {youtubeEmbedUrl && (
+        <div className="lg:col-span-2">
+          {/* Videos Section */}
+          {videoEmbedUrls.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-3">Video</h2>
-              <div className="aspect-video bg-black rounded-lg overflow-hidden">
-                <iframe
-                  src={youtubeEmbedUrl}
-                  className="w-full h-full"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  title={`${work.title} video`}
-                ></iframe>
+              <h2 className="text-xl font-semibold text-white mb-3">
+                Video{videoEmbedUrls.length > 1 ? 's' : ''}
+              </h2>
+              <div className="space-y-4">
+                {videoEmbedUrls.map((embedUrl, index) => (
+                  <div key={index} className="aspect-video bg-black rounded-lg overflow-hidden">
+                    <iframe
+                      src={embedUrl}
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={`${work.title} video ${index + 1}`}
+                    ></iframe>
+                  </div>
+                ))}
               </div>
             </div>
           )}
           
+          {/* Audio Section */}
           {soundcloudUrl && (
             <div className="mb-6">
               <h2 className="text-xl font-semibold text-white mb-3">Audio</h2>

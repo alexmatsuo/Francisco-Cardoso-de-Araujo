@@ -8,7 +8,13 @@ export async function GET() {
       orderBy: { year: 'desc' }
     });
 
-    return NextResponse.json({ works });
+    // Process works to ensure videoUrls is always an array
+    const processedWorks = works.map(work => ({
+      ...work,
+      videoUrls: Array.isArray(work.videoUrls) ? work.videoUrls : []
+    }));
+
+    return NextResponse.json({ works: processedWorks });
   } catch (error) {
     console.error('Error fetching works:', error);
     return NextResponse.json(
@@ -53,7 +59,7 @@ export async function POST(request: Request) {
           information,
           programNotes,
           imageFileName,
-          videoUrl,
+          videoUrls, // Now expects an array
           soundcloudUrl,
           slug
         } = workData;
@@ -62,6 +68,11 @@ export async function POST(request: Request) {
           console.warn('Missing required fields for work:', workData);
           continue;
         }
+
+        // Ensure videoUrls is an array and filter out empty URLs
+        const processedVideoUrls = Array.isArray(videoUrls) 
+          ? videoUrls.filter(url => url && url.trim()) 
+          : [];
 
         const work = await tx.work.create({
           data: {
@@ -73,7 +84,7 @@ export async function POST(request: Request) {
             information: information?.trim() || null,
             programNotes: programNotes?.trim() || null,
             imageFileName: imageFileName?.trim() || null,
-            videoUrl: videoUrl?.trim() || null,
+            videoUrls: processedVideoUrls, // Store as JSON array
             soundcloudUrl: soundcloudUrl?.trim() || null,
             slug: slug?.trim() || slugify(title.trim())
           }

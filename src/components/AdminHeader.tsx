@@ -96,42 +96,6 @@ export const AdminHeader = () => {
             </div>
           </div>
 
-          {/* Projects dropdown */}
-          <div className="relative group">
-            <Link
-              href="/admin"
-              className={`nav-item flex items-center ${
-                pathname.startsWith("/admin/projects") ? "text-[#D3CEAD]" : ""
-              }`}
-            >
-              Projects
-              <svg
-                className="ml-2 w-3 h-3 transition-transform group-hover:rotate-180"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </Link>
-            <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[50]">
-              <div className="border border-white/15 p-1 shadow-lg" style={{ backgroundColor: '#D3CEAD' }}>
-                <Link href="/admin/projects/kaphca-trio" className="menu-style">
-                  Kaphca Trio
-                </Link>
-                <Link href="/admin/projects/circulo-invencao-musical" className="menu-style">
-                  Círculo de Invenção Musical
-                </Link>
-                <Link href="/admin/projects/poetry-visual-arts" className="menu-style">
-                  Poetry and Visual Arts
-                </Link>
-              </div>
-            </div>
-          </div>
-
           <Link
             href="/admin/writings"
             className={`nav-item ${

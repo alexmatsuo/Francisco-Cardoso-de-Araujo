@@ -92,7 +92,7 @@ Mixer and Producer: Daniel Karcher
         {/* Content section */}
         <div className="max-w-4xl mx-auto">
           {isLoading ? (
-            <div className="text-lg leading-relaxed text-gray-400 text-center">
+            <div className="text-lg leading-relaxed text-center">
               Loading...
             </div>
           ) : (
@@ -106,7 +106,7 @@ Mixer and Producer: Daniel Karcher
 
               {/* Album Information */}
               <div>
-                <h2 className="text-2xl font-semibold text-white mb-4">About the Album</h2>
+                <h2 className="text-2xl font-semibold mb-4">About the Album</h2>
                 <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
                   {displayAlbumInfo}
                 </p>
@@ -114,7 +114,7 @@ Mixer and Producer: Daniel Karcher
 
               {/* Credits */}
               <div>
-                <h2 className="text-2xl font-semibold text-white mb-4">Credits</h2>
+                <h2 className="text-2xl font-semibold mb-4">Credits</h2>
                 <p className="text-base leading-relaxed text-gray-300 whitespace-pre-line font-mono">
                   {displayCredits}
                 </p>

@@ -113,7 +113,7 @@ export default function EventsPage() {
             }`}
             onClick={event.website ? () => window.open(event.website, '_blank') : undefined}
           >
-            <div className="flex-1">
+            <div className="flex-1 pr-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <div className="font-semibold text-white text-lg">{event.title}</div>
@@ -173,11 +173,12 @@ export default function EventsPage() {
               )}
             </div>
             
-            {event.website && (
-              <div className="ml-4" title="Click to view event details">
+            {/* Always reserve space for the icon area to maintain consistent alignment */}
+            <div className="w-9 flex justify-center items-start pt-1" title={event.website ? "Click to view event details" : ""}>
+              {event.website && (
                 <ExternalLink className="w-5 h-5 text-[#D3CEAD] hover:text-[#C3BE9D] transition-colors" />
-              </div>
-            )}
+              )}
+            </div>
           </div>
         ))}
 
