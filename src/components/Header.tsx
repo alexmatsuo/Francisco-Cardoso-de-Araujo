@@ -26,7 +26,7 @@ export const Header = () => {
     <>
       {/* Desktop Navigation */}
       <div className="hidden md:flex justify-center items-center top-3 z-50">
-        <nav className="flex justify-center gap-24 px-8 py-6 border border-white/15 bg-black backdrop-blur w-full">
+        <nav className="flex justify-center gap-24 px-8 py-6 bg-black backdrop-blur w-full">
           <Link 
             href="/" 
             className={`nav-item ${isActive("/") ? "text-[#D3CEAD]" : ""}`}
@@ -68,10 +68,9 @@ export const Header = () => {
             </div>
           </div>
           
-          {/* Projects dropdown */}
+          {/* Projects dropdown (button, no link) */}
           <div className="relative group">
-            <Link 
-              href="/projects" 
+            <button 
               className={`nav-item flex items-center ${
                 pathname.startsWith("/projects") ? "text-[#D3CEAD]" : ""
               }`}
@@ -84,7 +83,7 @@ export const Header = () => {
               >
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
-            </Link>
+            </button>
             <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="border border-white/15 p-1 shadow-lg " style={{ backgroundColor: '#D3CEAD' }}>
                 <Link href="/projects/kaphca-trio" className="menu-style">Kaphca Trio</Link>
@@ -184,7 +183,7 @@ export const Header = () => {
                   </Link>
                   <button
                     onClick={() => setIsWorksOpen(!isWorksOpen)}
-                    className="p-1 ml-2"
+                    className="flex items-center justify-center ml-2"
                     aria-label="Toggle works submenu"
                   >
                     <svg
@@ -198,39 +197,19 @@ export const Header = () => {
                 </div>
                 {isWorksOpen && (
                   <div className="ml-4 mt-3 flex flex-col gap-3">
-                    <Link 
-                      href="/works/solo" 
-                      onClick={closeMobileMenu} 
-                      className={`mobile-submenu-item ${isActive("/works/solo") ? "text-[#D3CEAD]" : ""}`}
-                    >
+                    <Link href="/works/solo" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/solo") ? "text-[#D3CEAD]" : ""}`}>
                       Solo
                     </Link>
-                    <Link 
-                      href="/works/duos-trios" 
-                      onClick={closeMobileMenu} 
-                      className={`mobile-submenu-item ${isActive("/works/duos-trios") ? "text-[#D3CEAD]" : ""}`}
-                    >
+                    <Link href="/works/duos-trios" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/duos-trios") ? "text-[#D3CEAD]" : ""}`}>
                       Duos & Trios
                     </Link>
-                    <Link 
-                      href="/works/chamber-ensembles" 
-                      onClick={closeMobileMenu} 
-                      className={`mobile-submenu-item ${isActive("/works/chamber-ensembles") ? "text-[#D3CEAD]" : ""}`}
-                    >
+                    <Link href="/works/chamber-ensembles" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/chamber-ensembles") ? "text-[#D3CEAD]" : ""}`}>
                       Chamber Ensembles
                     </Link>
-                    <Link 
-                      href="/works/large-ensembles" 
-                      onClick={closeMobileMenu} 
-                      className={`mobile-submenu-item ${isActive("/works/large-ensembles") ? "text-[#D3CEAD]" : ""}`}
-                    >
+                    <Link href="/works/large-ensembles" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/large-ensembles") ? "text-[#D3CEAD]" : ""}`}>
                       Large Ensembles
                     </Link>
-                    <Link 
-                      href="/works/multimedia-installations" 
-                      onClick={closeMobileMenu} 
-                      className={`mobile-submenu-item ${isActive("/works/multimedia-installations") ? "text-[#D3CEAD]" : ""}`}
-                    >
+                    <Link href="/works/multimedia-installations" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/multimedia-installations") ? "text-[#D3CEAD]" : ""}`}>
                       Multimedia & Installations
                     </Link>
                   </div>
@@ -256,50 +235,26 @@ export const Header = () => {
                 </button>
                 {isProjectsOpen && (
                   <div className="ml-4 mt-3 flex flex-col gap-3">
-                    <Link 
-                      href="/projects/kaphca-trio" 
-                      onClick={closeMobileMenu} 
-                      className={`mobile-submenu-item ${isActive("/projects/kaphca-trio") ? "text-[#D3CEAD]" : ""}`}
-                    >
+                    <Link href="/projects/kaphca-trio" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/projects/kaphca-trio") ? "text-[#D3CEAD]" : ""}`}>
                       Kaphca Trio
                     </Link>
-                    <Link 
-                      href="/projects/circulo-invencao-musical" 
-                      onClick={closeMobileMenu} 
-                      className={`mobile-submenu-item ${isActive("/projects/circulo-invencao-musical") ? "text-[#D3CEAD]" : ""}`}
-                    >
+                    <Link href="/projects/circulo-invencao-musical" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/projects/circulo-invencao-musical") ? "text-[#D3CEAD]" : ""}`}>
                       Círculo de Invenção Musical
                     </Link>
-                    <Link 
-                      href="/projects/poetry-visual-arts" 
-                      onClick={closeMobileMenu} 
-                      className={`mobile-submenu-item ${isActive("/projects/poetry-visual-arts") ? "text-[#D3CEAD]" : ""}`}
-                    >
+                    <Link href="/projects/poetry-visual-arts" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/projects/poetry-visual-arts") ? "text-[#D3CEAD]" : ""}`}>
                       Poetry and Visual Arts
                     </Link>
                   </div>
                 )}
               </div>
 
-              <Link 
-                href="/writings" 
-                onClick={closeMobileMenu} 
-                className={`mobile-nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}
-              >
+              <Link href="/writings" onClick={closeMobileMenu} className={`mobile-nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}>
                 Writings
               </Link>
-              <Link 
-                href="/events" 
-                onClick={closeMobileMenu} 
-                className={`mobile-nav-item ${isActive("/events") ? "text-[#D3CEAD]" : ""}`}
-              >
+              <Link href="/events" onClick={closeMobileMenu} className={`mobile-nav-item ${isActive("/events") ? "text-[#D3CEAD]" : ""}`}>
                 Events
               </Link>
-              <Link 
-                href="/contact" 
-                onClick={closeMobileMenu} 
-                className={`mobile-nav-item ${isActive("/contact") ? "text-[#D3CEAD]" : ""}`}
-              >
+              <Link href="/contact" onClick={closeMobileMenu} className={`mobile-nav-item ${isActive("/contact") ? "text-[#D3CEAD]" : ""}`}>
                 Contact
               </Link>
             </div>
