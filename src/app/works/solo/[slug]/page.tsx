@@ -110,7 +110,7 @@ export default function WorkDetailPage() {
         ← Back to Solo Works
       </Link>
       
-      <h1 className="text-4xl font-bold text-white mb-2">{work.title} ({work.year})</h1>
+      <h1 className="text-4xl font-bold mb-2">{work.title} ({work.year})</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
         {/* Media Section */}
@@ -118,7 +118,7 @@ export default function WorkDetailPage() {
           {/* Videos Section */}
           {videoEmbedUrls.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-3">
+              <h2 className="text-xl font-semibold mb-3">
                 Video{videoEmbedUrls.length > 1 ? 's' : ''}
               </h2>
               <div className="space-y-4">
@@ -141,7 +141,7 @@ export default function WorkDetailPage() {
           {/* Audio Section */}
           {soundcloudUrl && (
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-3">Audio</h2>
+              <h2 className="text-xl font-semibold mb-3">Audio</h2>
               <div className="bg-black rounded-lg p-4">
                 <iframe
                   width="100%"
@@ -169,27 +169,27 @@ export default function WorkDetailPage() {
           )}
           
           <div>
-            <h2 className="text-xl font-semibold text-white mb-2">Instrumentation</h2>
+            <h2 className="text-xl font-semiboldmb-2">Instrumentation</h2>
             <p className="text-gray-300">{work.instruments}</p>
           </div>
           
           {work.duration && (
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Duration</h2>
+              <h2 className="text-xl font-semiboldmb-2">Duration</h2>
               <p className="text-gray-300">{work.duration}</p>
             </div>
           )}
           
           {work.information && (
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Information</h2>
+              <h2 className="text-xl font-semibold mb-2">Information</h2>
               <p className="text-gray-300 whitespace-pre-line">{work.information}</p>
             </div>
           )}
           
           {work.programNotes && (
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Program Notes</h2>
+              <h2 className="text-xl font-semibold mb-2">Program Notes</h2>
               <p className="text-gray-300 whitespace-pre-line">{work.programNotes}</p>
             </div>
           )}

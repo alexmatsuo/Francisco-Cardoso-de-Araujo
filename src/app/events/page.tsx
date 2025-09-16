@@ -74,7 +74,7 @@ export default function EventsPage() {
       <div className="flex justify-center gap-4 mb-8">
         <button
           onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-lg border transition-colors ${
+          className={`px-4 py-2 border transition-colors ${
             filter === 'all' 
               ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
               : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
@@ -84,7 +84,7 @@ export default function EventsPage() {
         </button>
         <button
           onClick={() => setFilter('upcoming')}
-          className={`px-4 py-2 rounded-lg border transition-colors ${
+          className={`px-4 py-2 border transition-colors ${
             filter === 'upcoming' 
               ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
               : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
@@ -94,7 +94,7 @@ export default function EventsPage() {
         </button>
         <button
           onClick={() => setFilter('past')}
-          className={`px-4 py-2 rounded-lg border transition-colors ${
+          className={`px-4 py-2 border transition-colors ${
             filter === 'past' 
               ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
               : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
@@ -122,7 +122,7 @@ export default function EventsPage() {
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium uppercase ${
+                  <span className={`px-3 py-1 text-xs font-medium uppercase ${
                     event.eventType === 'concert' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
                     event.eventType === 'premiere' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                     event.eventType === 'workshop' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
@@ -132,7 +132,7 @@ export default function EventsPage() {
                   }`}>
                     {event.eventType}
                   </span>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
+                  <span className={`px-2 py-1 text-xs font-medium ${
                     event.isUpcoming 
                       ? 'bg-green-500/20 text-green-400' 
                       : 'bg-gray-500/20 text-gray-400'

@@ -74,32 +74,6 @@ export default function AdminDashboard() {
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section className="mb-12">
-        <div className="flex items-center mb-6">
-          <Users className="w-6 h-6 text-green-500 mr-3" />
-          <h2 className="text-2xl font-bold text-white">Projects Management</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projectsSections.map((section) => (
-            <Link
-              key={section.href}
-              href={section.href}
-              className="group bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-all duration-200 border border-gray-700 hover:border-green-500/50"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-white group-hover:text-green-500 transition-colors">
-                  {section.title}
-                </h3>
-                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-500 group-hover:translate-x-1 transition-all" />
-              </div>
-              <p className="text-gray-400 text-sm">{section.description}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* Events Section */}
       <section className="mb-12">
         <div className="flex items-center mb-6">

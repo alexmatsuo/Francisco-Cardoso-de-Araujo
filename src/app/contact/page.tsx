@@ -128,7 +128,7 @@ export default function ContactPage() {
                   required
                   value={formData.from_name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:border-white/40 focus:bg-white/10 transition-all"
+                  className="w-full px-4 py-3 bg-white/5 focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50 focus:bg-white/10 transition-all"
                   placeholder="Your name"
                 />
               </div>
@@ -143,7 +143,7 @@ export default function ContactPage() {
                   required
                   value={formData.from_email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:border-white/40 focus:bg-white/10 transition-all"
+                  className="w-full px-4 py-3 bg-white/5 focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50 focus:bg-white/10 transition-all"
                   placeholder="your@email.com"
                 />
               </div>
@@ -160,7 +160,7 @@ export default function ContactPage() {
                 required
                 value={formData.subject}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:border-white/40 focus:bg-white/10 transition-all"
+                className="w-full px-4 py-3 bg-white/5 focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50 focus:bg-white/10 transition-all"
                 placeholder="What's this about?"
               />
             </div>
@@ -176,7 +176,7 @@ export default function ContactPage() {
                 rows={6}
                 value={formData.message}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:border-white/40 focus:bg-white/10 transition-all resize-vertical"
+                className="w-full px-4 py-3 bg-white/5 focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50 focus:bg-white/10 transition-all resize-vertical"
                 placeholder="Your message..."
               />
             </div>
@@ -186,20 +186,21 @@ export default function ContactPage() {
               disabled={isSubmitting || !isFormValid}
               className="relative flex items-center justify-center space-x-2 w-full md:w-auto px-6 py-3 text-xl
               text-[#D3CEAD]/70 font-semibold transition-all duration-300 bg-white/10 hover:bg-white/20 hover:text-[#C3BE9D]
-              disabled:bg-white/5 disabled:text-[#D3CEAD]/30 disabled:cursor-not-allowed overflow-hidden group"
+              disabled:bg-white/5 disabled:text-[#D3CEAD]/30 disabled:cursor-not-allowed overflow-hidden group
+              focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50"
             >
               <span className="absolute inset-0 bg-white/10 opacity-0 transition duration-300 group-hover:opacity-100 group-disabled:opacity-0"></span>
               <span className="relative z-10">{isSubmitting ? 'Submiting...' : 'Submit'}</span>
             </button>
             
             {submitStatus === 'success' && (
-              <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400">
+              <div className="p-4 bg-green-500/20 border border-green-500/30 text-green-400">
                 Message sent successfully! I'll get back to you soon.
               </div>
             )}
             
             {submitStatus === 'error' && (
-              <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400">
+              <div className="p-4 bg-red-500/20 border border-red-500/30 text-red-400">
                 Failed to send message. Please try again or contact me directly.
               </div>
             )}
@@ -213,7 +214,7 @@ export default function ContactPage() {
             <h2 className="text-xl font-semibold mb-2">Email</h2>
             <a 
               href="mailto:franciscocardoso.composer@gmail.com" 
-              className="text-lg text-gray-300 hover:text-white transition-colors underline"
+              className="text-lg text-gray-300 hover:text-white transition-colors underline focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50 focus:rounded-sm"
             >
               franciscocardoso.composer@gmail.com
             </a>
@@ -237,8 +238,6 @@ export default function ContactPage() {
               <p className="text-lg text-gray-300">Atlanta Contemporary Music Collective (Member)</p>
             </div>
           </div>
-
-          
         </div>
       </div>
     </main>

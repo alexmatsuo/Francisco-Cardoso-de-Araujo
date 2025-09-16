@@ -15,7 +15,7 @@ export const Footer = () => {
               Francisco Cardoso de Araujo
             </h3>
             <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto"></div>
-            <p className="text-gray-300 text-sm font-light">Composer & Artist</p>
+            <p className="text-sm font-light">Composer & Artist</p>
           </div>
           
           {/* Social Media */}
@@ -24,44 +24,44 @@ export const Footer = () => {
               href="https://www.instagram.com/fco.crd/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative p-4 rounded-full bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
+              className="group relative p-4 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
               aria-label="Instagram"
             >
               <FaInstagram className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-600 via-pink-500 via-red-500 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-500 via-red-500 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
             </a>
             
             <a
               href="https://www.linkedin.com/in/francisco-cardoso-de-araujo-a96b7010a/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative p-4 rounded-full bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
+              className="group relative p-4 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
               aria-label="LinkedIn"
             >
               <FaLinkedin className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" />
-              <div className="absolute inset-0 rounded-full bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+              <div className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
             </a>
             
             <a
               href="https://soundcloud.com/franciscocardosodearaujo"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative p-4 rounded-full bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
+              className="group relative p-4 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
               aria-label="SoundCloud"
             >
               <SiSoundcloud className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
             </a>
             
             <a
               href="https://www.youtube.com/@franciscocardoso-composer"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative p-4 rounded-full bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
+              className="group relative p-4 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
               aria-label="YouTube"
             >
               <FaYoutube className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" />
-              <div className="absolute inset-0 rounded-full bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+              <div className="absolute inset-0 bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
             </a>
           </div>
         </div>

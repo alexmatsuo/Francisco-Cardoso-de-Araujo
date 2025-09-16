@@ -123,7 +123,7 @@ export const Header = () => {
         <div className="flex justify-left ml-6">
           <button
             onClick={toggleMobileMenu}
-            className="p-3 border border-white/15 rounded-full bg-white/10 backdrop-blur"
+            className="p-3 rounded-full backdrop-blur"
             aria-label="Toggle mobile menu"
           >
             <svg
@@ -153,7 +153,7 @@ export const Header = () => {
         <div className={`absolute top-full mt-2 left-4 right-4 transition-all duration-300 z-40 ${
           isMobileMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'
         }`}>
-          <nav className="border border-white/15 rounded-lg p-6 shadow-lg bg-white/10 backdrop-blur">
+          <nav className="rounded-lg p-6 shadow-lg bg-[#C3BE9D]/30 text-black backdrop-blur">
             <div className="flex flex-col gap-4">
               <Link 
                 href="/" 
@@ -172,21 +172,30 @@ export const Header = () => {
               
               {/* Mobile Works Section */}
               <div>
-                <button
-                  onClick={() => setIsWorksOpen(!isWorksOpen)}
-                  className={`mobile-nav-item w-full flex items-center justify-between ${
-                    pathname.startsWith("/works") ? "text-[#D3CEAD]" : ""
-                  }`}
-                >
-                  Works
-                  <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${isWorksOpen ? 'rotate-180' : ''}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
+                <div className={`mobile-nav-item w-full flex items-center justify-between ${
+                  pathname.startsWith("/works") ? "text-[#D3CEAD]" : ""
+                }`}>
+                  <Link 
+                    href="/works" 
+                    onClick={closeMobileMenu}
+                    className="flex-1 text-left"
                   >
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
+                    Works
+                  </Link>
+                  <button
+                    onClick={() => setIsWorksOpen(!isWorksOpen)}
+                    className="p-1 ml-2"
+                    aria-label="Toggle works submenu"
+                  >
+                    <svg
+                      className={`w-4 h-4 transition-transform duration-200 ${isWorksOpen ? 'rotate-180' : ''}`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
                 {isWorksOpen && (
                   <div className="ml-4 mt-3 flex flex-col gap-3">
                     <Link 
