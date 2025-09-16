@@ -17,9 +17,6 @@ declare global {
   }
 }
 
-import { FaInstagram, FaLinkedin, FaYoutube, FaPaperPlane } from 'react-icons/fa';
-import { SiSoundcloud } from 'react-icons/si';
-
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     from_name: '',
@@ -192,7 +189,6 @@ export default function ContactPage() {
               disabled:bg-white/5 disabled:text-[#D3CEAD]/30 disabled:cursor-not-allowed overflow-hidden group"
             >
               <span className="absolute inset-0 bg-white/10 opacity-0 transition duration-300 group-hover:opacity-100 group-disabled:opacity-0"></span>
-              <FaPaperPlane className={`w-5 h-5 relative z-10 ${isSubmitting ? 'animate-pulse' : ''}`} />
               <span className="relative z-10">{isSubmitting ? 'Submiting...' : 'Submit'}</span>
             </button>
             
@@ -242,48 +238,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Social Media */}
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Social Media</h2>
-            <div className="flex space-x-4">
-              <a 
-                href="https://www.instagram.com/fco.crd/" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105 group"
-                aria-label="Instagram"
-              >
-                <FaInstagram className="w-6 h-6 group-hover:text-white transition-colors" />
-              </a>
-              <a 
-                href="https://www.linkedin.com/in/francisco-cardoso-de-araujo-a96b7010a/" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105 group"
-                aria-label="LinkedIn"
-              >
-                <FaLinkedin className="w-6 h-6 group-hover:text-white transition-colors" />
-              </a>
-              <a 
-                href="https://soundcloud.com/franciscocardosodearaujo" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105 group"
-                aria-label="SoundCloud"
-              >
-                <SiSoundcloud className="w-6 h-6 group-hover:text-white transition-colors" />
-              </a>
-              <a 
-                href="https://www.youtube.com/@franciscocardoso-composer" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105 group"
-                aria-label="YouTube"
-              >
-                <FaYoutube className="w-6 h-6 group-hover:text-white transition-colors" />
-              </a>
-            </div>
-          </div>
+          
         </div>
       </div>
     </main>
