@@ -156,7 +156,7 @@ export default function AllWorks() {
     <main className="works-container">
       <h1 className="works-title">Full Catalog</h1>
       
-      {renderWorksSection("Solo Compositions", works.solo, "solo")}
+      {renderWorksSection("Solo", works.solo, "solo")}
       {renderWorksSection("Duos & Trios", works.duosTrios, "duosTrios")}
       {renderWorksSection("Chamber Ensembles", works.chamberEnsembles, "chamberEnsembles")}
       {renderWorksSection("Large Ensembles", works.largeEnsembles, "largeEnsembles")}

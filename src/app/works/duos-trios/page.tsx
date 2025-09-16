@@ -55,7 +55,7 @@ export default function DuosTriosWorks() {
 
   return (
     <main className="works-container">
-      <h1 className="works-title">Duos & Trios Compositions</h1>
+      <h1 className="works-title">Duos & Trios</h1>
       
       <div className="space-y-4">
         {works.map((work) => (

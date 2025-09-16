@@ -58,6 +58,7 @@ export default function AboutPage() {
             src={FranciscoImg}
             alt="Francisco"
             fill
+            sizes="(max-width: 768px) 100vw, 352px"
             className="object-cover"
             priority
           />

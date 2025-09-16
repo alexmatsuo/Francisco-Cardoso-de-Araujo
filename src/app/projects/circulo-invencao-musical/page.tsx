@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export default function CIMAboutPage() {
   return (
-    <main className="min-h-screen p-4 sm:p-6 md:p-8 lg:p-12">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight mb-4 sm:mb-6">
+    <main className="works-container">
+      <h1 className="text-4xl font-bold mb-16">
         Círculo de Invenção Musical
       </h1>
       

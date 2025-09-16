@@ -85,7 +85,7 @@ export default function WorkDetailPage() {
   if (isLoading) {
     return (
       <main className="p-8 max-w-4xl mx-auto">
-        <div className="text-center text-white">Loading work details...</div>
+        <div className="text-cente">Loading work details...</div>
       </main>
     );
   }
@@ -93,9 +93,9 @@ export default function WorkDetailPage() {
   if (!work) {
     return (
       <main className="p-8 max-w-4xl mx-auto">
-        <div className="text-center text-white">Work not found</div>
+        <div className="text-center">Work not found</div>
         <Link href="/works/solo" className="text-[#D3CEAD] hover:underline mt-4 inline-block">
-          ← Back to Solo Works
+          ← Back to Solo
         </Link>
       </main>
     );
@@ -107,7 +107,7 @@ export default function WorkDetailPage() {
   return (
     <main className="p-8 max-w-6xl mx-auto">
       <Link href="/works/solo" className="text-[#D3CEAD] hover:underline mb-6 inline-block">
-        ← Back to Solo Works
+        ← Back to Solo
       </Link>
       
       <h1 className="text-4xl font-bold mb-2">{work.title} ({work.year})</h1>
@@ -169,13 +169,13 @@ export default function WorkDetailPage() {
           )}
           
           <div>
-            <h2 className="text-xl font-semiboldmb-2">Instrumentation</h2>
+            <h2 className="text-xl font-semibold mb-2">Instrumentation</h2>
             <p className="text-gray-300">{work.instruments}</p>
           </div>
           
           {work.duration && (
             <div>
-              <h2 className="text-xl font-semiboldmb-2">Duration</h2>
+              <h2 className="text-xl font-semibold mb-2">Duration</h2>
               <p className="text-gray-300">{work.duration}</p>
             </div>
           )}

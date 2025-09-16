@@ -55,7 +55,7 @@ export default function SoloWorks() {
 
   return (
     <main className="works-container">
-      <h1 className="works-title">Solo Compositions</h1>
+      <h1 className="works-title">Solo</h1>
       
       <div className="space-y-4">
         {works.map((work) => (

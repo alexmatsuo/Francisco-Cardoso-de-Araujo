@@ -13,7 +13,7 @@ interface WorkDetail {
   information: string | null;
   programNotes: string | null;
   imageFileName: string | null;
-  videoUrl: string | null;
+  videoUrls: string[]; // Array of video URLs
   soundcloudUrl: string | null;
   slug: string | null;
 }
@@ -33,7 +33,12 @@ export default function WorkDetailPage() {
       if (!response.ok) throw new Error('Failed to fetch work');
       
       const data = await response.json();
-      setWork(data.work);
+      // Ensure videoUrls is always an array
+      const processedWork = {
+        ...data.work,
+        videoUrls: Array.isArray(data.work.videoUrls) ? data.work.videoUrls : []
+      };
+      setWork(processedWork);
     } catch (error) {
       console.error('Error fetching work:', error);
     } finally {
@@ -62,18 +67,25 @@ export default function WorkDetailPage() {
     
     // Basic SoundCloud URL conversion to embed
     if (url.includes('soundcloud.com')) {
-      // For SoundCloud, we need to use their widget API
-      // This will be handled by the SoundCloud widget
       return url;
     }
     
     return null;
   };
 
+  // Get all valid video embed URLs
+  const getVideoEmbedUrls = () => {
+    if (!work || !work.videoUrls) return [];
+    return work.videoUrls
+      .filter(url => url && url.trim())
+      .map(url => getYouTubeEmbedUrl(url))
+      .filter(url => url !== null);
+  };
+
   if (isLoading) {
     return (
       <main className="p-8 max-w-4xl mx-auto">
-        <div className="text-center text-white">Loading work details...</div>
+        <div className="text-cente">Loading work details...</div>
       </main>
     );
   }
@@ -81,47 +93,55 @@ export default function WorkDetailPage() {
   if (!work) {
     return (
       <main className="p-8 max-w-4xl mx-auto">
-        <div className="text-center text-white">Work not found</div>
+        <div className="text-center">Work not found</div>
         <Link href="/works/multimedia-installations" className="text-[#D3CEAD] hover:underline mt-4 inline-block">
-          ← Back to Multimedia & Installations Works
+          ← Back to Multimedia & Installations
         </Link>
       </main>
     );
   }
 
-  const youtubeEmbedUrl = getYouTubeEmbedUrl(work.videoUrl);
+  const videoEmbedUrls = getVideoEmbedUrls();
   const soundcloudUrl = getSoundCloudEmbedUrl(work.soundcloudUrl);
 
   return (
-    <main className="p-8 max-w-4xl mx-auto">
+    <main className="p-8 max-w-6xl mx-auto">
       <Link href="/works/multimedia-installations" className="text-[#D3CEAD] hover:underline mb-6 inline-block">
-        ← Back to Multimedia & Installations Works
+        ← Back to Multimedia & Installations
       </Link>
       
-      <h1 className="text-4xl font-bold text-white mb-2">{work.title} ({work.year})</h1>
+      <h1 className="text-4xl font-bold mb-2">{work.title} ({work.year})</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
         {/* Media Section */}
-        <div>
-          {youtubeEmbedUrl && (
+        <div className="lg:col-span-2">
+          {/* Videos Section */}
+          {videoEmbedUrls.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-3">Video</h2>
-              <div className="aspect-video bg-black rounded-lg overflow-hidden">
-                <iframe
-                  src={youtubeEmbedUrl}
-                  className="w-full h-full"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  title={`${work.title} video`}
-                ></iframe>
+              <h2 className="text-xl font-semibold mb-3">
+                Video{videoEmbedUrls.length > 1 ? 's' : ''}
+              </h2>
+              <div className="space-y-4">
+                {videoEmbedUrls.map((embedUrl, index) => (
+                  <div key={index} className="aspect-video bg-black rounded-lg overflow-hidden">
+                    <iframe
+                      src={embedUrl}
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={`${work.title} video ${index + 1}`}
+                    ></iframe>
+                  </div>
+                ))}
               </div>
             </div>
           )}
           
+          {/* Audio Section */}
           {soundcloudUrl && (
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-3">Audio</h2>
+              <h2 className="text-xl font-semibold mb-3">Audio</h2>
               <div className="bg-black rounded-lg p-4">
                 <iframe
                   width="100%"
@@ -149,27 +169,27 @@ export default function WorkDetailPage() {
           )}
           
           <div>
-            <h2 className="text-xl font-semibold text-white mb-2">Instrumentation</h2>
+            <h2 className="text-xl font-semibold mb-2">Instrumentation</h2>
             <p className="text-gray-300">{work.instruments}</p>
           </div>
           
           {work.duration && (
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Duration</h2>
+              <h2 className="text-xl font-semibold mb-2">Duration</h2>
               <p className="text-gray-300">{work.duration}</p>
             </div>
           )}
           
           {work.information && (
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Information</h2>
+              <h2 className="text-xl font-semibold mb-2">Information</h2>
               <p className="text-gray-300 whitespace-pre-line">{work.information}</p>
             </div>
           )}
           
           {work.programNotes && (
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Program Notes</h2>
+              <h2 className="text-xl font-semibold mb-2">Program Notes</h2>
               <p className="text-gray-300 whitespace-pre-line">{work.programNotes}</p>
             </div>
           )}

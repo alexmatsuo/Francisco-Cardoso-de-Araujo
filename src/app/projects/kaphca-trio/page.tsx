@@ -5,7 +5,7 @@ export default function KaphcaTrioPage() {
     <>
       <main className="works-container">
         {/* Header */}
-        <h1 className="text-4xl font-bold mb-16 text-[#D3CEAD]">Kaphca Trio</h1>
+        <h1 className="text-4xl font-bold mb-16">Kaphca Trio</h1>
         
         {/* Content section */}
         <div className="max-w-4xl mx-auto">
@@ -17,6 +17,7 @@ export default function KaphcaTrioPage() {
                 src="/Kaphca Trio grupo.jpg"
                 alt="Kaphca Trio Group Photo"
                 fill
+                sizes=""
                 className="object-cover"
               />
             </div>
@@ -43,6 +44,7 @@ export default function KaphcaTrioPage() {
                   src="/Kaphca Trio capa.jpg"
                   alt="Kaphca Trio Album Cover"
                   fill
+                  sizes=""
                   className="object-cover"
                   priority
                 />
