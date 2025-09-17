@@ -1,5 +1,10 @@
 {
-    "env": {
-      "PRISMA_CLI_BINARY_TARGETS": "native,rhel-openssl-1.0.x"
+  "functions": {
+    "app/api/upload/route.ts": {
+      "maxDuration": 30
     }
+  },
+  "env": {
+    "PRISMA_CLI_BINARY_TARGETS": "native,rhel-openssl-1.0.x"
   }
+}
