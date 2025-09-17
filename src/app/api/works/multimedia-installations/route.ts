@@ -39,19 +39,21 @@ export async function POST(request: Request) {
 
     // Use transaction to ensure data consistency
     const result = await prisma.$transaction(async (tx) => {
-      // Delete existing multimedia-installations works
-      console.log('Deleting existing multimedia-installations works...');
-      await tx.work.deleteMany({
+      // Get existing works for this category
+      const existingWorks = await tx.work.findMany({
         where: { category: 'multimedia-installations' }
       });
 
-      // Create new works
-      const createdWorks = [];
+      const existingWorkIds = new Set(existingWorks.map(w => w.id));
+      const receivedWorkIds = new Set<number>();
+      const processedWorks = [];
+
+      // Process each work
       for (const workData of works) {
         console.log('Processing work:', workData);
         
-        // Extract all fields from the work object
         const {
+          id,
           title,
           year,
           instruments,
@@ -59,7 +61,7 @@ export async function POST(request: Request) {
           information,
           programNotes,
           imageFileName,
-          videoUrls, // Now expects an array
+          videoUrls,
           soundcloudUrl,
           slug
         } = workData;
@@ -74,30 +76,59 @@ export async function POST(request: Request) {
           ? videoUrls.filter(url => url && url.trim()) 
           : [];
 
-        const work = await tx.work.create({
-          data: {
-            title: title.trim(),
-            category: 'multimedia-installations',
-            year: parseInt(year.toString()),
-            instruments: instruments.trim(),
-            duration: duration?.trim() || null,
-            information: information?.trim() || null,
-            programNotes: programNotes?.trim() || null,
-            imageFileName: imageFileName?.trim() || null,
-            videoUrls: processedVideoUrls, // Store as JSON array
-            soundcloudUrl: soundcloudUrl?.trim() || null,
-            slug: slug?.trim() || slugify(title.trim())
-          }
-        });
+        const workPayload = {
+          title: title.trim(),
+          category: 'multimedia-installations',
+          year: parseInt(year.toString()),
+          instruments: instruments.trim(),
+          duration: duration?.trim() || null,
+          information: information?.trim() || null,
+          programNotes: programNotes?.trim() || null,
+          imageFileName: imageFileName?.trim() || null,
+          videoUrls: processedVideoUrls,
+          soundcloudUrl: soundcloudUrl?.trim() || null,
+          slug: slug?.trim() || slugify(title.trim())
+        };
+
+        let work;
         
-        createdWorks.push(work);
-        console.log('Created work:', work);
+        // Check if this is an existing work (has a valid database ID)
+        if (id && typeof id === 'number' && id < 1000000000 && existingWorkIds.has(id)) {
+          // This is an existing work - UPDATE it
+          console.log('Updating existing work with ID:', id);
+          work = await tx.work.update({
+            where: { id },
+            data: workPayload
+          });
+          receivedWorkIds.add(id);
+        } else {
+          // This is a new work - CREATE it
+          console.log('Creating new work');
+          work = await tx.work.create({
+            data: workPayload
+          });
+        }
+        
+        processedWorks.push(work);
+        console.log('Processed work:', work);
       }
       
-      return createdWorks;
+      // Delete works that were not in the received list
+      const idsToDelete = Array.from(existingWorkIds).filter(id => !receivedWorkIds.has(id));
+      if (idsToDelete.length > 0) {
+        console.log('Deleting removed works:', idsToDelete);
+        await tx.work.deleteMany({
+          where: {
+            id: { in: idsToDelete },
+            category: 'multimedia-installations'
+          }
+        });
+      }
+      
+      return processedWorks;
     });
 
-    console.log('Transaction completed, created works:', result.length);
+    console.log('Transaction completed, processed works:', result.length);
 
     return NextResponse.json({ 
       message: 'Works updated successfully',

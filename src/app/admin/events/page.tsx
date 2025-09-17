@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { Edit, Trash2, Save, X, Plus, Calendar, MapPin, Clock } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Edit, Trash2, Save, X, Plus, Calendar, MapPin, Clock, Upload, File, Image } from "lucide-react";
+import React from 'react';
 
 interface AdminEvent {
   id: number;
@@ -16,6 +17,8 @@ interface AdminEvent {
   performers?: string;
   website?: string;
   description?: string;
+  imageFileNames?: string[]; // Changed from imageFileName to array
+  pdfFileName?: string;
 }
 
 export default function AdminEvents() {
@@ -34,11 +37,21 @@ export default function AdminEvents() {
     eventType: 'concert',
     works: '',
     performers: '',
-    website: ''
+    website: '',
+    imageFiles: [] as File[], // Changed to array
+    pdfFile: null as File | null
   });
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editFiles, setEditFiles] = useState({
+    imageFiles: [] as File[], // Changed to array
+    pdfFile: null as File | null
+  });
+  
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
+  const editImageInputRef = useRef<HTMLInputElement>(null);
+  const editPdfInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch events from your DB on mount
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -57,24 +70,119 @@ export default function AdminEvents() {
     }
   };
 
+  const uploadFile = async (file: File, type: 'image' | 'pdf'): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', type);
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('File upload failed');
+    }
+
+    const data = await response.json();
+    return data.filename;
+  };
+
+  const uploadMultipleImages = async (files: File[]): Promise<string[]> => {
+    const uploadPromises = files.map(file => uploadFile(file, 'image'));
+    return Promise.all(uploadPromises);
+  };
+
+  // CORRECTED removeImage function
+  const removeImage = async (eventId: number, imageFileName: string) => {
+    if (!confirm('Remove this image from the event?')) return;
+
+    try {
+      // Find the current event
+      const currentEvent = events.find(e => e.id === eventId);
+      if (!currentEvent) {
+        throw new Error('Event not found');
+      }
+
+      // Create updated event with image removed
+      const updatedImageFileNames = (currentEvent.imageFileNames || []).filter(name => name !== imageFileName);
+      
+      // Prepare the data for the API call - need to include ALL event fields
+      const updatedEventData = {
+        title: currentEvent.title,
+        date: currentEvent.date, // Keep as ISO string
+        location: currentEvent.location,
+        venue: currentEvent.venue || undefined,
+        description: currentEvent.description || undefined,
+        eventType: currentEvent.eventType,
+        works: currentEvent.works || undefined,
+        performers: currentEvent.performers || undefined,
+        website: currentEvent.website || undefined,
+        imageFileNames: updatedImageFileNames.length > 0 ? updatedImageFileNames : undefined,
+        pdfFileName: currentEvent.pdfFileName || undefined,
+        isUpcoming: currentEvent.isUpcoming
+      };
+
+      // Save to server using PUT to update the specific event
+      const response = await fetch(`/api/events/${eventId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedEventData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update event');
+      }
+
+      // Update local state
+      setEvents(events.map(event => {
+        if (event.id === eventId) {
+          return {
+            ...event,
+            imageFileNames: updatedImageFileNames.length > 0 ? updatedImageFileNames : undefined
+          };
+        }
+        return event;
+      }));
+
+      // Also update the draft if we're currently editing this event
+      if (editingId === eventId) {
+        setDraft(prev => ({
+          ...prev,
+          imageFileNames: updatedImageFileNames.length > 0 ? updatedImageFileNames : undefined
+        }));
+      }
+
+    } catch (error) {
+      console.error('Error removing image:', error);
+      alert(`Error removing image: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // Refresh events to get the correct state from server
+      fetchEvents();
+    }
+  };
+
   const startEdit = (event: AdminEvent) => {
     setEditingId(event.id);
     
-    // Extract date and time from ISO string
     const eventDate = new Date(event.date);
-    const date = eventDate.toISOString().split('T')[0]; // YYYY-MM-DD
-    const time = eventDate.toTimeString().substring(0, 5); // HH:MM
+    const date = eventDate.toISOString().split('T')[0];
+    const time = eventDate.toTimeString().substring(0, 5);
     
     setDraft({ 
       ...event,
       date: date,
       time: time
     });
+    setEditFiles({ imageFiles: [], pdfFile: null });
   };
 
   const cancelEdit = () => {
     setEditingId(null);
     setDraft({});
+    setEditFiles({ imageFiles: [], pdfFile: null });
   };
 
   const saveEdit = async () => {
@@ -82,45 +190,54 @@ export default function AdminEvents() {
     
     setIsSaving(true);
     try {
+      let updatedData = { ...draft };
+
+      // Upload new images if selected
+      if (editFiles.imageFiles.length > 0) {
+        const imageFileNames = await uploadMultipleImages(editFiles.imageFiles);
+        // Append to existing images or create new array
+        const existingImages = updatedData.imageFileNames || [];
+        updatedData.imageFileNames = [...existingImages, ...imageFileNames];
+      }
+
+      if (editFiles.pdfFile) {
+        const pdfFileName = await uploadFile(editFiles.pdfFile, 'pdf');
+        updatedData.pdfFileName = pdfFileName;
+      }
+
       // Combine date and time into ISO string
-      const dateStr = draft.date || events.find(e => e.id === editingId)?.date || '';
-      const timeStr = draft.time || '12:00';
+      const dateStr = updatedData.date || events.find(e => e.id === editingId)?.date || '';
+      const timeStr = updatedData.time || '12:00';
       
       let isoDateString = '';
       if (dateStr) {
         const [year, month, day] = dateStr.split('-');
         const [hours, minutes] = timeStr.split(':');
         
-        // Create date in local timezone but output as ISO string
         const eventDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 
                                   parseInt(hours), parseInt(minutes));
         
         isoDateString = eventDate.toISOString();
       }
 
-      const updatedDraft = {
-        ...draft,
+      updatedData = {
+        ...updatedData,
         date: isoDateString,
         isUpcoming: dateStr ? new Date(dateStr + 'T' + timeStr) > new Date() : undefined
       };
 
-      const updatedEvents = events.map(event => 
-        event.id === editingId 
-          ? { ...event, ...updatedDraft }
-          : event
-      );
-
-      const response = await fetch('/api/events', {
-        method: 'POST',
+      // Use PUT to update specific event
+      const response = await fetch(`/api/events/${editingId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ events: updatedEvents }),
+        body: JSON.stringify(updatedData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to save events');
+        throw new Error(errorData.error || 'Failed to update event');
       }
 
       await fetchEvents();
@@ -134,15 +251,12 @@ export default function AdminEvents() {
   };
 
   const removeEvent = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this event?')) return;
+    
     try {
-      const updatedEvents = events.filter(e => e.id !== id);
-      
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ events: updatedEvents }),
+      // Use DELETE method for deleting
+      const response = await fetch(`/api/events/${id}`, {
+        method: 'DELETE',
       });
 
       if (!response.ok) {
@@ -150,7 +264,8 @@ export default function AdminEvents() {
         throw new Error(errorData.error || 'Failed to delete event');
       }
 
-      setEvents(updatedEvents);
+      // Update local state
+      setEvents(events.filter(e => e.id !== id));
     } catch (error) {
       console.error('Error deleting event:', error);
       alert('Error deleting event. Please try again.');
@@ -163,36 +278,48 @@ export default function AdminEvents() {
       return;
     }
 
-    // Combine date and time into ISO string
-    const [year, month, day] = newEvent.date.split('-');
-    const [hours, minutes] = newEvent.time.split(':');
-    
-    const eventDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 
-                              parseInt(hours), parseInt(minutes));
-
-    const event: AdminEvent = {
-      id: Date.now(),
-      title: newEvent.title.trim(),
-      date: eventDate.toISOString(),
-      location: newEvent.location.trim(),
-      venue: newEvent.venue.trim() || undefined,
-      description: newEvent.description.trim() || undefined,
-      eventType: newEvent.eventType,
-      works: newEvent.works.trim() || undefined,
-      performers: newEvent.performers.trim() || undefined,
-      website: newEvent.website.trim() || undefined,
-      isUpcoming: eventDate > new Date()
-    };
-
     try {
-      const updatedEvents = [...events, event];
+      let imageFileNames: string[] = [];
+      let pdfFileName = undefined;
+
+      // Upload images if selected
+      if (newEvent.imageFiles.length > 0) {
+        imageFileNames = await uploadMultipleImages(newEvent.imageFiles);
+      }
+
+      if (newEvent.pdfFile) {
+        pdfFileName = await uploadFile(newEvent.pdfFile, 'pdf');
+      }
+
+      // Combine date and time into ISO string
+      const [year, month, day] = newEvent.date.split('-');
+      const [hours, minutes] = newEvent.time.split(':');
       
+      const eventDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 
+                                parseInt(hours), parseInt(minutes));
+
+      // Create event data for the API
+      const eventData = {
+        title: newEvent.title.trim(),
+        date: eventDate.toISOString(),
+        location: newEvent.location.trim(),
+        venue: newEvent.venue.trim() || undefined,
+        description: newEvent.description.trim() || undefined,
+        eventType: newEvent.eventType,
+        works: newEvent.works.trim() || undefined,
+        performers: newEvent.performers.trim() || undefined,
+        website: newEvent.website.trim() || undefined,
+        imageFileNames: imageFileNames.length > 0 ? imageFileNames : undefined,
+        pdfFileName,
+        isUpcoming: eventDate > new Date()
+      };
+
       const response = await fetch('/api/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ events: updatedEvents }),
+        body: JSON.stringify(eventData),
       });
 
       if (!response.ok) {
@@ -213,7 +340,9 @@ export default function AdminEvents() {
         eventType: 'concert',
         works: '',
         performers: '',
-        website: ''
+        website: '',
+        imageFiles: [],
+        pdfFile: null
       });
       setShowAddForm(false);
     } catch (error) {
@@ -235,6 +364,31 @@ export default function AdminEvents() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const handleMultipleFileSelect = (files: FileList | null, isEditing = false) => {
+    if (!files) return;
+    
+    const fileArray = Array.from(files);
+    if (isEditing) {
+      setEditFiles(prev => ({ ...prev, imageFiles: [...prev.imageFiles, ...fileArray] }));
+    } else {
+      setNewEvent(prev => ({ ...prev, imageFiles: [...prev.imageFiles, ...fileArray] }));
+    }
+  };
+
+  const removeFileFromList = (index: number, isEditing = false) => {
+    if (isEditing) {
+      setEditFiles(prev => ({
+        ...prev,
+        imageFiles: prev.imageFiles.filter((_, i) => i !== index)
+      }));
+    } else {
+      setNewEvent(prev => ({
+        ...prev,
+        imageFiles: prev.imageFiles.filter((_, i) => i !== index)
+      }));
+    }
   };
 
   if (isLoading) {
@@ -368,7 +522,69 @@ export default function AdminEvents() {
               rows={3}
               placeholder="Event description"
             />
+          </div>
+
+          {/* File Upload Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">Event Images</label>
+              <div className="space-y-2">
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => handleMultipleFileSelect(e.target.files)}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  className="w-full flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded border border-gray-600 transition-colors"
+                >
+                  <Image className="w-4 h-4" />
+                  Choose image files
+                </button>
+                {newEvent.imageFiles.length > 0 && (
+                  <div className="space-y-1">
+                    {newEvent.imageFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between bg-gray-600 p-2 rounded text-sm">
+                        <span className="truncate">{file.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeFileFromList(index)}
+                          className="text-red-400 hover:text-red-300 ml-2"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">Program PDF</label>
+              <div className="space-y-2">
+                <input
+                  ref={pdfInputRef}
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => setNewEvent({ ...newEvent, pdfFile: e.target.files?.[0] || null })}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => pdfInputRef.current?.click()}
+                  className="w-full flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded border border-gray-600 transition-colors"
+                >
+                  <File className="w-4 h-4" />
+                  {newEvent.pdfFile ? newEvent.pdfFile.name : 'Choose PDF file'}
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div className="flex gap-2">
             <button
               onClick={addEvent}
@@ -396,14 +612,15 @@ export default function AdminEvents() {
               <th className="p-3 text-left text-sm text-gray-400">Date & Time</th>
               <th className="p-3 text-left text-sm text-gray-400">Location</th>
               <th className="p-3 text-left text-sm text-gray-400">Type</th>
+              <th className="p-3 text-left text-sm text-gray-400">Files</th>
               <th className="p-3 text-left text-sm text-gray-400">Status</th>
               <th className="p-3 text-left text-sm text-gray-400">Actions</th>
             </tr>
           </thead>
           <tbody>
             {events.map((event) => (
-              <>
-                <tr key={event.id} className="border-b border-gray-700 hover:bg-gray-800/50">
+              <React.Fragment key={event.id}>
+                <tr className="border-b border-gray-700 hover:bg-gray-800/50">
                   <td className="p-3">
                     <div className="font-medium text-gray-200">{event.title}</div>
                     {event.venue && (
@@ -431,6 +648,22 @@ export default function AdminEvents() {
                     }`}>
                       {event.eventType}
                     </span>
+                  </td>
+                  <td className="p-3">
+                    <div className="flex flex-wrap gap-1">
+                      {event.imageFileNames && event.imageFileNames.length > 0 && (
+                        <span className="inline-flex items-center px-2 py-1 text-xs bg-green-500/20 text-green-400 rounded">
+                          <Image className="w-3 h-3 mr-1" />
+                          {event.imageFileNames.length} IMG{event.imageFileNames.length > 1 ? 'S' : ''}
+                        </span>
+                      )}
+                      {event.pdfFileName && (
+                        <span className="inline-flex items-center px-2 py-1 text-xs bg-red-500/20 text-red-400 rounded">
+                          <File className="w-3 h-3 mr-1" />
+                          PDF
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="p-3 text-sm">
                     <span
@@ -465,9 +698,9 @@ export default function AdminEvents() {
                 {/* Expanded row for editing */}
                 {editingId === event.id && (
                   <tr>
-                    <td colSpan={6} className="p-6 bg-gray-900 border-b border-gray-700">
+                    <td colSpan={7} className="p-6 bg-gray-900 border-b border-gray-700">
                       <h3 className="text-lg font-medium mb-4">Edit Event</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
                         <div>
                           <label className="block text-xs text-gray-400 mb-1">Title</label>
                           <input
@@ -502,7 +735,7 @@ export default function AdminEvents() {
                             onChange={(e) => updateDraft("eventType", e.target.value)}
                             className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                           >
-                            <option value="concert">Concept</option>
+                            <option value="concert">Concert</option>
                             <option value="premiere">Premiere</option>
                             <option value="workshop">Workshop</option>
                             <option value="masterclass">Masterclass</option>
@@ -555,14 +788,104 @@ export default function AdminEvents() {
                             className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                           />
                         </div>
-                        <div className="col-span-full">
-                          <label className="block text-xs text-gray-400 mb-1">Description</label>
-                          <textarea
-                            value={draft.description || ""}
-                            onChange={(e) => updateDraft("description", e.target.value)}
-                            className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
-                            rows={3}
-                          />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-xs text-gray-400 mb-1">Description</label>
+                        <textarea
+                          value={draft.description || ""}
+                          onChange={(e) => updateDraft("description", e.target.value)}
+                          className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
+                          rows={3}
+                        />
+                      </div>
+
+                      {/* Existing Images */}
+                      {event.imageFileNames && event.imageFileNames.length > 0 && (
+                        <div className="mb-4">
+                          <label className="block text-xs text-gray-400 mb-2">Current Images</label>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {event.imageFileNames.map((imageName, index) => (
+                              <div key={index} className="relative group">
+                                <img
+                                  src={`/api/files/images/${imageName}`}
+                                  alt={`Event image ${index + 1}`}
+                                  className="w-full h-24 object-cover rounded border border-gray-600"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeImage(event.id, imageName)}
+                                  className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* File Upload Section for Editing */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">
+                            Add More Images
+                          </label>
+                          <div className="space-y-2">
+                            <input
+                              ref={editImageInputRef}
+                              type="file"
+                              accept="image/*"
+                              multiple
+                              onChange={(e) => handleMultipleFileSelect(e.target.files, true)}
+                              className="hidden"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => editImageInputRef.current?.click()}
+                              className="w-full flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded border border-gray-600 transition-colors"
+                            >
+                              <Image className="w-4 h-4" />
+                              Choose additional images
+                            </button>
+                            {editFiles.imageFiles.length > 0 && (
+                              <div className="space-y-1">
+                                {editFiles.imageFiles.map((file, index) => (
+                                  <div key={index} className="flex items-center justify-between bg-gray-600 p-2 rounded text-sm">
+                                    <span className="truncate">{file.name}</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeFileFromList(index, true)}
+                                      className="text-red-400 hover:text-red-300 ml-2"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">
+                            Program PDF
+                          </label>
+                          <div className="space-y-2">
+                            <input
+                              ref={editPdfInputRef}
+                              type="file"
+                              accept=".pdf"
+                              onChange={(e) => setEditFiles(prev => ({ ...prev, pdfFile: e.target.files?.[0] || null }))}
+                              className="hidden"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => editPdfInputRef.current?.click()}
+                              className="w-full flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded border border-gray-600 transition-colors"
+                            >
+                              <File className="w-4 h-4" />
+                              {editFiles.pdfFile ? editFiles.pdfFile.name : 'Choose new PDF'}
+                            </button>
+                          </div>
                         </div>
                       </div>
 
@@ -586,7 +909,7 @@ export default function AdminEvents() {
                     </td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </tbody>
         </table>
