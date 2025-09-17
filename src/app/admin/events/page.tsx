@@ -64,22 +64,45 @@ export default function AdminEventsPage() {
     setUploadType(type);
     
     try {
+      // Validate file size on frontend too
+      const maxSize = 50 * 1024 * 1024; // 50MB
+      if (file.size > maxSize) {
+        throw new Error(`File too large. Maximum size is ${maxSize / (1024 * 1024)}MB`);
+      }
+  
+      // Validate file type
+      if (type === 'pdf' && file.type !== 'application/pdf') {
+        throw new Error('Please select a PDF file');
+      }
+      
+      if ((type === 'poster' || type === 'image') && !file.type.startsWith('image/')) {
+        throw new Error('Please select an image file');
+      }
+  
+      console.log('Uploading file:', {
+        name: file.name,
+        size: file.size,
+        type: file.type
+      });
+  
       const formData = new FormData();
       formData.append('file', file);
       formData.append('type', type === 'pdf' ? 'pdf' : 'image');
-
+  
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-
+  
       const data = await response.json();
+  
+      if (!response.ok) {
+        console.error('Upload failed:', data);
+        throw new Error(data.error || `Upload failed with status ${response.status}`);
+      }
+  
       console.log('Upload successful:', data);
-
+  
       // Update form data based on upload type
       if (type === 'poster') {
         setFormData(prev => ({ ...prev, posterUrl: data.url }));
@@ -88,11 +111,20 @@ export default function AdminEventsPage() {
       } else if (type === 'pdf') {
         setFormData(prev => ({ ...prev, pdfUrl: data.url }));
       }
-
-      setUploadType(null);
+  
+      // Show success message
+      console.log(`${type} uploaded successfully!`);
+      
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('Failed to upload file');
+      
+      // Show user-friendly error message
+      let errorMessage = 'Failed to upload file';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      alert(errorMessage);
     } finally {
       setUploadingFile(false);
       setUploadType(null);
