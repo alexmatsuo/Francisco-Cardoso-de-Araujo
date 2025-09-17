@@ -246,10 +246,6 @@ export default function EventsPage() {
                 )}
               </div>
               
-              {/* Arrow icon to indicate clickability */}
-              <div className="w-9 flex justify-center items-start pt-1" title="Click to view event details">
-                <ChevronRight className="w-5 h-5 text-[#D3CEAD] hover:text-[#C3BE9D] transition-colors" />
-              </div>
             </div>
           );
         })}

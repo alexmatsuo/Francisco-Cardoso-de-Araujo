@@ -200,6 +200,23 @@ export default function EventDetailPage() {
                   </div>
                 )}
 
+                {event.pdfUrl && (
+                  <div className="flex items-center gap-3 text-[#D3CEAD]">
+                    <FileText className="w-5 h-5 flex-shrink-0" />
+                    <div>
+                      <div className="font-medium">Program</div>
+                      <a
+                        href={event.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-[#D3CEAD]/60 hover:text-[#C3BE9D] transition-colors"
+                      >
+                        View Program PDF
+                      </a>
+                    </div>
+                  </div>
+                )}
+
                 {event.website && (
                   <div className="flex items-center gap-3 text-[#D3CEAD]">
                     <ExternalLink className="w-5 h-5 flex-shrink-0" />
@@ -230,7 +247,7 @@ export default function EventDetailPage() {
               )}
             </div>
 
-            {/* Additional images gallery - Now at the bottom of left column */}
+            {/* Additional images gallery */}
             {event.imageUrls && event.imageUrls.length > 0 && (
               <div>
                 <h3 className="text-lg font-medium text-[#D3CEAD] mb-4 flex items-center gap-2">
@@ -278,29 +295,6 @@ export default function EventDetailPage() {
                       (e.target as HTMLImageElement).style.display = "none";
                     }}
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded flex items-center justify-center">
-                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 px-3 py-1 rounded">
-                      Click to enlarge
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Program PDF */}
-            {event.pdfUrl && (
-              <div className="bg-white/5 p-6 rounded">
-                <h3 className="text-lg font-medium text-[#D3CEAD] mb-4">Program</h3>
-                <div className="space-y-3">
-                  <a
-                    href={event.pdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 w-full justify-center px-4 py-2 bg-white/10 hover:bg-white/20 text-[#D3CEAD] hover:text-[#C3BE9D] transition-all duration-300"
-                  >
-                    <FileText className="w-4 h-4" />
-                    View Program PDF
-                  </a>
                 </div>
               </div>
             )}
