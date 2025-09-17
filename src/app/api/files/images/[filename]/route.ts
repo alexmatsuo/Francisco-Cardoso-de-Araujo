@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFile, unlink } from 'fs/promises';
-import { join } from 'path';
 
 export async function GET(
   request: NextRequest,
@@ -8,36 +6,12 @@ export async function GET(
 ) {
   try {
     const filename = params.filename;
-    const filePath = join(process.cwd(), 'public', 'uploads', 'images', filename);
     
-    const fileBuffer = await readFile(filePath);
+    // With Vercel Blob, files are served directly via their URLs
+    // This route might not be needed anymore, but we can redirect
+    const blobUrl = `${process.env.BLOB_STORE_URL}/images/${filename}`;
     
-    // Determine content type based on file extension
-    const extension = filename.split('.').pop()?.toLowerCase();
-    let contentType = 'image/jpeg'; // default
-    
-    switch (extension) {
-      case 'png':
-        contentType = 'image/png';
-        break;
-      case 'jpg':
-      case 'jpeg':
-        contentType = 'image/jpeg';
-        break;
-      case 'gif':
-        contentType = 'image/gif';
-        break;
-      case 'webp':
-        contentType = 'image/webp';
-        break;
-    }
-    
-    return new NextResponse(fileBuffer, {
-      headers: {
-        'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=31536000', // Cache for 1 year
-      },
-    });
+    return NextResponse.redirect(blobUrl);
   } catch (error) {
     console.error('Error serving image:', error);
     return NextResponse.json(

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
-import { v4 as uuidv4 } from 'uuid';
+import { put } from '@vercel/blob';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,6 +11,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'No file uploaded' },
         { status: 400 }
+      );
+    }
+
+    // Check file size (Vercel Blob has generous limits, but good to validate)
+    if (file.size > 50 * 1024 * 1024) { // 50MB limit
+      return NextResponse.json(
+        { error: 'File too large. Maximum size is 50MB' },
+        { status: 413 }
       );
     }
 
@@ -38,30 +44,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate unique filename
-    const fileExtension = file.name.split('.').pop();
-    const uniqueFilename = `${uuidv4()}.${fileExtension}`;
+    // Create filename with folder structure
+    const timestamp = Date.now();
+    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_'); // Sanitize filename
+    const filename = `${type}s/${timestamp}-${originalName}`;
 
-    // Create directory path
-    const uploadDir = join(process.cwd(), 'public', 'uploads', type === 'image' ? 'images' : 'pdfs');
-    
-    // Ensure directory exists
-    const fs = require('fs');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    // Convert file to buffer and save
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const filePath = join(uploadDir, uniqueFilename);
-
-    await writeFile(filePath, buffer as NodeJS.ArrayBufferView);
+    // Upload to Vercel Blob
+    const blob = await put(filename, file, {
+      access: 'public',
+    });
 
     return NextResponse.json({
       message: 'File uploaded successfully',
-      filename: uniqueFilename,
+      filename: filename,
+      url: blob.url,
       originalName: file.name,
       size: file.size,
       type: file.type
@@ -70,7 +66,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error uploading file:', error);
     return NextResponse.json(
-      { error: 'Failed to upload file' },
+      { 
+        error: 'Failed to upload file',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

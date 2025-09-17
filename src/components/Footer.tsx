@@ -11,11 +11,7 @@ export const Footer = () => {
         <div className="text-center space-y-8">
           {/* Name/Brand */}
           <div className="space-y-2">
-            <h3 className="text-2xl font-light tracking-wide">
-              Francisco Cardoso de Araujo
-            </h3>
             <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto"></div>
-            <p className="text-sm font-light">Composer & Artist</p>
           </div>
           
           {/* Social Media */}

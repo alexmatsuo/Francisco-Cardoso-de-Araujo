@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, MapPin, ExternalLink, Music, Users, Clock, ChevronRight, Image } from "lucide-react";
+import { Calendar, MapPin, ExternalLink, Music, Users, Clock, ChevronRight, Image, FileImage } from "lucide-react";
 
 interface Event {
   id: number;
@@ -16,8 +16,9 @@ interface Event {
   performers?: string;
   website?: string;
   isUpcoming: boolean;
-  imageFileNames?: string[]; // New array format
-  imageFileName?: string; // Keep for backward compatibility
+  posterUrl?: string;   // Main poster image
+  imageUrls?: string[]; // Additional images
+  pdfUrl?: string;
 }
 
 export default function EventsPage() {
@@ -44,14 +45,7 @@ export default function EventsPage() {
       const data = await response.json();
       console.log('Received data:', data);
       
-      // Handle backward compatibility for images
-      const processedEvents = (data.events || []).map((event: Event) => ({
-        ...event,
-        // Convert old single image to array format if needed
-        imageFileNames: event.imageFileNames || (event.imageFileName ? [event.imageFileName] : [])
-      }));
-      
-      setEvents(processedEvents);
+      setEvents(data.events || []);
     } catch (error) {
       console.error("Error fetching events:", error);
       setError("Failed to load events. Please try again later.");
@@ -155,7 +149,8 @@ export default function EventsPage() {
 
       <div className="space-y-4">
         {filteredEvents.map((event) => {
-          const hasImages = event.imageFileNames && event.imageFileNames.length > 0;
+          const hasImages = event.imageUrls && event.imageUrls.length > 0;
+          const hasPoster = !!event.posterUrl;
           
           return (
             <div
@@ -191,10 +186,21 @@ export default function EventsPage() {
                     }`}>
                       {event.isUpcoming ? 'Upcoming' : 'Past'}
                     </span>
+                    {hasPoster && (
+                      <span className="inline-flex items-center px-2 py-1 text-xs bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                        <FileImage className="w-3 h-3 mr-1" />
+                        Poster
+                      </span>
+                    )}
                     {hasImages && (
                       <span className="inline-flex items-center px-2 py-1 text-xs bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                         <Image className="w-3 h-3 mr-1" />
-                        {event.imageFileNames!.length} {event.imageFileNames!.length === 1 ? 'Image' : 'Images'}
+                        {event.imageUrls!.length} {event.imageUrls!.length === 1 ? 'Image' : 'Images'}
+                      </span>
+                    )}
+                    {event.pdfUrl && (
+                      <span className="px-2 py-1 text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                        PDF
                       </span>
                     )}
                   </div>

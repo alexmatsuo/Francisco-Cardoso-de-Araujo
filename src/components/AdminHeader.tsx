@@ -97,15 +97,6 @@ export const AdminHeader = () => {
           </div>
 
           <Link
-            href="/admin/writings"
-            className={`nav-item ${
-              isActive("/admin/writings") ? "text-[#D3CEAD]" : ""
-            }`}
-          >
-            Writings
-          </Link>
-
-          <Link
             href="/admin/events"
             className={`nav-item ${
               isActive("/admin/events") ? "text-[#D3CEAD]" : ""
@@ -297,13 +288,6 @@ export const AdminHeader = () => {
                 )}
               </div>
 
-              <Link
-                href="/admin/writings"
-                onClick={closeMobileMenu}
-                className="mobile-nav-item"
-              >
-                Writings
-              </Link>
             </div>
           </nav>
         </div>

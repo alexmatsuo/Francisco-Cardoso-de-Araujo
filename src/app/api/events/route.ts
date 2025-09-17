@@ -46,8 +46,9 @@ export async function POST(request: Request) {
               works: eventData.works?.trim() || null,
               performers: eventData.performers?.trim() || null,
               website: eventData.website?.trim() || null,
-              imageFileNames: eventData.imageFileNames || null,
-              pdfFileName: eventData.pdfFileName || null,
+              posterUrl: eventData.posterUrl || null,  // New field
+              imageUrls: eventData.imageUrls || [],
+              pdfUrl: eventData.pdfUrl || null,
               isUpcoming: new Date(eventData.date) > new Date(),
             }
           });
@@ -85,8 +86,9 @@ export async function POST(request: Request) {
         works: eventData.works?.trim() || null,
         performers: eventData.performers?.trim() || null,
         website: eventData.website?.trim() || null,
-        imageFileNames: eventData.imageFileNames || null,
-        pdfFileName: eventData.pdfFileName || null,
+        posterUrl: eventData.posterUrl || null,  // New field
+        imageUrls: eventData.imageUrls || [],
+        pdfUrl: eventData.pdfUrl || null,
         isUpcoming: new Date(eventData.date) > new Date(),
       }
     });

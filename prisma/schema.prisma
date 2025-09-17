@@ -50,6 +50,7 @@ model About {
 
   @@map("about")
 }
+
 model Event {
   id          Int      @id @default(autoincrement())
   title       String
@@ -61,11 +62,11 @@ model Event {
   works       String?
   performers  String?
   website     String?
-  imageFileNames Json?   
-  pdfFileName String?
+  posterUrl   String?  // Main poster image URL
+  imageUrls   String[] // Additional images array
+  pdfUrl      String?  // Program PDF URL
   isUpcoming  Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   @@map("events")
 }

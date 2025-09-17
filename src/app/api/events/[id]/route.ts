@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { unlink } from 'fs/promises';
-import { join } from 'path';
 
 export async function GET(
   request: Request,
@@ -54,7 +52,7 @@ export async function PUT(
 
     const eventData = await request.json();
 
-    // Get current event to know what files to delete
+    // Get current event to check if it exists
     const currentEvent = await prisma.event.findUnique({
       where: { id: eventId }
     });
@@ -86,11 +84,12 @@ export async function PUT(
     updateData.works = eventData.works?.trim() || null;
     updateData.performers = eventData.performers?.trim() || null;
     updateData.website = eventData.website?.trim() || null;
-    updateData.pdfFileName = eventData.pdfFileName || null;
+    updateData.posterUrl = eventData.posterUrl || null;  // New field
+    updateData.pdfUrl = eventData.pdfUrl || null;
 
-    // Handle imageFileNames array - convert undefined to null for database
-    if (eventData.imageFileNames !== undefined) {
-      updateData.imageFileNames = eventData.imageFileNames;
+    // Handle imageUrls array - convert undefined to empty array for database
+    if (eventData.imageUrls !== undefined) {
+      updateData.imageUrls = eventData.imageUrls || [];
     }
 
     // Update the event
@@ -98,45 +97,6 @@ export async function PUT(
       where: { id: eventId },
       data: updateData
     });
-
-    // Check if images were removed and delete the physical files
-    const currentImages = Array.isArray(currentEvent?.imageFileNames) 
-      ? (currentEvent.imageFileNames as string[]) 
-      : [];
-    const newImages = Array.isArray(eventData.imageFileNames) 
-      ? eventData.imageFileNames 
-      : [];
-    
-    if (currentImages.length > 0) {
-      const imagesToDelete = currentImages.filter(
-        (img: string) => !newImages.includes(img)
-      );
-      
-      // Delete the physical files
-      for (const imageName of imagesToDelete) {
-        if (typeof imageName === 'string') {
-          try {
-            const filePath = join(process.cwd(), 'public', 'uploads', 'images', imageName);
-            await unlink(filePath);
-          } catch (error) {
-            console.error('Error deleting image file:', imageName, error);
-            // Continue even if file deletion fails
-          }
-        }
-      }
-    }
-
-    // Check if PDF was removed and delete the physical file
-    if (currentEvent?.pdfFileName && 
-        typeof currentEvent.pdfFileName === 'string' && 
-        currentEvent.pdfFileName !== eventData.pdfFileName) {
-      try {
-        const pdfPath = join(process.cwd(), 'public', 'uploads', 'pdfs', currentEvent.pdfFileName);
-        await unlink(pdfPath);
-      } catch (error) {
-        console.error('Error deleting PDF file:', error);
-      }
-    }
 
     return NextResponse.json({ 
       message: 'Event updated successfully',
@@ -168,7 +128,7 @@ export async function DELETE(
       );
     }
 
-    // Get event first to know what files to delete
+    // Get event first to check if it exists
     const event = await prisma.event.findUnique({
       where: { id: eventId }
     });
@@ -185,30 +145,8 @@ export async function DELETE(
       where: { id: eventId }
     });
     
-    // Delete associated image files (only if it's an array)
-    if (event?.imageFileNames && Array.isArray(event.imageFileNames)) {
-      for (const imageName of event.imageFileNames) {
-        if (typeof imageName === 'string') {
-          try {
-            const filePath = join(process.cwd(), 'public', 'uploads', 'images', imageName);
-            await unlink(filePath);
-          } catch (error) {
-            console.error('Error deleting image file:', error);
-            // Continue even if file deletion fails
-          }
-        }
-      }
-    }
-    
-    // Also delete PDF if exists
-    if (event?.pdfFileName && typeof event.pdfFileName === 'string') {
-      try {
-        const pdfPath = join(process.cwd(), 'public', 'uploads', 'pdfs', event.pdfFileName);
-        await unlink(pdfPath);
-      } catch (error) {
-        console.error('Error deleting PDF file:', error);
-      }
-    }
+    // Note: With Vercel Blob storage, we don't delete files from the filesystem
+    // If you want to delete blobs, you would use Vercel Blob API here
 
     return NextResponse.json({ 
       message: 'Event deleted successfully' 
