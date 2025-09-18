@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { Loading } from "@/components/Loading";
 
 interface WorkDetail {
   id: number;
@@ -83,11 +84,7 @@ export default function WorkDetailPage() {
   };
 
   if (isLoading) {
-    return (
-      <main className="p-8 max-w-4xl mx-auto">
-        <div className="text-cente">Loading work details...</div>
-      </main>
-    );
+    return <Loading message="Loading ..." />;
   }
 
   if (!work) {

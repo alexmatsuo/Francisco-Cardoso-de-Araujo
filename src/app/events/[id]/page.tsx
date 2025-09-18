@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Calendar, MapPin, ExternalLink, Music, Users, ArrowLeft, FileText, ImageIcon } from "lucide-react";
+import { Loading } from "@/components/Loading";
 
 interface Event {
   id: number;
@@ -69,11 +70,7 @@ export default function EventDetailPage() {
   };
 
   if (isLoading) {
-    return (
-      <main className="works-container">
-        <div className="text-center text-[#D3CEAD]">Loading event details...</div>
-      </main>
-    );
+    return <Loading message="Loading ..." />;
   }
 
   if (error || !event) {

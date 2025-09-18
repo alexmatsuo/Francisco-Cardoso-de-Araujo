@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Loading } from "@/components/Loading";
 
 interface Work {
   id: number;
@@ -46,11 +47,7 @@ export default function LargeEnsemblesWorks() {
   };
 
   if (isLoading) {
-    return (
-      <main className="works-container">
-        <div className="text-center">Loading ...</div>
-      </main>
-    );
+    return <Loading message="Loading ..." />;
   }
 
   return (

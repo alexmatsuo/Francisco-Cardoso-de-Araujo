@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Music, Clock, Calendar, ChevronRight, Eye, Grid, List } from "lucide-react";
 
 interface Work {
   id: number;
@@ -25,6 +26,14 @@ interface WorksByCategory {
   multimediaInstallations: Work[];
 }
 
+const categoryConfig = {
+  solo: { title: "Solo", icon: Music, color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+  duosTrios: { title: "Duos & Trios", icon: Music, color: "bg-green-500/20 text-green-400 border-green-500/30" },
+  chamberEnsembles: { title: "Chamber Ensembles", icon: Music, color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
+  largeEnsembles: { title: "Large Ensembles", icon: Music, color: "bg-orange-500/20 text-orange-400 border-orange-500/30" },
+  multimediaInstallations: { title: "Multimedia & Installations", icon: Music, color: "bg-pink-500/20 text-pink-400 border-pink-500/30" }
+};
+
 export default function AllWorks() {
   const [works, setWorks] = useState<WorksByCategory>({
     solo: [],
@@ -34,6 +43,10 @@ export default function AllWorks() {
     multimediaInstallations: []
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [selectedDecade, setSelectedDecade] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchAllWorks();
@@ -41,7 +54,6 @@ export default function AllWorks() {
 
   const fetchAllWorks = async () => {
     try {
-      // Fetch all categories in parallel
       const [soloRes, duosTriosRes, chamberRes, largeRes, multimediaRes] = await Promise.all([
         fetch('/api/works/solo'),
         fetch('/api/works/duos-trios'),
@@ -50,12 +62,10 @@ export default function AllWorks() {
         fetch('/api/works/multimedia-installations')
       ]);
 
-      // Check if all requests were successful
       if (!soloRes.ok || !duosTriosRes.ok || !chamberRes.ok || !largeRes.ok || !multimediaRes.ok) {
         throw new Error('Failed to fetch one or more work categories');
       }
 
-      // Parse all responses
       const [soloData, duosTriosData, chamberData, largeData, multimediaData] = await Promise.all([
         soloRes.json(),
         duosTriosRes.json(),
@@ -78,6 +88,39 @@ export default function AllWorks() {
     }
   };
 
+  const getAllWorks = () => {
+    return [
+      ...works.solo.map(w => ({ ...w, category: 'solo' })),
+      ...works.duosTrios.map(w => ({ ...w, category: 'duosTrios' })),
+      ...works.chamberEnsembles.map(w => ({ ...w, category: 'chamberEnsembles' })),
+      ...works.largeEnsembles.map(w => ({ ...w, category: 'largeEnsembles' })),
+      ...works.multimediaInstallations.map(w => ({ ...w, category: 'multimediaInstallations' }))
+    ].sort((a, b) => b.year - a.year);
+  };
+
+  const getFilteredWorks = () => {
+    const allWorks = getAllWorks();
+    
+    return allWorks.filter(work => {
+      const matchesSearch = searchTerm === '' || 
+        work.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        work.instruments.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesDecade = selectedDecade === 'all' || 
+        Math.floor(work.year / 10) * 10 === parseInt(selectedDecade);
+      
+      const matchesCategory = selectedCategory === 'all' || work.category === selectedCategory;
+      
+      return matchesSearch && matchesDecade && matchesCategory;
+    });
+  };
+
+  const getDecades = () => {
+    const allWorks = getAllWorks();
+    const decades = new Set(allWorks.map(work => Math.floor(work.year / 10) * 10));
+    return Array.from(decades).sort((a, b) => b - a);
+  };
+
   const getTotalWorks = () => {
     return works.solo.length + 
            works.duosTrios.length + 
@@ -86,92 +129,266 @@ export default function AllWorks() {
            works.multimediaInstallations.length;
   };
 
-  // Check if a work has additional details to determine if it should be linked
   const hasDetails = (work: Work) => {
     return work.duration || work.information || work.programNotes || 
            work.imageFileName || work.videoUrl || work.soundcloudUrl;
   };
 
-  // Get the appropriate link path based on category
-  const getLinkPath = (work: Work, category: string) => {
+  const getLinkPath = (work: Work & { category: string }) => {
     if (!hasDetails(work) || !work.slug) return null;
     
-    switch (category) {
-      case 'solo':
-        return `/works/solo/${work.slug}`;
-      case 'duosTrios':
-        return `/works/duos-trios/${work.slug}`;
-      case 'chamberEnsembles':
-        return `/works/chamber-ensembles/${work.slug}`;
-      case 'largeEnsembles':
-        return `/works/large-ensembles/${work.slug}`;
-      case 'multimediaInstallations':
-        return `/works/multimedia-installations/${work.slug}`;
-      default:
-        return null;
+    switch (work.category) {
+      case 'solo': return `/works/solo/${work.slug}`;
+      case 'duosTrios': return `/works/duos-trios/${work.slug}`;
+      case 'chamberEnsembles': return `/works/chamber-ensembles/${work.slug}`;
+      case 'largeEnsembles': return `/works/large-ensembles/${work.slug}`;
+      case 'multimediaInstallations': return `/works/multimedia-installations/${work.slug}`;
+      default: return null;
     }
   };
 
-  const renderWorksSection = (title: string, worksArray: Work[], category: string) => {
-    if (worksArray.length === 0) return null;
-    
-    return (
-      <div className="mb-12">
-        <h2 className="text-2xl font-semibold mb-6">{title}</h2>
-        <div className="space-y-3">
-          {worksArray.map((work) => {
-            const linkPath = getLinkPath(work, category);
-            
-            return (
-              <div key={work.id} className="text-lg text-gray-300 hover:text-white transition-colors pl-4">
-                {linkPath ? (
-                  <Link href={linkPath} className="hover:underline">
-                    {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
-                  </Link>
-                ) : (
-                  <>
-                    {work.title} ({work.year}) - <span className="text-sm">{work.instruments}</span>
-                  </>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <div className="mt-4 text-sm text-gray-500 pl-4">
-          {worksArray.length} composition{worksArray.length !== 1 ? 's' : ''}
-        </div>
-      </div>
-    );
-  };
+  const filteredWorks = getFilteredWorks();
 
   if (isLoading) {
     return (
       <main className="works-container">
-        <div className="text-center">Loading all compositions...</div>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-[#D3CEAD] border-t-transparent animate-spin mx-auto mb-4"></div>
+            <div className="text-[#D3CEAD]">Loading ...</div>
+          </div>
+        </div>
       </main>
     );
   }
 
   return (
     <main className="works-container">
-      <h1 className="works-title">Full Catalog</h1>
-      
-      {renderWorksSection("Solo", works.solo, "solo")}
-      {renderWorksSection("Duos & Trios", works.duosTrios, "duosTrios")}
-      {renderWorksSection("Chamber Ensembles", works.chamberEnsembles, "chamberEnsembles")}
-      {renderWorksSection("Large Ensembles", works.largeEnsembles, "largeEnsembles")}
-      {renderWorksSection("Multimedia & Installations", works.multimediaInstallations, "multimediaInstallations")}
-      
-      <div className="mt-16 pt-8 border-t border-gray-600">
-        <div className="text-lg text-gray-300 font-medium">
-          Total works across all categories: {getTotalWorks()}
+      {/* Header Section */}
+      <div className="mb-12">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+          <div>
+            <h1 className="text-4xl font-bold mb-2 text-[#D3CEAD]">Full Catalog</h1>
+            <p className="text-[#D3CEAD]/70">Complete collection of compositions across all categories</p>
+          </div>
+          
+          {/* Stats */}
+          <div className="flex flex-wrap gap-4">
+            <div className="bg-white/5 backdrop-blur-sm px-4 py-2 border border-white/10">
+              <div className="text-2xl font-bold text-[#D3CEAD]">{getTotalWorks()}</div>
+              <div className="text-sm text-[#D3CEAD]/70">Total Works</div>
+            </div>
+            <div className="bg-white/5 backdrop-blur-sm px-4 py-2 border border-white/10">
+              <div className="text-2xl font-bold text-[#D3CEAD]">{getDecades().length}</div>
+              <div className="text-sm text-[#D3CEAD]/70">Decades</div>
+            </div>
+          </div>
         </div>
-        <div className="mt-4 text-sm text-gray-400 space-y-1">
-          <div>Solo: {works.solo.length}</div>
-          <div>Duos & Trios: {works.duosTrios.length}</div>
-          <div>Chamber Ensembles: {works.chamberEnsembles.length}</div>
-          <div>Large Ensembles: {works.largeEnsembles.length}</div>
-          <div>Multimedia & Installations: {works.multimediaInstallations.length}</div>
+
+        {/* Controls */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          {/* Search */}
+          <div className="flex-1">
+            <input
+              type="text"
+              placeholder="Search by title or instruments..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] placeholder-[#D3CEAD]/50 focus:outline-none focus:border-[#D3CEAD]/50 focus:bg-white/10"
+            />
+          </div>
+          
+          {/* Category Filter */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] focus:outline-none focus:border-[#D3CEAD]/50"
+          >
+            <option value="all">All Categories</option>
+            <option value="solo">Solo</option>
+            <option value="duosTrios">Duos & Trios</option>
+            <option value="chamberEnsembles">Chamber Ensembles</option>
+            <option value="largeEnsembles">Large Ensembles</option>
+            <option value="multimediaInstallations">Multimedia & Installations</option>
+          </select>
+          
+          {/* Decade Filter */}
+          <select
+            value={selectedDecade}
+            onChange={(e) => setSelectedDecade(e.target.value)}
+            className="px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] focus:outline-none focus:border-[#D3CEAD]/50"
+          >
+            <option value="all">All Decades</option>
+            {getDecades().map(decade => (
+              <option key={decade} value={decade.toString()}>
+                {decade}s
+              </option>
+            ))}
+          </select>
+          
+          {/* View Mode Toggle */}
+          <div className="flex bg-white/5 border border-white/10 p-1">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`px-3 py-2 transition-colors ${
+                viewMode === 'grid' 
+                  ? 'bg-[#D3CEAD] text-black' 
+                  : 'text-[#D3CEAD] hover:bg-white/10'
+              }`}
+            >
+              <Grid className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`px-3 py-2 transition-colors ${
+                viewMode === 'list' 
+                  ? 'bg-[#D3CEAD] text-black' 
+                  : 'text-[#D3CEAD] hover:bg-white/10'
+              }`}
+            >
+              <List className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Results */}
+      {filteredWorks.length === 0 ? (
+        <div className="text-center py-12">
+          <Music className="w-16 h-16 text-[#D3CEAD]/30 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-[#D3CEAD] mb-2">No works found</h3>
+          <p className="text-[#D3CEAD]/70">Try adjusting your search or filter criteria</p>
+        </div>
+      ) : (
+        <>
+          {/* Results Count */}
+          <div className="mb-6 text-sm text-[#D3CEAD]/70">
+            Showing {filteredWorks.length} of {getTotalWorks()} works
+          </div>
+
+          {/* Works Display */}
+          {viewMode === 'grid' ? (
+            <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
+              {filteredWorks.map((work) => {
+                const linkPath = getLinkPath(work);
+                const category = categoryConfig[work.category as keyof typeof categoryConfig];
+                
+                const content = (
+                  <div className="group bg-white/5 backdrop-blur-sm border border-white/10 p-2 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30 aspect-square flex flex-col">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-1">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors text-xs leading-tight line-clamp-2 mb-1">
+                          {work.title}
+                        </h3>
+                        <div className="text-xs text-[#D3CEAD]/70">
+                          {work.year}
+                        </div>
+                      </div>
+                      {linkPath && (
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Eye className="w-2 h-2 text-[#D3CEAD]" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <span className="text-xs text-[#D3CEAD]/80 line-clamp-2 leading-tight">{work.instruments}</span>
+                        
+                        {work.duration && (
+                          <div className="text-xs text-[#D3CEAD]/70 mt-1">
+                            {work.duration}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Category Badge */}
+                      <div className="mt-1">
+                        <div className={`text-xs px-1 py-0.5 ${category.color} truncate`}>
+                          {category.title.split(' ')[0]}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+                
+                return linkPath ? (
+                  <Link key={work.id} href={linkPath} className="block">
+                    {content}
+                  </Link>
+                ) : (
+                  <div key={work.id}>
+                    {content}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {filteredWorks.map((work) => {
+                const linkPath = getLinkPath(work);
+                const category = categoryConfig[work.category as keyof typeof categoryConfig];
+                
+                const content = (
+                  <div className="group flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-1">
+                        <h3 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors truncate">
+                          {work.title}
+                        </h3>
+                        <span className="text-sm text-[#D3CEAD]/70">({work.year})</span>
+                        <div className={`px-2 py-1 text-xs border ${category.color}`}>
+                          {category.title}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-[#D3CEAD]/80">
+                        <span className="truncate">{work.instruments}</span>
+                        {work.duration && (
+                          <>
+                            <span>•</span>
+                            <span>{work.duration}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {linkPath && (
+                      <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <ChevronRight className="w-5 h-5 text-[#D3CEAD]" />
+                      </div>
+                    )}
+                  </div>
+                );
+                
+                return linkPath ? (
+                  <Link key={work.id} href={linkPath}>
+                    {content}
+                  </Link>
+                ) : (
+                  <div key={work.id}>
+                    {content}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Summary Statistics */}
+      <div className="mt-16 pt-8 border-t border-white/10">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {Object.entries(works).map(([key, workList]) => {
+            const category = categoryConfig[key as keyof typeof categoryConfig];
+            return (
+              <div key={key} className="text-center">
+                <div className="text-2xl font-bold text-[#D3CEAD] mb-1">{workList.length}</div>
+                <div className="text-sm text-[#D3CEAD]/70">{category.title}</div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </main>

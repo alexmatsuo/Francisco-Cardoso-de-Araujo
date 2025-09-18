@@ -9,6 +9,7 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWorksOpen, setIsWorksOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -18,6 +19,7 @@ export const Header = () => {
     setIsMobileMenuOpen(false);
     setIsWorksOpen(false);
     setIsProjectsOpen(false);
+    setIsAboutOpen(false);
   };
 
   const isActive = (href: string) => pathname === href;
@@ -33,12 +35,30 @@ export const Header = () => {
           >
             Home
           </Link>
-          <Link 
-            href="/about" 
-            className={`nav-item ${isActive("/about") ? "text-[#D3CEAD]" : ""}`}
-          >
-            About
-          </Link>
+          
+          {/* About dropdown */}
+          <div className="relative group">
+            <button 
+              className={`nav-item flex items-center ${
+                pathname.startsWith("/about") ? "text-[#D3CEAD]" : ""
+              }`}
+            >
+              About
+              <svg
+                className="ml-2 w-3 h-3 transition-transform group-hover:rotate-180"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+            <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="border border-white/15 p-1 shadow-lg " style={{ backgroundColor: '#D3CEAD' }}>
+                <Link href="/about/bio" className="menu-style">Bio</Link>
+                <Link href="/about/photos" className="menu-style">Photos</Link>
+              </div>
+            </div>
+          </div>
           
           {/* Works dropdown */}
           <div className="relative group">
@@ -92,7 +112,6 @@ export const Header = () => {
               </div>
             </div>
           </div>
-        
 
           <Link 
             href="/events" 
@@ -155,13 +174,35 @@ export const Header = () => {
               >
                 Home
               </Link>
-              <Link 
-                href="/about" 
-                onClick={closeMobileMenu} 
-                className={`mobile-nav-item ${isActive("/about") ? "text-[#D3CEAD]" : ""}`}
-              >
-                About
-              </Link>
+              
+              {/* Mobile About Section */}
+              <div>
+                <button
+                  onClick={() => setIsAboutOpen(!isAboutOpen)}
+                  className={`mobile-nav-item w-full flex items-center justify-between ${
+                    pathname.startsWith("/about") ? "text-[#D3CEAD]" : ""
+                  }`}
+                >
+                  About
+                  <svg
+                    className={`w-4 h-4 transition-transform duration-200 ${isAboutOpen ? 'rotate-180' : ''}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                {isAboutOpen && (
+                  <div className="ml-4 mt-3 flex flex-col gap-3">
+                    <Link href="/about/bio" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/about/bio") ? "text-[#D3CEAD]" : ""}`}>
+                      Bio
+                    </Link>
+                    <Link href="/about/photos" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/about/photos") ? "text-[#D3CEAD]" : ""}`}>
+                      Photos
+                    </Link>
+                  </div>
+                )}
+              </div>
               
               {/* Mobile Works Section */}
               <div>
