@@ -43,7 +43,7 @@ export default function AllWorks() {
     multimediaInstallations: []
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [selectedDecade, setSelectedDecade] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -194,7 +194,7 @@ export default function AllWorks() {
               placeholder="Search by title or instruments..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] placeholder-[#D3CEAD]/50 focus:outline-none focus:border-[#D3CEAD]/50 focus:bg-white/10"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] placeholder-[#D3CEAD]/50 focus:outline-none focus:border-[#D3CEAD]/50 focus:bg-white/10 transition-colors"
             />
           </div>
           
@@ -268,17 +268,17 @@ export default function AllWorks() {
 
           {/* Works Display */}
           {viewMode === 'grid' ? (
-            <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
               {filteredWorks.map((work) => {
                 const linkPath = getLinkPath(work);
                 const category = categoryConfig[work.category as keyof typeof categoryConfig];
                 
                 const content = (
-                  <div className="group bg-white/5 backdrop-blur-sm border border-white/10 p-2 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30 aspect-square flex flex-col">
+                  <div className="group bg-white/5 backdrop-blur-sm border border-white/10 p-3 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30 aspect-[3/2] flex flex-col">
                     {/* Header */}
-                    <div className="flex items-start justify-between mb-1">
+                    <div className="flex items-start justify-between mb-2">
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors text-xs leading-tight line-clamp-2 mb-1">
+                        <h3 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors text-sm leading-tight line-clamp-2 mb-1">
                           {work.title}
                         </h3>
                         <div className="text-xs text-[#D3CEAD]/70">
@@ -286,8 +286,8 @@ export default function AllWorks() {
                         </div>
                       </div>
                       {linkPath && (
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Eye className="w-2 h-2 text-[#D3CEAD]" />
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity ml-1">
+                          <Eye className="w-3 h-3 text-[#D3CEAD]" />
                         </div>
                       )}
                     </div>
@@ -295,20 +295,21 @@ export default function AllWorks() {
                     {/* Content */}
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
-                        <span className="text-xs text-[#D3CEAD]/80 line-clamp-2 leading-tight">{work.instruments}</span>
+                        <span className="text-xs text-[#D3CEAD]/80 line-clamp-3 leading-tight">{work.instruments}</span>
                         
                         {work.duration && (
-                          <div className="text-xs text-[#D3CEAD]/70 mt-1">
+                          <div className="text-xs text-[#D3CEAD]/70 mt-2">
+                            <Clock className="w-3 h-3 inline mr-1" />
                             {work.duration}
                           </div>
                         )}
                       </div>
                       
                       {/* Category Badge */}
-                      <div className="mt-1">
-                        <div className={`text-xs px-1 py-0.5 ${category.color} truncate`}>
+                      <div className="mt-2">
+                        <span className={`text-xs px-2 py-1 ${category.color} inline-block`}>
                           {category.title.split(' ')[0]}
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -326,7 +327,7 @@ export default function AllWorks() {
               })}
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="flex flex-col gap-4">
               {filteredWorks.map((work) => {
                 const linkPath = getLinkPath(work);
                 const category = categoryConfig[work.category as keyof typeof categoryConfig];
@@ -334,20 +335,22 @@ export default function AllWorks() {
                 const content = (
                   <div className="group flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-1">
-                        <h3 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors truncate">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <h3 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors">
                           {work.title}
                         </h3>
                         <span className="text-sm text-[#D3CEAD]/70">({work.year})</span>
-                        <div className={`px-2 py-1 text-xs border ${category.color}`}>
+                        <span className={`px-2 py-1 text-xs border ${category.color}`}>
                           {category.title}
-                        </div>
+                        </span>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-[#D3CEAD]/80">
-                        <span className="truncate">{work.instruments}</span>
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-[#D3CEAD]/80">
+                        <Music className="w-3 h-3" />
+                        <span>{work.instruments}</span>
                         {work.duration && (
                           <>
-                            <span>•</span>
+                            <span className="text-[#D3CEAD]/40">•</span>
+                            <Clock className="w-3 h-3" />
                             <span>{work.duration}</span>
                           </>
                         )}
@@ -363,7 +366,7 @@ export default function AllWorks() {
                 );
                 
                 return linkPath ? (
-                  <Link key={work.id} href={linkPath}>
+                  <Link key={work.id} href={linkPath} className="block">
                     {content}
                   </Link>
                 ) : (
