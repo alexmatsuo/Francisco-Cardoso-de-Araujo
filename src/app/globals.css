@@ -1,3 +1,5 @@
+/* Update your globals.css with this mobile-friendly background solution */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -106,37 +108,10 @@
     background-attachment: local;
 }
 
-/* Mobile-friendly parallax background */
-.parallax-background {
+/* Simple full background - no parallax effects */
+.simple-background {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    
-    /* Use fixed attachment only on desktop */
-    @media (min-width: 768px) {
-        background-attachment: fixed;
-    }
-    
-    /* On mobile, use scroll attachment to avoid jumping */
-    @media (max-width: 767px) {
-        background-attachment: scroll;
-        /* Ensure the background covers the full viewport height on mobile */
-        min-height: 100vh;
-        /* Use a larger background size on mobile to maintain coverage */
-        background-size: cover;
-    }
-}
-
-/* Additional mobile-specific fixes */
-@media (max-width: 767px) {
-    /* Prevent background jumping on iOS Safari */
-    body {
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Ensure full height coverage on mobile */
-    .parallax-background {
-        transform: translateZ(0); /* Force hardware acceleration */
-        -webkit-transform: translateZ(0);
-    }
+    background-attachment: scroll;
 }

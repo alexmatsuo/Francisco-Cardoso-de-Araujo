@@ -17,11 +17,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-black text-[#D3CEAD] antialiased font-sans flex flex-col min-h-screen">
         <div 
-          className="fixed inset-0 z-[-1] parallax-background"
+          className="fixed inset-0 z-[-1] simple-background"
           style={{
             backgroundImage: "url('/background.jpg')",
-            backgroundSize: 'cover',
-            backgroundRepeat: 'repeat',
           }}
         >
           {/* Dark overlay */}
