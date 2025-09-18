@@ -70,7 +70,7 @@ export const Footer = () => {
         {/* Copyright */}
         <div className="text-center">
           <p className="text-gray-400 text-sm font-light">
-            © {year} Francisco Cardoso de Araujo. All rights reserved. Made by Alex Matsuo @gmalexmatsuo@gmail.com
+            © {year} Francisco Cardoso de Araujo. All rights reserved. Made by Alex Matsuo gmalexmatsuo@gmail.com
           </p>
         </div>
       </div>

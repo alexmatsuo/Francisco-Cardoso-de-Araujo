@@ -74,7 +74,7 @@ export const Header = () => {
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </Link>
             <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
@@ -135,7 +135,7 @@ export const Header = () => {
         <div className="flex justify-left ml-6">
           <button
             onClick={toggleMobileMenu}
-            className="p-3 rounded-full backdrop-blur"
+            className="p-3 backdrop-blur mt-2"
             aria-label="Toggle mobile menu"
           >
             <svg
@@ -165,7 +165,7 @@ export const Header = () => {
         <div className={`absolute top-full mt-2 left-4 right-4 transition-all duration-300 z-40 ${
           isMobileMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'
         }`}>
-          <nav className="rounded-lg p-6 shadow-lg bg-[#C3BE9D]/30 text-black backdrop-blur">
+          <nav className="p-6 shadow-lg bg-[#C3BE9D]/30 text-black backdrop-blur">
             <div className="flex flex-col gap-4">
               <Link 
                 href="/" 
@@ -295,10 +295,10 @@ export const Header = () => {
 
       <style jsx>{`
         .mobile-nav-item {
-          @apply block py-3 px-4 rounded-md hover:bg-black/10 transition-colors text-left text-black;
+          @apply block py-3 px-4 hover:bg-black/10 transition-colors text-left text-black;
         }
         .mobile-submenu-item {
-          @apply block py-2 px-4 rounded-md hover:bg-black/10 transition-colors text-sm opacity-80 hover:opacity-100 text-black;
+          @apply block py-2 px-4 hover:bg-black/10 transition-colors text-sm opacity-80 hover:opacity-100 text-black;
         }
       `}</style>
     </>
