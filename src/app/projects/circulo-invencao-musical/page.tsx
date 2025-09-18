@@ -70,7 +70,7 @@ export default function CIMAboutPage() {
         </div>
 
         <footer className="p-4 sm:p-6 text-center text-xs sm:text-sm text-gray-300">
-          © Círculo de Invenção Musical — founded 2015
+          © Círculo de Invenção Musical — founded 2014
         </footer>
       </section>
     </main>
