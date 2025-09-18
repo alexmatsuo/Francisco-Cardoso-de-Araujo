@@ -96,12 +96,12 @@ export default function EventsPage() {
 
   const getEventTypeStyle = (eventType: string) => {
     const styles = {
-      concert: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-      premiere: 'bg-green-500/20 text-green-400 border-green-500/30',
-      workshop: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-      masterclass: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-      festival: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
-      default: 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      concert: 'bg-blue-500/20 text-blue-400',
+      premiere: 'bg-green-500/20 text-green-400',
+      workshop: 'bg-purple-500/20 text-purple-400',
+      masterclass: 'bg-orange-500/20 text-orange-400',
+      festival: 'bg-pink-500/20 text-pink-400',
+      default: 'bg-gray-500/20 text-gray-400'
     };
     return styles[eventType as keyof typeof styles] || styles.default;
   };
@@ -163,8 +163,8 @@ export default function EventsPage() {
             onClick={() => setFilter('all')}
             className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
               filter === 'all' 
-                ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
-                : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
+                ? 'bg-[#D3CEAD] text-black' 
+                : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
             }`}
           >
             All ({events.length})
@@ -173,8 +173,8 @@ export default function EventsPage() {
             onClick={() => setFilter('upcoming')}
             className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
               filter === 'upcoming' 
-                ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
-                : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
+                ? 'bg-[#D3CEAD] text-black' 
+                : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
             }`}
           >
             Upcoming ({events.filter(e => e.isUpcoming).length})
@@ -183,8 +183,8 @@ export default function EventsPage() {
             onClick={() => setFilter('past')}
             className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
               filter === 'past' 
-                ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black ' 
-                : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
+                ? 'bg-[#D3CEAD] text-black ' 
+                : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
             }`}
           >
             Past ({events.filter(e => !e.isUpcoming).length})
@@ -213,7 +213,7 @@ export default function EventsPage() {
             return (
               <div
                 key={event.id}
-                className="group bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30 cursor-pointer overflow-hidden h-full flex flex-col"
+                className="group bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
                 onClick={() => handleEventClick(event.id)}
               >
                 <div className="p-6 flex-1 flex flex-col">
@@ -237,7 +237,7 @@ export default function EventsPage() {
                     </div>
                     
                     <div className="flex flex-col items-end gap-2 ml-4">
-                      <div className={`px-2 py-1 text-xs font-medium uppercase border ${eventTypeStyle} whitespace-nowrap`}>
+                      <div className={`px-2 py-1 text-xs font-medium uppercase ${eventTypeStyle} whitespace-nowrap`}>
                         {event.eventType}
                       </div>
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -312,7 +312,7 @@ export default function EventsPage() {
 
       {/* Summary */}
       {events.length > 0 && (
-        <div className="mt-12 pt-8 border-t border-white/10 text-center text-sm text-[#D3CEAD]/70">
+        <div className="mt-12 pt-8 text-center text-sm text-[#D3CEAD]/70">
           Showing {filteredEvents.length} of {events.length} events
         </div>
       )}
