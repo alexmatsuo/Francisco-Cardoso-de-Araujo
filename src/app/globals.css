@@ -106,10 +106,37 @@
     background-attachment: local;
 }
 
-/* Alternative parallax effect using CSS only */
+/* Mobile-friendly parallax background */
 .parallax-background {
-    background-attachment: fixed;
     background-position: center;
-    background-repeat: repeat;
+    background-repeat: no-repeat;
     background-size: cover;
+    
+    /* Use fixed attachment only on desktop */
+    @media (min-width: 768px) {
+        background-attachment: fixed;
+    }
+    
+    /* On mobile, use scroll attachment to avoid jumping */
+    @media (max-width: 767px) {
+        background-attachment: scroll;
+        /* Ensure the background covers the full viewport height on mobile */
+        min-height: 100vh;
+        /* Use a larger background size on mobile to maintain coverage */
+        background-size: cover;
+    }
+}
+
+/* Additional mobile-specific fixes */
+@media (max-width: 767px) {
+    /* Prevent background jumping on iOS Safari */
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure full height coverage on mobile */
+    .parallax-background {
+        transform: translateZ(0); /* Force hardware acceleration */
+        -webkit-transform: translateZ(0);
+    }
 }

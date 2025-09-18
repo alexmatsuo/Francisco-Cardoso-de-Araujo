@@ -152,7 +152,7 @@ export default function EventDetailPage() {
           {/* Main content - Left side */}
           <div className="lg:col-span-2 space-y-8">
             {/* Event details */}
-            <div className="bg-white/5 p-6 rounded">
+            <div className="bg-white/5 p-6">
               <h2 className="text-xl font-semibold text-[#D3CEAD] mb-4">
                 Event Details
               </h2>
@@ -264,12 +264,12 @@ export default function EventDetailPage() {
                       <img
                         src={imageUrl}
                         alt={`${event.title} - Image ${index + 1}`}
-                        className="w-full aspect-[4/3] object-cover rounded transition-transform group-hover:scale-105"
+                        className="w-full aspect-[4/3] object-cover transition-transform group-hover:scale-105"
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = "none";
                         }}
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
                     </div>
                   ))}
                 </div>
@@ -282,7 +282,7 @@ export default function EventDetailPage() {
             {/* Event Poster */}
             {event.posterUrl && (
               <div>
-                <h3 className="text-lg font-medium text-[#D3CEAD] mb-3">Event Poster</h3>
+                
                 <div 
                   className="relative cursor-pointer group"
                   onClick={() => setSelectedImage(event.posterUrl!)}
@@ -290,7 +290,7 @@ export default function EventDetailPage() {
                   <img
                     src={event.posterUrl}
                     alt={`${event.title} - Poster`}
-                    className="w-full aspect-[3/4] object-cover rounded shadow-lg transition-transform group-hover:scale-[1.02]"
+                    className="w-full aspect-[3/4] object-cover shadow-lg transition-transform group-hover:scale-[1.02]"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = "none";
                     }}
@@ -316,7 +316,7 @@ export default function EventDetailPage() {
             />
             <button
               onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black/70 transition-colors"
+              className="absolute top-4 right-4 text-white bg-black/50 p-2 hover:bg-black/70 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
