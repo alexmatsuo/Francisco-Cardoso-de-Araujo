@@ -108,10 +108,14 @@
     background-attachment: local;
 }
 
-/* Simple full background - no parallax effects */
-.simple-background {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: scroll;
+/* Remove all background classes since we're using body background now */
+
+/* If you need any specific mobile overrides, add them here */
+@media (max-width: 767px) {
+    body {
+        /* Ensure smooth scrolling on mobile */
+        -webkit-overflow-scrolling: touch;
+        /* Prevent background issues on mobile Safari */
+        background-attachment: scroll !important;
+    }
 }
