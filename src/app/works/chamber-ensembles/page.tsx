@@ -32,8 +32,9 @@ export default function ChamberEnsemblesWorks() {
   const fetchWorks = async () => {
     try {
       const response = await fetch('/api/works/chamber-ensembles');
-      if (!response.ok) throw new Error('Failed to fetch');
-      
+      if (!response.ok) {
+        throw new Error('Failed to fetch works');
+      }
       const data = await response.json();
       setWorks(data.works || []);
     } catch (error) {
@@ -53,7 +54,7 @@ export default function ChamberEnsemblesWorks() {
         Math.floor(work.year / 10) * 10 === parseInt(selectedDecade);
       
       return matchesSearch && matchesDecade;
-    }).sort((a, b) => b.year - a.year);
+    });
   };
 
   const getDecades = () => {
@@ -98,11 +99,11 @@ export default function ChamberEnsemblesWorks() {
           
           {/* Stats */}
           <div className="flex flex-wrap gap-4">
-            <div className="bg-white/5 backdrop-blur-sm px-4 py-2 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-sm px-4 py-2">
               <div className="text-2xl font-bold text-[#D3CEAD]">{works.length}</div>
               <div className="text-sm text-[#D3CEAD]/70">Total Works</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm px-4 py-2 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-sm px-4 py-2">
               <div className="text-2xl font-bold text-[#D3CEAD]">{getDecades().length}</div>
               <div className="text-sm text-[#D3CEAD]/70">Decades</div>
             </div>
@@ -118,7 +119,7 @@ export default function ChamberEnsemblesWorks() {
               placeholder="Search by title or instruments..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] placeholder-[#D3CEAD]/50 focus:outline-none focus:border-[#D3CEAD]/50 focus:bg-white/10 transition-colors"
+              className="w-full px-4 py-3 bg-white/5 text-[#D3CEAD] placeholder-[#D3CEAD]/50 focus:outline-none focus:bg-white/10 transition-colors"
             />
           </div>
           
@@ -126,7 +127,7 @@ export default function ChamberEnsemblesWorks() {
           <select
             value={selectedDecade}
             onChange={(e) => setSelectedDecade(e.target.value)}
-            className="px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] focus:outline-none focus:border-[#D3CEAD]/50"
+            className="px-4 py-3 bg-white/5 text-[#D3CEAD] focus:outline-none"
           >
             <option value="all">All Decades</option>
             {getDecades().map(decade => (
@@ -137,7 +138,7 @@ export default function ChamberEnsemblesWorks() {
           </select>
           
           {/* View Mode Toggle */}
-          <div className="flex bg-white/5 border border-white/10 p-1">
+          <div className="flex bg-white/5 p-1">
             <button
               onClick={() => setViewMode('grid')}
               className={`px-3 py-2 transition-colors ${
@@ -183,7 +184,7 @@ export default function ChamberEnsemblesWorks() {
                 const linkPath = getLinkPath(work);
                 
                 const content = (
-                  <div className="group bg-white/5 backdrop-blur-sm border border-white/10 p-3 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30 aspect-[3/2] flex flex-col">
+                  <div className="group bg-white/5 backdrop-blur-sm p-3 hover:bg-white/10 transition-all duration-300 aspect-[3/2] flex flex-col">
                     {/* Header */}
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1 min-w-0">
@@ -214,9 +215,9 @@ export default function ChamberEnsemblesWorks() {
                         )}
                       </div>
                       
-                      {/* Chamber Badge */}
+                      {/* Chamber Ensembles Badge */}
                       <div className="mt-2">
-                        <span className="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 border border-purple-500/30 inline-block">
+                        <span className="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 inline-block">
                           Chamber
                         </span>
                       </div>
@@ -241,15 +242,15 @@ export default function ChamberEnsemblesWorks() {
                 const linkPath = getLinkPath(work);
                 
                 const content = (
-                  <div className="group flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30">
+                  <div className="group flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-3 mb-2">
                         <h3 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors">
                           {work.title}
                         </h3>
                         <span className="text-sm text-[#D3CEAD]/70">({work.year})</span>
-                        <span className="px-2 py-1 text-xs border bg-purple-500/20 text-purple-400 border-purple-500/30">
-                          Chamber
+                        <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400">
+                          Chamber Ensembles
                         </span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2 text-sm text-[#D3CEAD]/80">

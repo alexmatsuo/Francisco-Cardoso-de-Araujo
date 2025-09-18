@@ -27,11 +27,11 @@ interface WorksByCategory {
 }
 
 const categoryConfig = {
-  solo: { title: "Solo", icon: Music, color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
-  duosTrios: { title: "Duos & Trios", icon: Music, color: "bg-green-500/20 text-green-400 border-green-500/30" },
-  chamberEnsembles: { title: "Chamber Ensembles", icon: Music, color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-  largeEnsembles: { title: "Large Ensembles", icon: Music, color: "bg-orange-500/20 text-orange-400 border-orange-500/30" },
-  multimediaInstallations: { title: "Multimedia & Installations", icon: Music, color: "bg-pink-500/20 text-pink-400 border-pink-500/30" }
+  solo: { title: "Solo", icon: Music, color: "bg-blue-500/20 text-blue-400" },
+  duosTrios: { title: "Duos & Trios", icon: Music, color: "bg-green-500/20 text-green-400" },
+  chamberEnsembles: { title: "Chamber Ensembles", icon: Music, color: "bg-purple-500/20 text-purple-400" },
+  largeEnsembles: { title: "Large Ensembles", icon: Music, color: "bg-orange-500/20 text-orange-400" },
+  multimediaInstallations: { title: "Multimedia & Installations", icon: Music, color: "bg-pink-500/20 text-pink-400" }
 };
 
 export default function AllWorks() {
@@ -174,11 +174,11 @@ export default function AllWorks() {
           
           {/* Stats */}
           <div className="flex flex-wrap gap-4">
-            <div className="bg-white/5 backdrop-blur-sm px-4 py-2 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-sm px-4 py-2">
               <div className="text-2xl font-bold text-[#D3CEAD]">{getTotalWorks()}</div>
               <div className="text-sm text-[#D3CEAD]/70">Total Works</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm px-4 py-2 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-sm px-4 py-2">
               <div className="text-2xl font-bold text-[#D3CEAD]">{getDecades().length}</div>
               <div className="text-sm text-[#D3CEAD]/70">Decades</div>
             </div>
@@ -194,7 +194,7 @@ export default function AllWorks() {
               placeholder="Search by title or instruments..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] placeholder-[#D3CEAD]/50 focus:outline-none focus:border-[#D3CEAD]/50 focus:bg-white/10 transition-colors"
+              className="w-full px-4 py-3 bg-white/5 text-[#D3CEAD] placeholder-[#D3CEAD]/50 focus:outline-none focus:bg-white/10 transition-colors"
             />
           </div>
           
@@ -202,7 +202,7 @@ export default function AllWorks() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] focus:outline-none focus:border-[#D3CEAD]/50"
+            className="px-4 py-3 bg-white/5 text-[#D3CEAD] focus:outline-none"
           >
             <option value="all">All Categories</option>
             <option value="solo">Solo</option>
@@ -216,7 +216,7 @@ export default function AllWorks() {
           <select
             value={selectedDecade}
             onChange={(e) => setSelectedDecade(e.target.value)}
-            className="px-4 py-3 bg-white/5 border border-white/10 text-[#D3CEAD] focus:outline-none focus:border-[#D3CEAD]/50"
+            className="px-4 py-3 bg-white/5 text-[#D3CEAD] focus:outline-none"
           >
             <option value="all">All Decades</option>
             {getDecades().map(decade => (
@@ -227,7 +227,7 @@ export default function AllWorks() {
           </select>
           
           {/* View Mode Toggle */}
-          <div className="flex bg-white/5 border border-white/10 p-1">
+          <div className="flex bg-white/5 p-1">
             <button
               onClick={() => setViewMode('grid')}
               className={`px-3 py-2 transition-colors ${
@@ -274,7 +274,7 @@ export default function AllWorks() {
                 const category = categoryConfig[work.category as keyof typeof categoryConfig];
                 
                 const content = (
-                  <div className="group bg-white/5 backdrop-blur-sm border border-white/10 p-3 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30 aspect-[3/2] flex flex-col">
+                  <div className="group bg-white/5 backdrop-blur-sm p-3 hover:bg-white/10 transition-all duration-300 aspect-[3/2] flex flex-col">
                     {/* Header */}
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1 min-w-0">
@@ -333,14 +333,14 @@ export default function AllWorks() {
                 const category = categoryConfig[work.category as keyof typeof categoryConfig];
                 
                 const content = (
-                  <div className="group flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 hover:border-[#D3CEAD]/30">
+                  <div className="group flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-3 mb-2">
                         <h3 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors">
                           {work.title}
                         </h3>
                         <span className="text-sm text-[#D3CEAD]/70">({work.year})</span>
-                        <span className={`px-2 py-1 text-xs border ${category.color}`}>
+                        <span className={`px-2 py-1 text-xs ${category.color}`}>
                           {category.title}
                         </span>
                       </div>

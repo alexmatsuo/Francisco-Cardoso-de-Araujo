@@ -23,7 +23,7 @@ export default function KaphcaTrioPage() {
             
             {/* Description below image */}
             <div>
-              <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap text-justify">
+              <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
                 <a href="https://kaphcatrio.bandcamp.com/album/kaphca-trio" className="underline">Kaphca Trio</a> is an experimental musical collective from Athens, GA. Founded in 2024 by Dan Phipps, Francisco Cardoso, and Daniel Karcher, the group improvises with an assortment of acoustic instruments and experimental electronics to create harsh and discordant soundscapes.
               </p>
             </div>
@@ -32,7 +32,7 @@ export default function KaphcaTrioPage() {
             <div className="flex flex-col md:flex-row gap-8 items-center">
               <div className="flex-1">
                 <h2 className="text-2xl font-semibold mb-4">About the Album</h2>
-                <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap text-justify">
+                <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
                   The eponymous album of the Kaphca Trio was recorded at the Dancz Center for New Music and features two guided improvisations composed by Karcher and Cardoso (Transformation and through medium, respectively). The majority of the album combines the sound of no-input mixing boards along with Dan Phipps on saxophone, resulting in hosts of eerie textures and chaotic feedback loops. The name for the Kaphca trio comes from an amalgamation of the first letters of each of the member's last names (Karcher, Phipps, Cardoso) which coincidentally, is similar to the name of a certain writer.
                 </p>
               </div>

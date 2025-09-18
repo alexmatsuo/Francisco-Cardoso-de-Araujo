@@ -111,7 +111,7 @@ export default function EventsPage() {
   };
 
   if (isLoading) {
-    return <Loading message="Loading events..." />;
+    return <Loading message="Loading ..." />;
   }
 
   if (error) {

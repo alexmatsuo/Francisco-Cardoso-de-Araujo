@@ -62,8 +62,7 @@ export const Header = () => {
           
           {/* Works dropdown */}
           <div className="relative group">
-            <Link 
-              href="/works" 
+            <button 
               className={`nav-item flex items-center ${
                 pathname.startsWith("/works") ? "text-[#D3CEAD]" : ""
               }`}
@@ -74,11 +73,12 @@ export const Header = () => {
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
-            </Link>
+            </button>
             <div className="absolute top-full mt-6 left-0 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="border border-white/15 p-1 shadow-lg " style={{ backgroundColor: '#D3CEAD' }}>
+                <Link href="/works" className="menu-style">Full Catalog</Link>
                 <Link href="/works/solo" className="menu-style">Solo</Link>
                 <Link href="/works/duos-trios" className="menu-style">Duos & Trios</Link>
                 <Link href="/works/chamber-ensembles" className="menu-style">Chamber Ensembles</Link>
@@ -206,32 +206,26 @@ export const Header = () => {
               
               {/* Mobile Works Section */}
               <div>
-                <div className={`mobile-nav-item w-full flex items-center justify-between ${
-                  pathname.startsWith("/works") ? "text-[#D3CEAD]" : ""
-                }`}>
-                  <Link 
-                    href="/works" 
-                    onClick={closeMobileMenu}
-                    className="flex-1 text-left"
+                <button
+                  onClick={() => setIsWorksOpen(!isWorksOpen)}
+                  className={`mobile-nav-item w-full flex items-center justify-between ${
+                    pathname.startsWith("/works") ? "text-[#D3CEAD]" : ""
+                  }`}
+                >
+                  Works
+                  <svg
+                    className={`w-4 h-4 transition-transform duration-200 ${isWorksOpen ? 'rotate-180' : ''}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
                   >
-                    Works
-                  </Link>
-                  <button
-                    onClick={() => setIsWorksOpen(!isWorksOpen)}
-                    className="flex items-center justify-center ml-2"
-                    aria-label="Toggle works submenu"
-                  >
-                    <svg
-                      className={`w-4 h-4 transition-transform duration-200 ${isWorksOpen ? 'rotate-180' : ''}`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                </div>
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
                 {isWorksOpen && (
                   <div className="ml-4 mt-3 flex flex-col gap-3">
+                    <Link href="/works" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works") ? "text-[#D3CEAD]" : ""}`}>
+                      Full Catalog
+                    </Link>
                     <Link href="/works/solo" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/solo") ? "text-[#D3CEAD]" : ""}`}>
                       Solo
                     </Link>

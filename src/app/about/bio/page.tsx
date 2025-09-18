@@ -126,7 +126,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                   )}
                   
                   {error && !aboutData && (
-                    <div className="text-sm text-yellow-400/80 bg-yellow-400/10 px-3 py-2 border border-yellow-400/20">
+                    <div className="text-sm text-[#D3CEAD]/80 bg-white/5 backdrop-blur-sm px-3 py-2">
                       ⚠️ Using default content due to loading issue
                     </div>
                   )}
@@ -137,7 +137,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
               <div className="flex flex-wrap gap-4 pt-4">
                 <a 
                   href="/works" 
-                  className="group inline-flex items-center gap-2 px-6 py-3 bg-[#D3CEAD]/10 hover:bg-[#D3CEAD]/20 border border-[#D3CEAD]/30 hover:border-[#D3CEAD]/50 text-[#D3CEAD] hover:text-white transition-all duration-300 backdrop-blur-sm"
+                  className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300"
                 >
                   Explore Works
                   <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +147,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                 
                 <a 
                   href="/contact" 
-                  className="group inline-flex items-center gap-2 px-6 py-3 bg-transparent hover:bg-[#D3CEAD]/5 border border-[#D3CEAD]/20 hover:border-[#D3CEAD]/40 text-[#D3CEAD]/80 hover:text-[#D3CEAD] transition-all duration-300"
+                  className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300"
                 >
                   Get in Touch
                   <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
