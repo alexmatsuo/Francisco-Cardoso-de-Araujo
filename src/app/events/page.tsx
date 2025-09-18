@@ -157,22 +157,21 @@ export default function EventsPage() {
           </div>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+       {/* Filter Buttons - Universal Mobile Fix */}
+        <div className="flex flex-wrap gap-3 mb-8 justify-center sm:justify-start">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 sm:px-6 py-3 text-sm sm:text-base transition-all duration-300 ${
+            className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
               filter === 'all' 
                 ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
                 : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
             }`}
           >
-            <span className="sm:hidden">All ({events.length})</span>
-            <span className="hidden sm:inline">All Events ({events.length})</span>
+            All ({events.length})
           </button>
           <button
             onClick={() => setFilter('upcoming')}
-            className={`px-4 sm:px-6 py-3 text-sm sm:text-base transition-all duration-300 ${
+            className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
               filter === 'upcoming' 
                 ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
                 : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
@@ -182,14 +181,13 @@ export default function EventsPage() {
           </button>
           <button
             onClick={() => setFilter('past')}
-            className={`px-4 sm:px-6 py-3 text-sm sm:text-base transition-all duration-300 ${
+            className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
               filter === 'past' 
                 ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black ' 
                 : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
             }`}
           >
-            <span className="sm:hidden">Past ({events.filter(e => !e.isUpcoming).length})</span>
-            <span className="hidden sm:inline">Past Events ({events.filter(e => !e.isUpcoming).length})</span>
+            Past ({events.filter(e => !e.isUpcoming).length})
           </button>
         </div>
       </div>

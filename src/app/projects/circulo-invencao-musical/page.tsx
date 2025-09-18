@@ -45,7 +45,7 @@ export default function CIMAboutPage() {
             Francisco, together with Willian Lentz and Paul Wegmann, is a founding member and co-artistic director of the collective.
           </p>
 
-          <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-300">
+          <div className="mt-4 sm:mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-300">
             <div className="p-4 rounded-lg border border-white/20 bg-black">
               <div className="font-semibold underline text-base sm:text-lg">
                 <a href="https://francisco-cardoso-de-araujo-n9hs.vercel.app/">Francisco Cardoso de Araujo</a>
@@ -70,7 +70,7 @@ export default function CIMAboutPage() {
         </div>
 
         <footer className="p-4 sm:p-6 text-center text-xs sm:text-sm text-gray-300">
-          © Círculo de Invenção Musical — founded 2014
+          © Círculo de Invenção Musical — founded 2015
         </footer>
       </section>
     </main>
