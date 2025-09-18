@@ -108,7 +108,7 @@ export default function ContactPage() {
   const isFormValid = formData.from_name && formData.from_email && formData.subject && formData.message;
 
   return (
-    <main className="p-12 ml-4">
+    <main className="works-container">
       <h1 className="text-4xl font-bold mb-12">Contact</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -190,7 +190,7 @@ export default function ContactPage() {
               focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50"
             >
               <span className="absolute inset-0 bg-white/10 opacity-0 transition duration-300 group-hover:opacity-100 group-disabled:opacity-0"></span>
-              <span className="relative z-10">{isSubmitting ? 'Submiting...' : 'Submit'}</span>
+              <span className="relative z-10">{isSubmitting ? 'Submitting...' : 'Submit'}</span>
             </button>
             
             {submitStatus === 'success' && (
