@@ -158,20 +158,21 @@ export default function EventsPage() {
         </div>
 
         {/* Filter Buttons */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <button
             onClick={() => setFilter('all')}
-            className={`px-6 py-3 transition-all duration-300 ${
+            className={`px-4 sm:px-6 py-3 text-sm sm:text-base transition-all duration-300 ${
               filter === 'all' 
                 ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
                 : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
             }`}
           >
-            All Events ({events.length})
+            <span className="sm:hidden">All ({events.length})</span>
+            <span className="hidden sm:inline">All Events ({events.length})</span>
           </button>
           <button
             onClick={() => setFilter('upcoming')}
-            className={`px-6 py-3 transition-all duration-300 ${
+            className={`px-4 sm:px-6 py-3 text-sm sm:text-base transition-all duration-300 ${
               filter === 'upcoming' 
                 ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black' 
                 : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
@@ -181,13 +182,14 @@ export default function EventsPage() {
           </button>
           <button
             onClick={() => setFilter('past')}
-            className={`px-6 py-3 transition-all duration-300 ${
+            className={`px-4 sm:px-6 py-3 text-sm sm:text-base transition-all duration-300 ${
               filter === 'past' 
                 ? 'border-[#D3CEAD] bg-[#D3CEAD] text-black ' 
                 : 'border-[#D3CEAD] text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
             }`}
           >
-            Past Events ({events.filter(e => !e.isUpcoming).length})
+            <span className="sm:hidden">Past ({events.filter(e => !e.isUpcoming).length})</span>
+            <span className="hidden sm:inline">Past Events ({events.filter(e => !e.isUpcoming).length})</span>
           </button>
         </div>
       </div>

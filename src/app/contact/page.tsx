@@ -214,7 +214,7 @@ export default function ContactPage() {
             <h2 className="text-xl font-semibold mb-2">Email</h2>
             <a 
               href="mailto:franciscocardoso.composer@gmail.com" 
-              className="text-lg text-gray-300 hover:text-white transition-colors underline focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50 focus:rounded-sm"
+              className="text-lg text-gray-300 hover:text-white transition-colors underline focus:outline-none focus:ring-2 focus:ring-[#D3CEAD]/50 focus:rounded-sm break-words"
             >
               franciscocardoso.composer@gmail.com
             </a>

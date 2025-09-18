@@ -11,12 +11,12 @@ export default function KaphcaTrioPage() {
         <div className="max-w-4xl mx-auto">
           <div className="space-y-16">
             {/* Group Photo - on top */}
-            <div className="w-10/12 h-96 relative overflow-hidden shadow-lg mx-auto">
+            <div className="w-full max-w-3xl h-64 sm:h-80 md:h-96 relative overflow-hidden shadow-lg mx-auto">
               <Image
                 src="/Kaphca Trio grupo.jpg"
                 alt="Kaphca Trio Group Photo"
                 fill
-                sizes=""
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 75vw, 50vw"
                 className="object-cover"
               />
             </div>
@@ -38,13 +38,13 @@ export default function KaphcaTrioPage() {
               </div>
               {/* Album Cover with caption */}
               <div className="flex flex-col items-center">
-                <div className="w-96 h-96 relative overflow-hidden shadow-lg flex-shrink-0">
+                <div className="w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 relative overflow-hidden shadow-lg flex-shrink-0">
                   <a href="https://kaphcatrio.bandcamp.com/album/kaphca-trio" target="_blank" rel="noopener noreferrer">
                     <Image
                       src="/Kaphca Trio capa.jpg"
                       alt="Kaphca Trio Album Cover"
                       fill
-                      sizes=""
+                      sizes="(max-width: 640px) 288px, (max-width: 768px) 320px, 384px"
                       className="object-cover"
                       priority
                     />

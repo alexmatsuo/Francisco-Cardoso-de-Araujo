@@ -47,7 +47,7 @@
     
     /* Work List Styles */
     .works-container {
-        @apply p-12 ml-4;
+        @apply p-4 ml-2 sm:p-8 sm:ml-3 lg:p-12 lg:ml-4;
     }
     
     .works-title {
@@ -106,21 +106,10 @@
     background-attachment: local;
 }
 
-/* Mobile-specific background fixes */
-@media (max-width: 767px) {
-    body {
-        /* Ensure smooth scrolling on mobile */
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Force the background to cover full screen on mobile */
-    .fixed {
-        position: fixed !important;
-    }
-    
-    /* Prevent address bar issues on mobile */
-    html, body {
-        height: 100%;
-        overflow-x: hidden;
-    }
+/* Alternative parallax effect using CSS only */
+.parallax-background {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: repeat;
+    background-size: cover;
 }

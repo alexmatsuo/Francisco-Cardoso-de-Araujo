@@ -45,22 +45,22 @@ export default function CIMAboutPage() {
             Francisco, together with Willian Lentz and Paul Wegmann, is a founding member and co-artistic director of the collective.
           </p>
 
-          <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-gray-300 bg-black">
-            <div className="p-3 sm:p-4 rounded-lg border">
+          <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-300">
+            <div className="p-4 rounded-lg border border-white/20 bg-black">
               <div className="font-semibold underline text-base sm:text-lg">
                 <a href="https://francisco-cardoso-de-araujo-n9hs.vercel.app/">Francisco Cardoso de Araujo</a>
               </div>
               <div className="text-xs sm:text-sm mt-1">Co-Artistic Director, Composer, Coordinator, and Producer</div>
             </div>
 
-            <div className="p-3 sm:p-4 rounded-lg border">
+            <div className="p-4 rounded-lg border border-white/20 bg-black">
               <div className="font-semibold underline text-base sm:text-lg">
                 <a href="https://www.willianlentz.com/">Willian Lentz</a>
               </div>
               <div className="text-xs sm:text-sm mt-1">Co-Artistic Director, Composer, Coordinator, and Producer</div>
             </div>
 
-            <div className="p-3 sm:p-4 rounded-lg border">
+            <div className="p-4 rounded-lg border border-white/20 bg-black">
               <div className="font-semibold text-base sm:text-lg underline">
                 <a href="https://soundcloud.com/paul-wegmann">Paul Wegmann</a>
               </div>
