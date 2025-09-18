@@ -1,5 +1,3 @@
-/* Update your globals.css with this mobile-friendly background solution */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -108,14 +106,21 @@
     background-attachment: local;
 }
 
-/* Remove all background classes since we're using body background now */
-
-/* If you need any specific mobile overrides, add them here */
+/* Mobile-specific background fixes */
 @media (max-width: 767px) {
     body {
         /* Ensure smooth scrolling on mobile */
         -webkit-overflow-scrolling: touch;
-        /* Prevent background issues on mobile Safari */
-        background-attachment: scroll !important;
+    }
+    
+    /* Force the background to cover full screen on mobile */
+    .fixed {
+        position: fixed !important;
+    }
+    
+    /* Prevent address bar issues on mobile */
+    html, body {
+        height: 100%;
+        overflow-x: hidden;
     }
 }
