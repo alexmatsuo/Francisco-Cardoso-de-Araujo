@@ -235,14 +235,14 @@ export const Header = () => {
       {/* Mobile Navigation */}
       <div className="md:hidden relative top-3 z-40">
         {/* Mobile Menu Button */}
-        <div className="flex justify-between items-center px-4 sm:px-6">
+        <div className="flex justify-between items-center px-4 sm:px-8">
           <button
             onClick={toggleMobileMenu}
-            className="p-3 backdrop-blur mt-2"
+            className="p-4 backdrop-blur mt-6 border-2 border-white/20 hover:border-white/40 transition-all duration-200"
             aria-label="Toggle mobile menu"
           >
             <svg
-              className={`w-6 h-6 transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-90' : ''}`}
+              className={`w-8 h-8 transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-90' : ''}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
