@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, MapPin, ExternalLink, Music, Users, Clock, ChevronRight, Image, Eye } from "lucide-react";
+import { Calendar, MapPin, ExternalLink, Music, Users, Clock, ChevronRight, Image, Eye, Grid, List } from "lucide-react";
 import { Loading } from "@/components/Loading";
 
 interface Event {
@@ -17,6 +17,9 @@ interface Event {
   performers?: string;
   website?: string;
   isUpcoming: boolean;
+  posterUrl?: string;  // Main poster image
+  imageUrls?: string[]; // Additional images
+  pdfUrl?: string;
   imageFileNames?: string[];
   imageFileName?: string;
 }
@@ -27,6 +30,7 @@ export default function EventsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'past'>('all');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   useEffect(() => {
     fetchEvents();
@@ -111,7 +115,7 @@ export default function EventsPage() {
   };
 
   if (isLoading) {
-    return <Loading message="Loading ..." />;
+    return <Loading message="Loading events..." />;
   }
 
   if (error) {
@@ -157,45 +161,71 @@ export default function EventsPage() {
           </div>
         </div>
 
-       {/* Filter Buttons - Universal Mobile Fix */}
-        <div className="flex flex-wrap gap-3 mb-8 justify-center sm:justify-start">
-          <button
-            onClick={() => setFilter('all')}
-            className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
-              filter === 'all' 
-                ? 'bg-[#D3CEAD] text-black' 
-                : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
-            }`}
-          >
-            All ({events.length})
-          </button>
-          <button
-            onClick={() => setFilter('upcoming')}
-            className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
-              filter === 'upcoming' 
-                ? 'bg-[#D3CEAD] text-black' 
-                : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
-            }`}
-          >
-            Upcoming ({events.filter(e => e.isUpcoming).length})
-          </button>
-          <button
-            onClick={() => setFilter('past')}
-            className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
-              filter === 'past' 
-                ? 'bg-[#D3CEAD] text-black ' 
-                : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
-            }`}
-          >
-            Past ({events.filter(e => !e.isUpcoming).length})
-          </button>
+        {/* Controls */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          {/* Filter Buttons */}
+          <div className="flex flex-wrap gap-3 flex-1">
+            <button
+              onClick={() => setFilter('all')}
+              className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
+                filter === 'all' 
+                  ? 'bg-[#D3CEAD] text-black' 
+                  : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
+              }`}
+            >
+              All ({events.length})
+            </button>
+            <button
+              onClick={() => setFilter('upcoming')}
+              className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
+                filter === 'upcoming' 
+                  ? 'bg-[#D3CEAD] text-black' 
+                  : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
+              }`}
+            >
+              Upcoming ({events.filter(e => e.isUpcoming).length})
+            </button>
+            <button
+              onClick={() => setFilter('past')}
+              className={`flex-shrink-0 px-4 py-3 text-sm transition-all duration-300 whitespace-nowrap ${
+                filter === 'past' 
+                  ? 'bg-[#D3CEAD] text-black' 
+                  : 'text-[#D3CEAD] hover:bg-[#D3CEAD] hover:text-black'
+              }`}
+            >
+              Past ({events.filter(e => !e.isUpcoming).length})
+            </button>
+          </div>
+          
+          {/* View Mode Toggle */}
+          <div className="flex bg-white/5 p-1">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`px-3 py-2 transition-colors ${
+                viewMode === 'grid' 
+                  ? 'bg-[#D3CEAD] text-black' 
+                  : 'text-[#D3CEAD] hover:bg-white/10'
+              }`}
+            >
+              <Grid className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`px-3 py-2 transition-colors ${
+                viewMode === 'list' 
+                  ? 'bg-[#D3CEAD] text-black' 
+                  : 'text-[#D3CEAD] hover:bg-white/10'
+              }`}
+            >
+              <List className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Events Grid */}
+      {/* Events Display */}
       {filteredEvents.length === 0 ? (
         <div className="text-center py-12">
-          <Calendar className="w-16 h-16 text-[#D3CEAD]/30 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-[#D3CEAD] mb-2">No events found</h3>
           <p className="text-[#D3CEAD]/70">
             {filter === 'upcoming' && 'No upcoming events at this time.'}
@@ -204,110 +234,143 @@ export default function EventsPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {filteredEvents.map((event) => {
-            const { date, time, fullDate } = formatDateTime(event.date);
-            const hasImages = event.imageFileNames && event.imageFileNames.length > 0;
-            const eventTypeStyle = getEventTypeStyle(event.eventType);
-            
-            return (
-              <div
-                key={event.id}
-                className="group bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
-                onClick={() => handleEventClick(event.id)}
-              >
-                <div className="p-6 flex-1 flex flex-col">
-                  {/* Header */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <h2 className="text-lg font-bold text-[#D3CEAD] group-hover:text-white transition-colors line-clamp-2">
+        <>
+          {/* Results Count */}
+          <div className="mb-6 text-sm text-[#D3CEAD]/70">
+            Showing {filteredEvents.length} of {events.length} events
+          </div>
+
+          {/* Grid View */}
+          {viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredEvents.map((event) => {
+                const { date, time } = formatDateTime(event.date);
+                const eventTypeStyle = getEventTypeStyle(event.eventType);
+                const hasImage = event.posterUrl || (event.imageFileNames && event.imageFileNames.length > 0);
+                const imageUrl = event.posterUrl || (event.imageFileNames && event.imageFileNames[0] ? `/uploads/${event.imageFileNames[0]}` : null);
+                
+                return (
+                  <div
+                    key={event.id}
+                    className="group bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col relative"
+                    onClick={() => handleEventClick(event.id)}
+                  >
+                    {/* Poster Image - Positioned absolutely */}
+                    {hasImage && imageUrl && (
+                      <div className="absolute top-4 right-4 w-32 h-48 flex-shrink-0 overflow-hidden z-10">
+                        <img 
+                          src={imageUrl}
+                          alt={event.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+                    
+                    <div className="p-4 pr-32 flex-1 flex flex-col">
+                      {/* Header */}
+                      <div className="mb-3">
+                        <h2 className="text-lg font-bold text-[#D3CEAD] group-hover:text-white transition-colors line-clamp-2 mb-2">
                           {event.title}
                         </h2>
+                        {event.venue && (
+                          <p className="text-[#D3CEAD]/80 font-medium text-sm line-clamp-1 mb-2">{event.venue}</p>
+                        )}
+                      </div>
+
+                      {/* Date & Location */}
+                      <div className="space-y-2 mb-3">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-3 h-3 text-[#D3CEAD]" />
+                          <div className="text-sm text-[#D3CEAD]">{date}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-3 h-3 text-[#D3CEAD]" />
+                          <div className="text-sm text-[#D3CEAD] line-clamp-1">{event.location}</div>
+                        </div>
+                      </div>
+
+                      {/* Badges */}
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        <span className={`px-2 py-1 text-xs font-medium uppercase ${eventTypeStyle}`}>
+                          {event.eventType}
+                        </span>
                         {event.isUpcoming && (
-                          <span className="px-2 py-1 text-xs font-semibold bg-green-500/20 text-green-400 whitespace-nowrap">
+                          <span className="px-2 py-1 text-xs font-semibold bg-green-500/20 text-green-400">
                             UPCOMING
                           </span>
                         )}
                       </div>
-                      
-                      {event.venue && (
-                        <p className="text-[#D3CEAD]/80 font-medium text-sm line-clamp-1">{event.venue}</p>
+
+                      {/* Description */}
+                      {event.description && (
+                        <div className="mt-auto">
+                          <p className="text-[#D3CEAD]/80 text-xs leading-relaxed line-clamp-3">{event.description}</p>
+                        </div>
                       )}
+                    </div>
+
+                    {/* Eye icon */}
+                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Eye className="w-4 h-4 text-[#D3CEAD]" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            /* List View */
+            <div className="flex flex-col gap-4">
+              {filteredEvents.map((event) => {
+                const { date, time } = formatDateTime(event.date);
+                const eventTypeStyle = getEventTypeStyle(event.eventType);
+                
+                return (
+                  <div
+                    key={event.id}
+                    className="group flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                    onClick={() => handleEventClick(event.id)}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <h2 className="font-semibold text-[#D3CEAD] group-hover:text-white transition-colors">
+                          {event.title}
+                        </h2>
+                        <span className="text-sm text-[#D3CEAD]/70">({date})</span>
+                        <span className={`px-2 py-1 text-xs uppercase ${eventTypeStyle}`}>
+                          {event.eventType}
+                        </span>
+                        {event.isUpcoming && (
+                          <span className="px-2 py-1 text-xs font-semibold bg-green-500/20 text-green-400">
+                            UPCOMING
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2 text-base text-[#D3CEAD]/80">
+                        <span>{event.location}</span>
+                        {event.venue && (
+                          <>
+                            <span className="text-[#D3CEAD]/40">•</span>
+                            <span>{event.venue}</span>
+                          </>
+                        )}
+                        {event.works && (
+                          <>
+                            <span className="text-[#D3CEAD]/40">•</span>
+                            <span className="line-clamp-1">{event.works}</span>
+                          </>
+                        )}
+                      </div>
                     </div>
                     
-                    <div className="flex flex-col items-end gap-2 ml-4">
-                      <div className={`px-2 py-1 text-xs font-medium uppercase ${eventTypeStyle} whitespace-nowrap`}>
-                        {event.eventType}
-                      </div>
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Eye className="w-4 h-4 text-[#D3CEAD]" />
-                      </div>
+                    <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ChevronRight className="w-5 h-5 text-[#D3CEAD]" />
                     </div>
                   </div>
-
-                  {/* Date & Location - Always Visible */}
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-[#D3CEAD]/20 flex items-center justify-center flex-shrink-0">
-                        <Calendar className="w-4 h-4 text-[#D3CEAD]" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-semibold text-[#D3CEAD] text-sm">{date}</div>
-                        {time && <div className="text-xs text-[#D3CEAD]/70">{time}</div>}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-[#D3CEAD]/20 flex items-center justify-center flex-shrink-0">
-                        <MapPin className="w-4 h-4 text-[#D3CEAD]" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-semibold text-[#D3CEAD] text-sm line-clamp-1">{event.location}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Works & Performers - Compact */}
-                  {(event.works || event.performers) && (
-                    <div className="space-y-3 mb-4 flex-1">
-                      {event.works && (
-                        <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 bg-[#D3CEAD]/20 flex items-center justify-center flex-shrink-0">
-                            <Music className="w-4 h-4 text-[#D3CEAD]" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="font-semibold text-[#D3CEAD] text-sm mb-1">Works</div>
-                            <div className="text-xs text-[#D3CEAD]/80 leading-relaxed line-clamp-2">{event.works}</div>
-                          </div>
-                        </div>
-                      )}
-
-                      {event.performers && (
-                        <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 bg-[#D3CEAD]/20 flex items-center justify-center flex-shrink-0">
-                            <Users className="w-4 h-4 text-[#D3CEAD]" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="font-semibold text-[#D3CEAD] text-sm mb-1">Performers</div>
-                            <div className="text-xs text-[#D3CEAD]/80 leading-relaxed line-clamp-2">{event.performers}</div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Description - Truncated */}
-                  {event.description && (
-                    <div className="bg-white/5 p-3 mt-auto">
-                      <p className="text-[#D3CEAD]/80 text-xs leading-relaxed line-clamp-3">{event.description}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
 
       {/* Summary */}

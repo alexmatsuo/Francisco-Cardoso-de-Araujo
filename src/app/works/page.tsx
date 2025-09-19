@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Music, Clock, Calendar, ChevronRight, Eye, Grid, List } from "lucide-react";
+import { Clock, Calendar, ChevronRight, Eye, Grid, List } from "lucide-react";
+import { Loading } from "@/components/Loading";
 
 interface Work {
   id: number;
@@ -27,11 +28,11 @@ interface WorksByCategory {
 }
 
 const categoryConfig = {
-  solo: { title: "Solo", icon: Music, color: "bg-blue-500/20 text-blue-400" },
-  duosTrios: { title: "Duos & Trios", icon: Music, color: "bg-green-500/20 text-green-400" },
-  chamberEnsembles: { title: "Chamber Ensembles", icon: Music, color: "bg-purple-500/20 text-purple-400" },
-  largeEnsembles: { title: "Large Ensembles", icon: Music, color: "bg-orange-500/20 text-orange-400" },
-  multimediaInstallations: { title: "Multimedia & Installations", icon: Music, color: "bg-pink-500/20 text-pink-400" }
+  solo: { title: "Solo", color: "bg-blue-500/20 text-blue-400" },
+  duosTrios: { title: "Duos & Trios", color: "bg-green-500/20 text-green-400" },
+  chamberEnsembles: { title: "Chamber Ensembles", color: "bg-purple-500/20 text-purple-400" },
+  largeEnsembles: { title: "Large Ensembles", color: "bg-orange-500/20 text-orange-400" },
+  multimediaInstallations: { title: "Multimedia & Installations", color: "bg-pink-500/20 text-pink-400" }
 };
 
 export default function AllWorks() {
@@ -150,16 +151,7 @@ export default function AllWorks() {
   const filteredWorks = getFilteredWorks();
 
   if (isLoading) {
-    return (
-      <main className="works-container">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="w-8 h-8 border-2 border-[#D3CEAD] border-t-transparent animate-spin mx-auto mb-4"></div>
-            <div className="text-[#D3CEAD]">Loading ...</div>
-          </div>
-        </div>
-      </main>
-    );
+      return <Loading message="Loading ..." />;
   }
 
   return (
@@ -255,7 +247,6 @@ export default function AllWorks() {
       {/* Results */}
       {filteredWorks.length === 0 ? (
         <div className="text-center py-12">
-          <Music className="w-16 h-16 text-[#D3CEAD]/30 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-[#D3CEAD] mb-2">No works found</h3>
           <p className="text-[#D3CEAD]/70">Try adjusting your search or filter criteria</p>
         </div>
@@ -295,7 +286,7 @@ export default function AllWorks() {
                     {/* Content */}
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
-                        <span className="text-xs text-[#D3CEAD]/80 line-clamp-3 leading-tight">{work.instruments}</span>
+                        <span className="text-sm text-[#D3CEAD]/80 line-clamp-3 leading-tight">{work.instruments}</span>
                         
                         {work.duration && (
                           <div className="text-xs text-[#D3CEAD]/70 mt-2">
@@ -344,8 +335,7 @@ export default function AllWorks() {
                           {category.title}
                         </span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2 text-sm text-[#D3CEAD]/80">
-                        <Music className="w-3 h-3" />
+                      <div className="flex flex-wrap items-center gap-2 text-base text-[#D3CEAD]/80">
                         <span>{work.instruments}</span>
                         {work.duration && (
                           <>
