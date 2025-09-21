@@ -255,53 +255,59 @@ export default function EventsPage() {
                     className="group bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col relative"
                     onClick={() => handleEventClick(event.id)}
                   >
-                    {/* Poster Image - Positioned absolutely */}
-                    {hasImage && imageUrl && (
-                      <div className="absolute top-4 right-4 w-32 h-48 flex-shrink-0 overflow-hidden z-10">
-                        <img 
-                          src={imageUrl}
-                          alt={event.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    )}
-                    
-                    <div className="p-4 pr-32 flex-1 flex flex-col">
-                      {/* Header */}
-                      <div className="mb-3">
-                        <h2 className="text-lg font-bold text-[#D3CEAD] group-hover:text-white transition-colors line-clamp-2 mb-2">
-                          {event.title}
-                        </h2>
-                        {event.venue && (
-                          <p className="text-[#D3CEAD]/80 font-medium text-sm line-clamp-1 mb-2">{event.venue}</p>
+                    <div className="p-4 flex flex-col h-full">
+                      {/* Main Content Area with Image */}
+                      <div className="flex gap-4 mb-3">
+                        {/* Text Content - Takes remaining space */}
+                        <div className="flex-1 min-w-0">
+                          {/* Header */}
+                          <div className="mb-3">
+                            <h2 className="text-lg font-bold text-[#D3CEAD] group-hover:text-white transition-colors line-clamp-2 mb-2 leading-tight">
+                              {event.title}
+                            </h2>
+                            {event.venue && (
+                              <p className="text-[#D3CEAD]/80 font-medium text-sm line-clamp-1 mb-2">{event.venue}</p>
+                            )}
+                          </div>
+
+                          {/* Date & Location */}
+                          <div className="space-y-2 mb-3">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="w-3 h-3 text-[#D3CEAD] flex-shrink-0" />
+                              <div className="text-sm text-[#D3CEAD] truncate">{date}</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-3 h-3 text-[#D3CEAD] flex-shrink-0" />
+                              <div className="text-sm text-[#D3CEAD] line-clamp-1">{event.location}</div>
+                            </div>
+                          </div>
+
+                          {/* Badges */}
+                          <div className="flex flex-wrap gap-2">
+                            <span className={`px-2 py-1 text-xs font-medium uppercase ${eventTypeStyle} whitespace-nowrap`}>
+                              {event.eventType}
+                            </span>
+                            {event.isUpcoming && (
+                              <span className="px-2 py-1 text-xs font-semibold bg-green-500/20 text-green-400 whitespace-nowrap">
+                                UPCOMING
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Poster Image - Fixed width, only shows if image exists */}
+                        {hasImage && imageUrl && (
+                          <div className="w-20 h-28 flex-shrink-0 overflow-hidden">
+                            <img 
+                              src={imageUrl}
+                              alt={event.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
                         )}
                       </div>
 
-                      {/* Date & Location */}
-                      <div className="space-y-2 mb-3">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-3 h-3 text-[#D3CEAD]" />
-                          <div className="text-sm text-[#D3CEAD]">{date}</div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-3 h-3 text-[#D3CEAD]" />
-                          <div className="text-sm text-[#D3CEAD] line-clamp-1">{event.location}</div>
-                        </div>
-                      </div>
-
-                      {/* Badges */}
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        <span className={`px-2 py-1 text-xs font-medium uppercase ${eventTypeStyle}`}>
-                          {event.eventType}
-                        </span>
-                        {event.isUpcoming && (
-                          <span className="px-2 py-1 text-xs font-semibold bg-green-500/20 text-green-400">
-                            UPCOMING
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Description */}
+                      {/* Description - Takes remaining space */}
                       {event.description && (
                         <div className="mt-auto">
                           <p className="text-[#D3CEAD]/80 text-xs leading-relaxed line-clamp-3">{event.description}</p>
