@@ -72,7 +72,13 @@ const config: Config = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+		transitionTimingFunction: {
+        	slow: "cubic-bezier(.405, 0, .025, 1)",
+		},
+		transitionDuration: {
+			mid: "3s",
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],

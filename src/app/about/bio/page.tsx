@@ -1,8 +1,9 @@
 'use client'
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import FranciscoImg from "@/assets/images/francisco.avif";
 import { Loading } from "@/components/Loading";
+import DiscloseImage from "@/components/Disclose";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 interface AboutData {
   id: number;
@@ -22,6 +23,8 @@ export default function BioPage() {
 Francisco has developed a unique compositional voice that draws from diverse influences, ranging from Brazilian musical traditions to cutting-edge experimental techniques. His pieces have been performed internationally by renowned ensembles and soloists, establishing him as an emerging voice in contemporary classical music.
 
 As a researcher, Francisco investigates new approaches to musical creation and performance, contributing to the academic discourse on contemporary composition. His work as a clarinetist and improviser informs his compositional practice, bringing a performer's perspective to his creative process.`;
+
+  const words = `Francisco Cardoso de Araujo`;
 
   useEffect(() => {
     fetchAboutData();
@@ -64,39 +67,28 @@ As a researcher, Francisco investigates new approaches to musical creation and p
         <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent z-10"></div>
         
         <div className="container mx-auto px-6 py-20 relative z-20">
-          <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             
-            {/* Image Section */}
-            <div className="relative group">
-              <div className="relative">
-                {/* Main image container */}
-                <div className="relative w-full aspect-[4/5] max-w-md mx-auto lg:max-w-full overflow-hidden shadow-2xl group-hover:shadow-3xl transition-all duration-500">
-                  <Image
-                    src={FranciscoImg}
-                    alt="Francisco Cardoso de Araujo"
-                    fill
-                    sizes="(max-width: 768px) 90vw, (max-width: 1024px) 50vw, 40vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                    priority
-                  />
-                  
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Content Section */}
-            <div className="space-y-8">
+            {/* Mobile Layout: Title First */}
+            <div className="lg:hidden">
               {/* Header */}
-              <div className="space-y-4">
-                <div className="inline-block">
-                  <h1 className="text-5xl lg:text-6xl font-bold text-[#D3CEAD] mb-2 bg-gradient-to-r from-[#D3CEAD] to-[#C3BE9D] bg-clip-text text-transparent">
-                    Francisco
-                  </h1>
-                  <h2 className="text-3xl lg:text-4xl font-light text-[#D3CEAD]/80">
-                    Cardoso de Araujo
-                  </h2>
+              <div className="space-y-4 mb-6">
+                <TextGenerateEffect words={words} />
+              </div>
+
+              {/* Image Section */}
+              <div className="relative group -mb-20">
+                <div className="relative w-full max-w-sm mx-auto">
+                  <div className="aspect-[3/4] w-full">
+                    <DiscloseImage
+                      src={FranciscoImg.src}
+                      alt="Francisco Cardoso de Araujo"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 w-full h-full"
+                      doorClassName="bg-gradient-to-br from-[#D3CEAD]/80 to-[#C3BE9D]/80 backdrop-blur-sm"
+                      vertical={false}
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
                 </div>
               </div>
 
@@ -106,7 +98,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                   {displayText.split('\n\n').map((paragraph, index) => (
                     <p 
                       key={index} 
-                      className="text-lg leading-relaxed text-gray-300 mb-6 first:text-xl first:text-[#D3CEAD]/90 first:font-medium"
+                      className="text-base leading-relaxed text-gray-300 mb-6 first:text-lg first:text-[#D3CEAD]/90 first:font-medium"
                     >
                       {paragraph}
                     </p>
@@ -114,7 +106,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                 </div>
 
                 {/* Metadata */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 border-t border-[#D3CEAD]/20">
+                <div className="flex flex-col gap-4 pt-6 border-t border-[#D3CEAD]/20">
                   {aboutData && (
                     <div className="text-sm text-[#D3CEAD]/60">
                       Last updated: {new Date(aboutData.updatedAt).toLocaleDateString('en-US', {
@@ -126,34 +118,118 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                   )}
                   
                   {error && !aboutData && (
-                    <div className="text-sm text-[#D3CEAD]/80 bg-white/5 backdrop-blur-sm px-3 py-2">
+                    <div className="text-sm text-[#D3CEAD]/80 bg-white/5 backdrop-blur-sm px-3 py-2 rounded">
                       ⚠️ Using default content due to loading issue
                     </div>
                   )}
                 </div>
+
+                {/* Call-to-action */}
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <a 
+                    href="/works" 
+                    className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300 rounded"
+                  >
+                    Explore Works
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                  
+                  <a 
+                    href="/contact" 
+                    className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300 rounded"
+                  >
+                    Get in Touch
+                    <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Layout: Side by Side */}
+            <div className="hidden lg:grid lg:grid-cols-2 gap-12 items-center">
+              
+              {/* Image Section */}
+              <div className="relative group">
+                <div className="relative w-full max-w-md xl:max-w-lg mx-auto lg:mx-0">
+                  <div className="aspect-[3/4] w-full">
+                    <DiscloseImage
+                      src={FranciscoImg.src}
+                      alt="Francisco Cardoso de Araujo"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 w-full h-full"
+                      doorClassName="bg-gradient-to-br from-[#D3CEAD]/80 to-[#C3BE9D]/80 backdrop-blur-sm"
+                      vertical={false}
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                </div>
               </div>
 
-              {/* Call-to-action */}
-              <div className="flex flex-wrap gap-4 pt-4">
-                <a 
-                  href="/works" 
-                  className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300"
-                >
-                  Explore Works
-                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-                
-                <a 
-                  href="/contact" 
-                  className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300"
-                >
-                  Get in Touch
-                  <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </a>
+              {/* Content Section */}
+              <div className="space-y-8">
+                {/* Header */}
+                <div className="space-y-4">
+                  <TextGenerateEffect words={words} />
+                </div>
+
+                {/* Bio Text */}
+                <div className="space-y-6">
+                  <div className="prose prose-lg max-w-none">
+                    {displayText.split('\n\n').map((paragraph, index) => (
+                      <p 
+                        key={index} 
+                        className="text-lg leading-relaxed text-gray-300 mb-6 first:text-xl first:text-[#D3CEAD]/90 first:font-medium"
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+
+                  {/* Metadata */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 border-t border-[#D3CEAD]/20">
+                    {aboutData && (
+                      <div className="text-sm text-[#D3CEAD]/60">
+                        Last updated: {new Date(aboutData.updatedAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </div>
+                    )}
+                    
+                    {error && !aboutData && (
+                      <div className="text-sm text-[#D3CEAD]/80 bg-white/5 backdrop-blur-sm px-3 py-2 rounded">
+                        ⚠️ Using default content due to loading issue
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Call-to-action */}
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <a 
+                    href="/works" 
+                    className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300 rounded"
+                  >
+                    Explore Works
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                  
+                  <a 
+                    href="/contact" 
+                    className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300 rounded"
+                  >
+                    Get in Touch
+                    <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
