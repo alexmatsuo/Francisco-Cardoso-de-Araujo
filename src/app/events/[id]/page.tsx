@@ -306,7 +306,7 @@ export default function EventDetailPage() {
                   <img
                     src={event.posterUrl}
                     alt={`${event.title} - Poster`}
-                    className="w-full aspect-[3/3] object-cover shadow-lg transition-transform group-hover:scale-[1.02]"
+                    className="w-full object-cover shadow-lg transition-transform group-hover:scale-[1.02]"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = "none";
                     }}
