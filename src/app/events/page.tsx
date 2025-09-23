@@ -297,7 +297,7 @@ export default function EventsPage() {
 
                         {/* Poster Image - Fixed width, only shows if image exists */}
                         {hasImage && imageUrl && (
-                          <div className="w-20 h-28 flex-shrink-0 overflow-hidden">
+                          <div className="w-28 h-28 flex-shrink-0 overflow-hidden">
                             <img 
                               src={imageUrl}
                               alt={event.title}
