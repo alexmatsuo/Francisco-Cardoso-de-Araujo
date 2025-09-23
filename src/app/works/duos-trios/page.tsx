@@ -95,10 +95,6 @@ export default function DuosTriosWorks() {
               <div className="text-2xl font-bold text-[#D3CEAD]">{works.length}</div>
               <div className="text-sm text-[#D3CEAD]/70">Total Works</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm px-4 py-2">
-              <div className="text-2xl font-bold text-[#D3CEAD]">{getDecades().length}</div>
-              <div className="text-sm text-[#D3CEAD]/70">Decades</div>
-            </div>
           </div>
         </div>
 

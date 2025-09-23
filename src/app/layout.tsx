@@ -33,7 +33,7 @@ export default function RootLayout({
         </div>
         
         <ConditionalHeader />
-        <main className="flex-1 relative z-0">{children}</main>
+        <main className="flex-1 relative">{children}</main>
         <Footer />
       </body>
     </html>

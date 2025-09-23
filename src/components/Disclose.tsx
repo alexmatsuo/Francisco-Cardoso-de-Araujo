@@ -25,7 +25,7 @@ export default function DiscloseImage({
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const baseClassName =
-    "ease-slow duration-mid absolute bg-[#C3BE9D] transition-all animate-out fill-mode-forwards";
+    "ease-slow duration-mid absolute bg-black transition-all animate-out fill-mode-forwards";
 
   return (
     <div className="relative overflow-hidden">

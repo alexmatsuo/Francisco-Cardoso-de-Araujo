@@ -69,6 +69,25 @@ export default function EventDetailPage() {
     };
   };
 
+  const downloadImage = async (imageUrl: string, filename: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${filename.replace(/\s+/g, '_').toLowerCase()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // Fallback: open image in new tab
+      window.open(imageUrl, '_blank');
+    }
+  };
+
   if (isLoading) {
     return <Loading message="Loading ..." />;
   }
@@ -287,7 +306,7 @@ export default function EventDetailPage() {
                   <img
                     src={event.posterUrl}
                     alt={`${event.title} - Poster`}
-                    className="w-full aspect-[3/4] object-cover shadow-lg transition-transform group-hover:scale-[1.02]"
+                    className="w-full aspect-[3/3] object-cover shadow-lg transition-transform group-hover:scale-[1.02]"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = "none";
                     }}
@@ -302,24 +321,15 @@ export default function EventDetailPage() {
       {/* Lightbox for enlarged images */}
       {selectedImage && (
         <div 
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/90 z-40 flex items-center justify-center p-8"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-7xl max-h-[90vh]">
-            <img
-              src={selectedImage}
-              alt="Enlarged view"
-              className="max-w-full max-h-[90vh] object-contain"
-            />
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 text-white bg-black/50 p-2 hover:bg-black/70 transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+          <img
+            src={selectedImage}
+            alt="Enlarged view"
+            className="max-w-full max-h-full object-contain cursor-zoom-out"
+            onClick={() => setSelectedImage(null)}
+          />
         </div>
       )}
     </>

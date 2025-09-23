@@ -15,18 +15,27 @@ interface Photo {
   category?: string;
 }
 
+interface ImageItem {
+  title: string;
+  image: string;
+  className: string;
+}
+
 export default function PhotosPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState<ImageItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clickTimeouts, setClickTimeouts] = useState<{[key: number]: NodeJS.Timeout}>({});
   
   const items = [
     {
-      title: "Tyler Durden",
-      image: "https://images.unsplash.com/photo-1732310216648-603c0255c000?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      title: "My Photo 1",
+      image: "/41436600_301080640705638_1608189809101795861_n.jpg",
       className: "absolute top-[5%] left-[5%] rotate-[-8deg]",
     },
     {
-      title: "The Narrator",
-      image: "https://images.unsplash.com/photo-1697909623564-3dae17f6c20b?q=80&w=2667&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      title: "My Photo 2",
+      image: "/IMG_5831.JPG",
       className: "absolute top-[15%] left-[65%] rotate-[-12deg]",
     },
     {
@@ -56,6 +65,65 @@ export default function PhotosPage() {
     },
   ];
 
+  const handleImageClick = (item: ImageItem, index: number) => {
+    // Clear any existing timeout for this image
+    if (clickTimeouts[index]) {
+      clearTimeout(clickTimeouts[index]);
+      // This is the second click, open modal
+      openModal(item);
+      setClickTimeouts(prev => {
+        const newTimeouts = { ...prev };
+        delete newTimeouts[index];
+        return newTimeouts;
+      });
+    } else {
+      // This is the first click, set timeout
+      const timeout = setTimeout(() => {
+        setClickTimeouts(prev => {
+          const newTimeouts = { ...prev };
+          delete newTimeouts[index];
+          return newTimeouts;
+        });
+      }, 300); // 300ms window for second click
+      
+      setClickTimeouts(prev => ({ ...prev, [index]: timeout }));
+    }
+  };
+
+  const openModal = (item: ImageItem) => {
+    setSelectedImage(item);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedImage(null);
+    document.body.style.overflow = 'unset'; // Restore scrolling
+    // Clear all click timeouts when modal closes
+    Object.values(clickTimeouts).forEach(timeout => clearTimeout(timeout));
+    setClickTimeouts({});
+  };
+
+  const downloadImage = async (imageUrl: string, filename: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${filename.replace(/\s+/g, '_').toLowerCase()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // Fallback: open image in new tab
+      window.open(imageUrl, '_blank');
+    }
+  };
+
   useEffect(() => {
     // Simulate loading time
     const timer = setTimeout(() => {
@@ -64,65 +132,154 @@ export default function PhotosPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Close modal on escape key and cleanup timeouts on unmount
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      // Cleanup all timeouts on unmount
+      Object.values(clickTimeouts).forEach(timeout => clearTimeout(timeout));
+    };
+  }, [isModalOpen, clickTimeouts]);
+
   if (isLoading) {
     return <Loading message="Loading ..." />;
   }
 
   return (
-    <main>
-      {/* Desktop version - original scattered layout with dragging */}
-      <div className="hidden md:block">
-        <DraggableCardContainer className="relative flex min-h-screen w-full items-center justify-center overflow-clip">
-          <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-black text-gray-300 md:text-4xl">
-            If its your first day at Fight Club, you have to fight.
-          </p>
-          {items.map((item, index) => (
-            <DraggableCardBody key={index} className={item.className}>
-              <img
-                src={item.image}
-                alt={item.title}
-                className="pointer-events-none relative z-10 h-80 w-80 object-cover rounded-lg shadow-2xl"
-              />
-              <h3 className="mt-4 text-center text-2xl font-bold text-neutral-700 dark:text-neutral-300">
-                {item.title}
-              </h3>
-            </DraggableCardBody>
-          ))}
-        </DraggableCardContainer>
-      </div>
+    <>
+      <main>
+        {/* Desktop version - original scattered layout with dragging */}
+        <div className="hidden md:block">
+          <DraggableCardContainer className="relative flex min-h-screen w-full items-center justify-center overflow-clip">
+            {items.map((item, index) => (
+              <DraggableCardBody key={index} className={item.className}>
+                <div className="relative group">
+                  <div 
+                    className="cursor-pointer transition-transform hover:scale-105 relative"
+                    onClick={() => handleImageClick(item, index)}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="pointer-events-none relative z-10 h-80 w-80 object-cover rounded-lg shadow-2xl"
+                    />
+                    {/* Double-click indicator */}
+                    {clickTimeouts[index] && (
+                      <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/20 rounded-lg">
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Download button overlay */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      downloadImage(item.image, item.title);
+                    }}
+                    className="absolute top-2 right-2 z-20 bg-black/70 hover:bg-black/90 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
+                    title="Download image"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                  </button>
 
-      {/* Mobile version - clean vertical scroll */}
-      <div className="block md:hidden min-h-screen">
-        {/* Header */}
-        <div className="px-6 py-8 text-center">
-          <p className="text-xl font-black text-gray-300 leading-tight">
-            If its your first day at Fight Club, you have to fight.
-          </p>
+                  <h3 className="mt-4 text-center text-2xl font-bold text-neutral-700 dark:text-neutral-300">
+                    {item.title}
+                  </h3>
+                </div>
+              </DraggableCardBody>
+            ))}
+          </DraggableCardContainer>
         </div>
-        
-        {/* Cards in vertical layout */}
-        <div className="space-y-6 px-4 pb-8">
-          {items.map((item, index) => (
-            <div 
-              key={index} 
-              className={`transform transition-all duration-300 hover:scale-105 ${
-                index % 2 === 0 ? 'rotate-1' : '-rotate-1'
-              }`}
-            >
-              <div className="bg-[#D3CEAD] rounded-xl p-4 shadow-lg">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-                <h3 className="mt-3 text-center text-lg font-bold text-neutral-700 dark:text-neutral-300">
-                  {item.title}
-                </h3>
+
+        {/* Mobile version - clean vertical scroll */}
+        <div className="block md:hidden min-h-screen">
+          {/* Header */}
+          <div className="px-6 py-8 text-center">
+          </div>
+          
+          {/* Cards in vertical layout */}
+          <div className="space-y-6 px-4 pb-8">
+            {items.map((item, index) => (
+              <div 
+                key={index} 
+                className={`transform transition-all duration-300 hover:scale-105 cursor-pointer relative ${
+                  index % 2 === 0 ? 'rotate-1' : '-rotate-1'
+                }`}
+                onClick={() => handleImageClick(item, index)}
+              >
+                <div className="bg-[#D3CEAD] rounded-xl p-4 shadow-lg">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                  <h3 className="mt-3 text-center text-lg font-bold text-neutral-700 dark:text-neutral-300">
+                    {item.title}
+                  </h3>
+                  {/* Double-click indicator for mobile */}
+                  {clickTimeouts[index] && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-xl">
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+
+      {/* Modal */}
+      {isModalOpen && selectedImage && (
+        <div 
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-sm pt-24"
+          onClick={closeModal}
+        >
+          <div 
+            className="relative max-w-7xl mx-4 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Button container positioned above the image */}
+            <div className="flex justify-end gap-2 mb-4">
+              {/* Download button - Above the image */}
+              <button
+                onClick={() => downloadImage(selectedImage.image, selectedImage.title)}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110"
+                title="Download image"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </button>
+
+              {/* Close button - Above the image */}
+              <button
+                onClick={closeModal}
+                className="bg-white/20 hover:bg-white/30 text-white rounded-full p-3 transition-colors backdrop-blur-sm"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Image - Now completely unobstructed */}
+            <img
+              src={selectedImage.image}
+              alt={selectedImage.title}
+              className="max-w-full max-h-[calc(100vh-200px)] object-contain rounded-lg shadow-2xl"
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }

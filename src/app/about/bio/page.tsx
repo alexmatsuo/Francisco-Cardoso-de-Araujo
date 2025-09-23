@@ -84,7 +84,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                       src={FranciscoImg.src}
                       alt="Francisco Cardoso de Araujo"
                       className="object-cover group-hover:scale-105 transition-transform duration-700 w-full h-full"
-                      doorClassName="bg-gradient-to-br from-[#D3CEAD]/80 to-[#C3BE9D]/80 backdrop-blur-sm"
+                      doorClassName="bg-black"
                       vertical={false}
                     />
                   </div>
@@ -142,7 +142,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                   >
                     Get in Touch
                     <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 002 2v10a2 2 0 002 2z" />
                     </svg>
                   </a>
                 </div>
@@ -160,7 +160,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                       src={FranciscoImg.src}
                       alt="Francisco Cardoso de Araujo"
                       className="object-cover group-hover:scale-105 transition-transform duration-700 w-full h-full"
-                      doorClassName="bg-gradient-to-br from-[#D3CEAD]/80 to-[#C3BE9D]/80 backdrop-blur-sm"
+                      doorClassName="bg-black"
                       vertical={false}
                     />
                   </div>
@@ -226,7 +226,7 @@ As a researcher, Francisco investigates new approaches to musical creation and p
                   >
                     Get in Touch
                     <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 002 2v10a2 2 0 002 2z" />
                     </svg>
                   </a>
                 </div>
