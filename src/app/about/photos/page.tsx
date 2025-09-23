@@ -66,10 +66,8 @@ export default function PhotosPage() {
   ];
 
   const handleImageClick = (item: ImageItem, index: number) => {
-    // Clear any existing timeout for this image
     if (clickTimeouts[index]) {
       clearTimeout(clickTimeouts[index]);
-      // This is the second click, open modal
       openModal(item);
       setClickTimeouts(prev => {
         const newTimeouts = { ...prev };
@@ -77,15 +75,13 @@ export default function PhotosPage() {
         return newTimeouts;
       });
     } else {
-      // This is the first click, set timeout
       const timeout = setTimeout(() => {
         setClickTimeouts(prev => {
           const newTimeouts = { ...prev };
           delete newTimeouts[index];
           return newTimeouts;
         });
-      }, 300); // 300ms window for second click
-      
+      }, 300);
       setClickTimeouts(prev => ({ ...prev, [index]: timeout }));
     }
   };
@@ -93,14 +89,13 @@ export default function PhotosPage() {
   const openModal = (item: ImageItem) => {
     setSelectedImage(item);
     setIsModalOpen(true);
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedImage(null);
-    document.body.style.overflow = 'unset'; // Restore scrolling
-    // Clear all click timeouts when modal closes
+    document.body.style.overflow = 'unset';
     Object.values(clickTimeouts).forEach(timeout => clearTimeout(timeout));
     setClickTimeouts({});
   };
@@ -119,20 +114,17 @@ export default function PhotosPage() {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Download failed:', error);
-      // Fallback: open image in new tab
       window.open(imageUrl, '_blank');
     }
   };
 
   useEffect(() => {
-    // Simulate loading time
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 500);
     return () => clearTimeout(timer);
   }, []);
 
-  // Close modal on escape key and cleanup timeouts on unmount
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isModalOpen) {
@@ -143,7 +135,6 @@ export default function PhotosPage() {
     document.addEventListener('keydown', handleEscape);
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      // Cleanup all timeouts on unmount
       Object.values(clickTimeouts).forEach(timeout => clearTimeout(timeout));
     };
   }, [isModalOpen, clickTimeouts]);
@@ -155,7 +146,7 @@ export default function PhotosPage() {
   return (
     <>
       <main>
-        {/* Desktop version - original scattered layout with dragging */}
+        {/* Desktop version */}
         <div className="hidden md:block">
           <DraggableCardContainer className="relative flex min-h-screen w-full items-center justify-center overflow-clip">
             {items.map((item, index) => (
@@ -168,23 +159,19 @@ export default function PhotosPage() {
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="pointer-events-none relative z-10 h-80 w-80 object-cover rounded-lg shadow-2xl"
+                      className="pointer-events-none relative z-10 h-80 w-80 object-cover shadow-2xl"
                     />
-                    {/* Double-click indicator */}
                     {clickTimeouts[index] && (
-                      <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/20 rounded-lg">
-                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/20"></div>
                     )}
                   </div>
                   
-                  {/* Download button overlay */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       downloadImage(item.image, item.title);
                     }}
-                    className="absolute top-2 right-2 z-20 bg-black/70 hover:bg-black/90 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
-                    title="Download image"
+                    className="absolute top-2 right-2 z-20 bg-black/70 hover:bg-black/90 text-white p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -200,13 +187,9 @@ export default function PhotosPage() {
           </DraggableCardContainer>
         </div>
 
-        {/* Mobile version - clean vertical scroll */}
+        {/* Mobile version */}
         <div className="block md:hidden min-h-screen">
-          {/* Header */}
-          <div className="px-6 py-8 text-center">
-          </div>
-          
-          {/* Cards in vertical layout */}
+          <div className="px-6 py-8 text-center"></div>
           <div className="space-y-6 px-4 pb-8">
             {items.map((item, index) => (
               <div 
@@ -216,19 +199,17 @@ export default function PhotosPage() {
                 }`}
                 onClick={() => handleImageClick(item, index)}
               >
-                <div className="bg-[#D3CEAD] rounded-xl p-4 shadow-lg">
+                <div className="bg-[#D3CEAD] p-4 shadow-lg">
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-64 object-cover rounded-lg"
+                    className="w-full h-64 object-cover"
                   />
                   <h3 className="mt-3 text-center text-lg font-bold text-neutral-700 dark:text-neutral-300">
                     {item.title}
                   </h3>
-                  {/* Double-click indicator for mobile */}
                   {clickTimeouts[index] && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-xl">
-                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20"></div>
                   )}
                 </div>
               </div>
@@ -247,12 +228,10 @@ export default function PhotosPage() {
             className="relative max-w-7xl mx-4 flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Button container positioned above the image */}
             <div className="flex justify-end gap-2 mb-4">
-              {/* Download button - Above the image */}
               <button
                 onClick={() => downloadImage(selectedImage.image, selectedImage.title)}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110"
+                className="bg-[#D3CEAD] hover:bg-[#C3BE9D] text-white p-3 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110"
                 title="Download image"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -260,10 +239,9 @@ export default function PhotosPage() {
                 </svg>
               </button>
 
-              {/* Close button - Above the image */}
               <button
                 onClick={closeModal}
-                className="bg-white/20 hover:bg-white/30 text-white rounded-full p-3 transition-colors backdrop-blur-sm"
+                className="bg-white/20 hover:bg-white/30 text-white p-3 transition-colors backdrop-blur-sm"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -271,11 +249,10 @@ export default function PhotosPage() {
               </button>
             </div>
 
-            {/* Image - Now completely unobstructed */}
             <img
               src={selectedImage.image}
               alt={selectedImage.title}
-              className="max-w-full max-h-[calc(100vh-200px)] object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-[calc(100vh-200px)] object-contain shadow-2xl"
             />
           </div>
         </div>
