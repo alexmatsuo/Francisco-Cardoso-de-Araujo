@@ -36,12 +36,12 @@ export default function PhotosPage() {
     {
       title: "My Photo 2",
       image: "/IMG_5831.JPG",
-      className: "absolute top-[15%] left-[65%] rotate-[-12deg]",
+      className: "absolute top-[5%] left-[75%] rotate-[-12deg]",
     },
     {
       title: "Iceland",
       image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=2600&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      className: "absolute top-[10%] left-[35%] rotate-[6deg]",
+      className: "absolute top-[5%] left-[30%] rotate-[6deg]",
     },
     {
       title: "Japan",
@@ -51,12 +51,12 @@ export default function PhotosPage() {
     {
       title: "Norway",
       image: "https://images.unsplash.com/photo-1421789665209-c9b2a435e3dc?q=80&w=3542&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      className: "absolute top-[40%] right-[5%] rotate-[4deg]",
+      className: "absolute top-[40%] right-[10%] rotate-[4deg]",
     },
     {
       title: "New Zealand",
       image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      className: "absolute top-[35%] left-[55%] rotate-[-6deg]",
+      className: "absolute top-[5%] left-[52%] rotate-[-6deg]",
     },
     {
       title: "Canada",

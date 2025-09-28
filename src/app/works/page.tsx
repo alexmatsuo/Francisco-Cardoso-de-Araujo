@@ -4,6 +4,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Clock, Calendar, ChevronRight, Eye, Grid, List } from "lucide-react";
 import { Loading } from "@/components/Loading";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 interface Work {
   id: number;
