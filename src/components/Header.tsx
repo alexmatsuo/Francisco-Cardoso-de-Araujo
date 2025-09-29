@@ -84,6 +84,7 @@ export const Header = () => {
                 <Link href="/works/chamber-ensembles" className="menu-style">Chamber Ensembles</Link>
                 <Link href="/works/large-ensembles" className="menu-style">Large Ensembles</Link>
                 <Link href="/works/multimedia-installations" className="menu-style">Multimedia & Installations</Link>
+                <Link href="/works/other-works" className="menu-style">Other Works</Link>
               </div>
             </div>
           </div>
@@ -108,7 +109,6 @@ export const Header = () => {
               <div className="border border-white/15 p-1 shadow-lg" style={{ backgroundColor: '#D3CEAD' }}>
                 <Link href="/projects/kaphca-trio" className="menu-style">Kaphca Trio</Link>
                 <Link href="/projects/circulo-invencao-musical" className="menu-style">Círculo de Invenção Musical</Link>
-                <Link href="/projects/poetry-visual-arts" className="menu-style">Poetry and Visual Arts</Link>
               </div>
             </div>
           </div>
@@ -187,6 +187,7 @@ export const Header = () => {
                 <Link href="/works/chamber-ensembles" className="menu-style text-sm">Chamber Ensembles</Link>
                 <Link href="/works/large-ensembles" className="menu-style text-sm">Large Ensembles</Link>
                 <Link href="/works/multimedia-installations" className="menu-style text-sm">Multimedia & Installations</Link>
+                <Link href="/works/other-works" className="menu-style text-sm">Other Works</Link>
               </div>
             </div>
           </div>
@@ -211,7 +212,6 @@ export const Header = () => {
               <div className="border border-white/15 p-1 shadow-lg" style={{ backgroundColor: '#D3CEAD' }}>
                 <Link href="/projects/kaphca-trio" className="menu-style text-sm">Kaphca Trio</Link>
                 <Link href="/projects/circulo-invencao-musical" className="menu-style text-sm">Círculo de Invenção Musical</Link>
-                <Link href="/projects/poetry-visual-arts" className="menu-style text-sm">Poetry and Visual Arts</Link>
               </div>
             </div>
           </div>
@@ -344,6 +344,10 @@ export const Header = () => {
                     <Link href="/works/multimedia-installations" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/multimedia-installations") ? "text-[#D3CEAD]" : ""}`}>
                       Multimedia & Installations
                     </Link>
+                    <Link href="/works/other-works" onClick={closeMobileMenu} 
+                      className={`mobile-submenu-item ${isActive("/works/other-works") ? "text-[#D3CEAD]" : ""}`}>
+                      Other Works
+                    </Link>
                   </div>
                 )}
               </div>
@@ -372,9 +376,6 @@ export const Header = () => {
                     </Link>
                     <Link href="/projects/circulo-invencao-musical" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/projects/circulo-invencao-musical") ? "text-[#D3CEAD]" : ""}`}>
                       Círculo de Invenção Musical
-                    </Link>
-                    <Link href="/projects/poetry-visual-arts" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/projects/poetry-visual-arts") ? "text-[#D3CEAD]" : ""}`}>
-                      Poetry and Visual Arts
                     </Link>
                   </div>
                 )}

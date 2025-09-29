@@ -10,12 +10,12 @@ export default function AdminDashboard() {
     { title: 'Chamber Ensembles', href: '/admin/works/chamber-ensembles', description: 'Manage chamber ensemble' },
     { title: 'Large Ensembles', href: '/admin/works/large-ensembles', description: 'Manage orchestral and large works' },
     { title: 'Multimedia & Installations', href: '/admin/works/multimedia-installations', description: 'Manage multimedia projects' },
+    { title: 'Other Works', href: '/admin/works/other-works', description: 'Manage other works' }
   ];
 
   const projectsSections = [
     { title: 'Kaphca Trio', href: '/admin/projects/kaphca-trio', description: 'Manage Kaphca Trio content' },
     { title: 'Círculo de Invenção Musical', href: '/admin/projects/circulo-invencao-musical', description: 'Manage CIM project content' },
-    { title: 'Poetry and Visual Arts', href: '/admin/projects/poetry-visual-arts', description: 'Manage poetry and visual arts content' },
   ];
 
   return (
