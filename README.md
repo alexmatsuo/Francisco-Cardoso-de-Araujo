@@ -1,10 +1,10 @@
 # Francisco Cardoso de Araujo
 
-Personal portfolio website showcasing my work, projects, and professional experience.
+Personal portfolio website showcasing work, projects, and professional experience.
 
 ## About
 
-Welcome to my portfolio! This website serves as a digital showcase of my professional journey, skills, and projects. Built with modern web technologies to provide a fast, responsive, and engaging user experience.
+Welcome to the portfolio! This website serves as a digital showcase of professional journey, skills, and projects. Built with modern web technologies to provide a fast, responsive, and engaging user experience.
 
 ## Features
 
@@ -19,4 +19,4 @@ This portfolio is built using [Next.js](https://nextjs.org/), a powerful React f
 
 ---
 
-**© 2024 Francisco Cardoso de Araujo**
+**© 2025 Francisco Cardoso de Araujo**
