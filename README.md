@@ -1,22 +1,47 @@
-# Francisco Cardoso de Araujo
+# Francisco Cardoso de Araujo - Portfolio
 
-Personal portfolio website showcasing work, projects, and professional experience.
+https://francisco-cardoso-de-araujo-n9hs.vercel.app
 
-## About
+A modern, responsive portfolio website built with Next.js, showcasing professional work and technical expertise.
 
-Welcome to the portfolio! This website serves as a digital showcase of professional journey, skills, and projects. Built with modern web technologies to provide a fast, responsive, and engaging user experience.
+## 🌐 Overview
 
-## Features
+Personal portfolio website designed to highlight projects, skills, and professional experience. Built with performance and user experience as top priorities, leveraging modern web technologies and best practices.
 
-✨ Clean, professional design  
-📱 Fully responsive across all devices  
-⚡ Fast loading and optimized performance  
-🎨 Modern UI with smooth interactions
+## ✨ Features
 
-## Built With
+- **Responsive Design** - Fully optimized for mobile, tablet, and desktop viewing
+- **Fast Performance** - Server-side rendering and optimized assets for quick load times
+- **Modern UI/UX** - Clean, professional interface with smooth interactions
+- **SEO Optimized** - Built-in Next.js SEO capabilities for better discoverability
+- **Type-Safe** - TypeScript implementation for robust code quality
+- **Accessibility** - Following WCAG guidelines for inclusive design
 
-This portfolio is built using [Next.js](https://nextjs.org/), a powerful React framework that ensures optimal performance and user experience.
+## 🛠️ Built With
+
+- **[Next.js 14+](https://nextjs.org/)** - React framework with App Router
+- **[React](https://react.dev/)** - UI component library
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
+- **[CSS Modules](https://nextjs.org/docs/app/building-your-application/styling/css-modules)** - Scoped styling solution
+- **[next/font](https://nextjs.org/docs/app/building-your-application/optimizing/fonts)** - Automatic font optimization
+
+## 🚢 Deployment
+
+Optimized for deployment on [Vercel](https://vercel.com).
+
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 👤 Developer
+
+**Alex Matsuo**
+- GitHub: [@alexmatsuo](https://github.com/alexmatsuo)
+
+**Portfolio Owner**
+- Francisco Cardoso de Araujo
 
 ---
 
-**© 2025 Francisco Cardoso de Araujo**
+Built with ❤️ using [Next.js](https://nextjs.org/)
