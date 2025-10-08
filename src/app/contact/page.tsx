@@ -60,8 +60,8 @@ export default function ContactPage() {
     try {
       console.log('Sending email with EmailJS...');
       const result = await window.emailjs.send(
-        'service_7csehtb',
-        'template_318bmiz',
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
         {
           from_name: formData.from_name,
           from_email: formData.from_email,
@@ -69,7 +69,7 @@ export default function ContactPage() {
           message: formData.message,
           to_name: 'Francisco Cardoso'
         },
-        '9ZlxtPYewu2W_FRi8'
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       );
 
       console.log('EmailJS result:', result);
@@ -94,7 +94,7 @@ export default function ContactPage() {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
     script.onload = () => {
-      window.emailjs.init('9ZlxtPYewu2W_FRi8');
+      window.emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
     };
     document.head.appendChild(script);
 
