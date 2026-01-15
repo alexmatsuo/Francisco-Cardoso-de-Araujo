@@ -34,32 +34,32 @@ export default function PhotosPage() {
       className: "absolute top-[5%] left-[5%] rotate-[-8deg]",
     },
     {
-      title: "II",
+      title: "IV",
       image: "/2.png",
       className: "absolute top-[5%] left-[75%] rotate-[-12deg]",
     },
     {
-      title: "III",
+      title: "II",
       image: "/3.png",
       className: "absolute top-[5%] left-[30%] rotate-[6deg]",
     },
     {
-      title: "IV",
+      title: "V",
       image: "/4.png",
       className: "absolute top-[40%] left-[20%] rotate-[12deg]",
     },
     {
-      title: "V",
+      title: "VII",
       image: "/5.png",
       className: "absolute top-[40%] right-[10%] rotate-[4deg]",
     },
     {
-      title: "VI",
+      title: "III",
       image: "/6.png",
       className: "absolute top-[5%] left-[52%] rotate-[-6deg]",
     },
     {
-      title: "VII",
+      title: "VI",
       image: "/7.png",
       className: "absolute top-[40%] left-[45%] rotate-[8deg]",
     },
