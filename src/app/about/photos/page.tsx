@@ -29,30 +29,37 @@ export default function PhotosPage() {
   
   const items = [
     {
+      title: "I",
       image: "/1.png",
       className: "absolute top-[5%] left-[5%] rotate-[-8deg]",
     },
     {
+      title: "II",
       image: "/2.png",
       className: "absolute top-[5%] left-[75%] rotate-[-12deg]",
     },
     {
+      title: "III",
       image: "/3.png",
       className: "absolute top-[5%] left-[30%] rotate-[6deg]",
     },
     {
+      title: "IV",
       image: "/4.png",
       className: "absolute top-[40%] left-[20%] rotate-[12deg]",
     },
     {
+      title: "V",
       image: "/5.png",
       className: "absolute top-[40%] right-[10%] rotate-[4deg]",
     },
     {
+      title: "VI",
       image: "/6.png",
       className: "absolute top-[5%] left-[52%] rotate-[-6deg]",
     },
     {
+      title: "VII",
       image: "/7.png",
       className: "absolute top-[40%] left-[45%] rotate-[8deg]",
     },
