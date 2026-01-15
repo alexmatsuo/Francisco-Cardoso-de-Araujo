@@ -29,38 +29,31 @@ export default function PhotosPage() {
   
   const items = [
     {
-      title: "My Photo 1",
-      image: "/41436600_301080640705638_1608189809101795861_n.jpg",
+      image: "/1.png",
       className: "absolute top-[5%] left-[5%] rotate-[-8deg]",
     },
     {
-      title: "My Photo 2",
-      image: "/IMG_5831.JPG",
+      image: "/2.png",
       className: "absolute top-[5%] left-[75%] rotate-[-12deg]",
     },
     {
-      title: "Iceland",
-      image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=2600&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "/3.png",
       className: "absolute top-[5%] left-[30%] rotate-[6deg]",
     },
     {
-      title: "Japan",
-      image: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?q=80&w=3648&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "/4.png",
       className: "absolute top-[40%] left-[20%] rotate-[12deg]",
     },
     {
-      title: "Norway",
-      image: "https://images.unsplash.com/photo-1421789665209-c9b2a435e3dc?q=80&w=3542&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "/5.png",
       className: "absolute top-[40%] right-[10%] rotate-[4deg]",
     },
     {
-      title: "New Zealand",
-      image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=3070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "/6.png",
       className: "absolute top-[5%] left-[52%] rotate-[-6deg]",
     },
     {
-      title: "Canada",
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "/7.png",
       className: "absolute top-[40%] left-[45%] rotate-[8deg]",
     },
   ];
