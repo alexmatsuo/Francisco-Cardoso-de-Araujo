@@ -83,7 +83,7 @@ export const Header = () => {
                 <Link href="/works/duos-trios" className="menu-style">Duos & Trios</Link>
                 <Link href="/works/chamber-ensembles" className="menu-style">Chamber Ensembles</Link>
                 <Link href="/works/large-ensembles" className="menu-style">Large Ensembles</Link>
-                <Link href="/works/multimedia-installations" className="menu-style">Multimedia & Installations</Link>
+                <Link href="/works/electroacoustic-acousmatic" className="menu-style">Electroacoustic & Acousmatic</Link>
                 <Link href="/works/other-works" className="menu-style">Other Works</Link>
               </div>
             </div>
@@ -186,7 +186,7 @@ export const Header = () => {
                 <Link href="/works/duos-trios" className="menu-style text-sm">Duos & Trios</Link>
                 <Link href="/works/chamber-ensembles" className="menu-style text-sm">Chamber Ensembles</Link>
                 <Link href="/works/large-ensembles" className="menu-style text-sm">Large Ensembles</Link>
-                <Link href="/works/multimedia-installations" className="menu-style text-sm">Multimedia & Installations</Link>
+                <Link href="/works/electroacoustic-acousmatic" className="menu-style text-sm">Electroacoustic & Acousmatic</Link>
                 <Link href="/works/other-works" className="menu-style text-sm">Other Works</Link>
               </div>
             </div>
@@ -341,8 +341,8 @@ export const Header = () => {
                     <Link href="/works/large-ensembles" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/large-ensembles") ? "text-[#D3CEAD]" : ""}`}>
                       Large Ensembles
                     </Link>
-                    <Link href="/works/multimedia-installations" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/multimedia-installations") ? "text-[#D3CEAD]" : ""}`}>
-                      Multimedia & Installations
+                    <Link href="/works/electroacoustic-acousmatic" onClick={closeMobileMenu} className={`mobile-submenu-item ${isActive("/works/electroacoustic-acousmatic") ? "text-[#D3CEAD]" : ""}`}>
+                      Electroacoustic & Acousmatic
                     </Link>
                     <Link href="/works/other-works" onClick={closeMobileMenu} 
                       className={`mobile-submenu-item ${isActive("/works/other-works") ? "text-[#D3CEAD]" : ""}`}>

@@ -19,7 +19,7 @@ interface Work {
   soundcloudUrl: string | null;
 }
 
-export default function MultimediaInstallationsWorks() {
+export default function ElectroacousticAcousmatic() {
   const [works, setWorks] = useState<Work[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
@@ -32,7 +32,7 @@ export default function MultimediaInstallationsWorks() {
 
   const fetchWorks = async () => {
     try {
-      const response = await fetch('/api/works/multimedia-installations');
+      const response = await fetch('/api/works/electroacoustic-acousmatic');
       if (!response.ok) {
         throw new Error('Failed to fetch works');
       }
@@ -70,7 +70,7 @@ export default function MultimediaInstallationsWorks() {
 
   const getLinkPath = (work: Work) => {
     if (!hasDetails(work) || !work.slug) return null;
-    return `/works/multimedia-installations/${work.slug}`;
+    return `/works/electroacoustic-acousmatic/${work.slug}`;
   };
 
   const filteredWorks = getFilteredWorks();
@@ -85,8 +85,8 @@ export default function MultimediaInstallationsWorks() {
       <div className="mb-12">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
           <div>
-            <h1 className="text-4xl font-bold mb-2 text-[#D3CEAD]">Multimedia & Installations</h1>
-            <p className="text-[#D3CEAD]/70">Works for Multimedia and Installations</p>
+            <h1 className="text-4xl font-bold mb-2 text-[#D3CEAD]">Electroacoustic & Acousmatic</h1>
+            <p className="text-[#D3CEAD]/70">Works for Electroacoustic & Acousmatic</p>
           </div>
           
           {/* Stats */}
@@ -202,10 +202,10 @@ export default function MultimediaInstallationsWorks() {
                         )}
                       </div>
                       
-                      {/* Multimedia & Installations Badge */}
+                      {/* Eletroacoustic & Acousmatic Badge */}
                       <div className="mt-2">
                         <span className="text-xs px-2 py-1 bg-pink-500/20 text-pink-400 inline-block">
-                          Media
+                          Eletroacoustic & Acousmatic
                         </span>
                       </div>
                     </div>
@@ -237,7 +237,7 @@ export default function MultimediaInstallationsWorks() {
                         </h3>
                         <span className="text-sm text-[#D3CEAD]/70">({work.year})</span>
                         <span className="px-2 py-1 text-xs bg-pink-500/20 text-pink-400">
-                          Multimedia & Installations
+                          Electroacoustic & Acousmatic
                         </span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2 text-base text-[#D3CEAD]/80">
@@ -279,7 +279,7 @@ export default function MultimediaInstallationsWorks() {
       <div className="mt-16 pt-8 border-t border-white/10">
         <div className="text-center">
           <div className="text-2xl font-bold text-[#D3CEAD] mb-1">{works.length}</div>
-          <div className="text-sm text-[#D3CEAD]/70">Total Multimedia & Installations Works</div>
+          <div className="text-sm text-[#D3CEAD]/70">Total Electroacoustic & Acousmatic Works</div>
         </div>
       </div>
     </main>

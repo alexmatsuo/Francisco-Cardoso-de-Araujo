@@ -9,7 +9,7 @@ export async function GET(
     const work = await prisma.work.findFirst({
       where: { 
         slug: params.slug,
-        category: 'multimedia-installations'
+        category: 'electroacoustic-acousmatic'
       }
     });
 

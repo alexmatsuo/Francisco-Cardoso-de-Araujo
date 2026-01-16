@@ -89,8 +89,8 @@ export const AdminHeader = () => {
                 <Link href="/admin/works/large-ensembles" className="menu-style">
                   Large Ensembles
                 </Link>
-                <Link href="/admin/works/multimedia-installations" className="menu-style">
-                  Multimedia & Installations
+                <Link href="/admin/works/electroacoustic-acousmatic" className="menu-style">
+                  Electroacoustic & Acousmatic
                 </Link>
               </div>
             </div>
@@ -230,11 +230,11 @@ export const AdminHeader = () => {
                       Large Ensembles
                     </Link>
                     <Link
-                      href="/admin/works/multimedia-installations"
+                      href="/admin/works/electroacoustic-acousmatic"
                       onClick={closeMobileMenu}
                       className="mobile-submenu-item"
                     >
-                      Multimedia & Installations
+                      Electroacoustic & Acousmatic
                     </Link>
                   </div>
                 )}

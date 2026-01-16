@@ -16,7 +16,7 @@ interface Work {
   slug: string;
 }
 
-export default function AdminMultimediaInstallationsWorks() {
+export default function AdminElectroacousticAcousmaticWorks() {
   const [works, setWorks] = useState<Work[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -40,7 +40,7 @@ export default function AdminMultimediaInstallationsWorks() {
 
   const fetchWorks = async () => {
     try {
-      const response = await fetch('/api/works/multimedia-installations');
+      const response = await fetch('/api/works/electroacoustic-acousmatic');
       if (!response.ok) throw new Error('Failed to fetch');
       
       const data = await response.json();
@@ -65,7 +65,7 @@ export default function AdminMultimediaInstallationsWorks() {
   const saveWorks = async () => {
     setIsSaving(true);
     try {
-      const response = await fetch('/api/works/multimedia-installations', {
+      const response = await fetch('/api/works/electroacoustic-acousmatic', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -220,7 +220,7 @@ export default function AdminMultimediaInstallationsWorks() {
   };
 
   const viewWork = (work: Work) => {
-    const url = `/works/multimedia-installations/${work.slug || work.id}`;
+    const url = `/works/electroacoustic-acousmatic/${work.slug || work.id}`;
     window.open(url, '_blank');
   };
 
@@ -246,7 +246,7 @@ export default function AdminMultimediaInstallationsWorks() {
   return (
     <main className="p-8 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-white">Admin - Multimedia & Installations</h1>
+        <h1 className="text-4xl font-bold text-white">Admin - Electroacoustic & Acousmatic</h1>
         <div className="flex gap-4">
           {!isEditing ? (
             <button

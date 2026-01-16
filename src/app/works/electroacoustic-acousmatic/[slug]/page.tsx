@@ -30,7 +30,7 @@ export default function WorkDetailPage() {
 
   const fetchWork = async () => {
     try {
-      const response = await fetch(`/api/works/multimedia-installations/${params.slug}`);
+      const response = await fetch(`/api/works/electroacoustic-acousmatic/${params.slug}`);
       if (!response.ok) throw new Error('Failed to fetch work');
       
       const data = await response.json();
@@ -91,8 +91,8 @@ export default function WorkDetailPage() {
     return (
       <main className="p-8 max-w-4xl mx-auto">
         <div className="text-center">Work not found</div>
-        <Link href="/works/multimedia-installations" className="text-[#D3CEAD] hover:underline mt-4 inline-block">
-          ← Back to Multimedia & Installations
+        <Link href="/works/electroacoustic-acousmatic" className="text-[#D3CEAD] hover:underline mt-4 inline-block">
+          ← Back to Electroacoustic & Acousmatic
         </Link>
       </main>
     );
@@ -103,8 +103,8 @@ export default function WorkDetailPage() {
 
   return (
     <main className="p-8 max-w-6xl mx-auto">
-      <Link href="/works/multimedia-installations" className="text-[#D3CEAD] hover:underline mb-6 inline-block">
-        ← Back to Multimedia & Installations
+      <Link href="/works/electroacoustic-acousmatic" className="text-[#D3CEAD] hover:underline mb-6 inline-block">
+        ← Back to Electroacoustic & Acousmatic
       </Link>
       
       <h1 className="text-4xl font-bold mb-2">{work.title} ({work.year})</h1>

@@ -33,7 +33,7 @@ interface WorksByCategory {
   duosTrios: Work[];
   chamberEnsembles: Work[];
   largeEnsembles: Work[];
-  multimediaInstallations: Work[];
+  electroacousticAcousmatic: Work[];
 }
 
 const categoryConfig = {
@@ -41,7 +41,7 @@ const categoryConfig = {
   duosTrios: { title: "Duos & Trios", color: "bg-green-500/20 text-green-400" },
   chamberEnsembles: { title: "Chamber Ensembles", color: "bg-purple-500/20 text-purple-400" },
   largeEnsembles: { title: "Large Ensembles", color: "bg-orange-500/20 text-orange-400" },
-  multimediaInstallations: { title: "Multimedia & Installations", color: "bg-pink-500/20 text-pink-400" }
+  electroacousticAcousmatic: { title: "Electroacoustic & Acousmatic", color: "bg-pink-500/20 text-pink-400" }
 };
 
 export default function AllWorks() {
@@ -50,7 +50,7 @@ export default function AllWorks() {
     duosTrios: [],
     chamberEnsembles: [],
     largeEnsembles: [],
-    multimediaInstallations: []
+    electroacousticAcousmatic: []
   });
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
@@ -64,24 +64,24 @@ export default function AllWorks() {
 
   const fetchAllWorks = async () => {
     try {
-      const [soloRes, duosTriosRes, chamberRes, largeRes, multimediaRes] = await Promise.all([
+      const [soloRes, duosTriosRes, chamberRes, largeRes, electroacousticRes] = await Promise.all([
         fetch('/api/works/solo'),
         fetch('/api/works/duos-trios'),
         fetch('/api/works/chamber-ensembles'),
         fetch('/api/works/large-ensembles'),
-        fetch('/api/works/multimedia-installations')
+        fetch('/api/works/electroacoustic-acousmatic')
       ]);
 
-      if (!soloRes.ok || !duosTriosRes.ok || !chamberRes.ok || !largeRes.ok || !multimediaRes.ok) {
+      if (!soloRes.ok || !duosTriosRes.ok || !chamberRes.ok || !largeRes.ok || !electroacousticRes.ok) {
         throw new Error('Failed to fetch one or more work categories');
       }
 
-      const [soloData, duosTriosData, chamberData, largeData, multimediaData] = await Promise.all([
+      const [soloData, duosTriosData, chamberData, largeData, electroacousticData] = await Promise.all([
         soloRes.json(),
         duosTriosRes.json(),
         chamberRes.json(),
         largeRes.json(),
-        multimediaRes.json()
+        electroacousticRes.json()
       ]);
 
       setWorks({
@@ -89,7 +89,7 @@ export default function AllWorks() {
         duosTrios: duosTriosData.works || [],
         chamberEnsembles: chamberData.works || [],
         largeEnsembles: largeData.works || [],
-        multimediaInstallations: multimediaData.works || []
+        electroacousticAcousmatic: electroacousticData.works || []
       });
     } catch (error) {
       console.error('Error fetching works:', error);
@@ -104,7 +104,7 @@ export default function AllWorks() {
       ...works.duosTrios.map(w => ({ ...w, category: 'duosTrios' })),
       ...works.chamberEnsembles.map(w => ({ ...w, category: 'chamberEnsembles' })),
       ...works.largeEnsembles.map(w => ({ ...w, category: 'largeEnsembles' })),
-      ...works.multimediaInstallations.map(w => ({ ...w, category: 'multimediaInstallations' }))
+      ...works.electroacousticAcousmatic.map(w => ({ ...w, category: 'electroacousticAcousmatic' }))
     ].sort((a, b) => b.year - a.year);
   };
 
@@ -136,7 +136,7 @@ export default function AllWorks() {
            works.duosTrios.length + 
            works.chamberEnsembles.length + 
            works.largeEnsembles.length + 
-           works.multimediaInstallations.length;
+           works.electroacousticAcousmatic.length;
   };
 
   const hasDetails = (work: Work) => {
@@ -152,7 +152,7 @@ export default function AllWorks() {
       case 'duosTrios': return `/works/duos-trios/${work.slug}`;
       case 'chamberEnsembles': return `/works/chamber-ensembles/${work.slug}`;
       case 'largeEnsembles': return `/works/large-ensembles/${work.slug}`;
-      case 'multimediaInstallations': return `/works/multimedia-installations/${work.slug}`;
+      case 'electroacousticAcousmatic': return `/works/electroacoustic-acousmatic/${work.slug}`;
       default: return null;
     }
   };
@@ -206,7 +206,7 @@ export default function AllWorks() {
             <option value="duosTrios">Duos & Trios</option>
             <option value="chamberEnsembles">Chamber Ensembles</option>
             <option value="largeEnsembles">Large Ensembles</option>
-            <option value="multimediaInstallations">Multimedia & Installations</option>
+            <option value="electroacousticAcousmatic">Electroacoustic & Acousmatic</option>
           </select>
           
           {/* Decade Filter */}

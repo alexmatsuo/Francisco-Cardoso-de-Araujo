@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   try {
     const works = await prisma.work.findMany({
-      where: { category: 'multimedia-installations' },
+      where: { category: 'electroacoustic-acousmatic' },
       orderBy: { year: 'desc' }
     });
 
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const result = await prisma.$transaction(async (tx) => {
       // Get existing works for this category
       const existingWorks = await tx.work.findMany({
-        where: { category: 'multimedia-installations' }
+        where: { category: 'electroacoustic-acousmatic' }
       });
 
       const existingWorkIds = new Set(existingWorks.map(w => w.id));
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
 
         const workPayload = {
           title: title.trim(),
-          category: 'multimedia-installations',
+          category: 'electroacoustic-acousmatic',
           year: parseInt(year.toString()),
           instruments: instruments.trim(),
           duration: duration?.trim() || null,
@@ -120,7 +120,7 @@ export async function POST(request: Request) {
         await tx.work.deleteMany({
           where: {
             id: { in: idsToDelete },
-            category: 'multimedia-installations'
+            category: 'electroacoustic-acousmatic'
           }
         });
       }

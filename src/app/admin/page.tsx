@@ -9,7 +9,7 @@ export default function AdminDashboard() {
     { title: 'Duos & Trios', href: '/admin/works/duos-trios', description: 'Manage duos & trios works' },
     { title: 'Chamber Ensembles', href: '/admin/works/chamber-ensembles', description: 'Manage chamber ensemble' },
     { title: 'Large Ensembles', href: '/admin/works/large-ensembles', description: 'Manage orchestral and large works' },
-    { title: 'Multimedia & Installations', href: '/admin/works/multimedia-installations', description: 'Manage multimedia projects' },
+    { title: 'Electracoustic & Acousmatic', href: '/admin/works/electroacoustic-acousmatic', description: 'Manage electroacoustic projects' },
     { title: 'Other Works', href: '/admin/works/other-works', description: 'Manage other works' }
   ];
 
