@@ -45,6 +45,7 @@ export async function POST(request: Request) {
       });
 
       const existingWorkIds = new Set(existingWorks.map(w => w.id));
+      const existingSlugs = new Set(existingWorks.map(w => w.slug));
       const receivedWorkIds = new Set<number>();
       const processedWorks = [];
 
@@ -76,6 +77,17 @@ export async function POST(request: Request) {
           ? videoUrls.filter(url => url && url.trim()) 
           : [];
 
+        // Generate or use provided slug, ensuring uniqueness
+        let finalSlug = slug?.trim() || slugify(title.trim());
+        
+        // Check if slug already exists (excluding current work if updating)
+        let slugCounter = 1;
+        const originalSlug = finalSlug;
+        while (existingSlugs.has(finalSlug) && !(id && typeof id === 'number' && id < 1000000000 && existingWorkIds.has(id))) {
+          finalSlug = `${originalSlug}-${slugCounter}`;
+          slugCounter++;
+        }
+
         const workPayload = {
           title: title.trim(),
           category: 'electroacoustic-acousmatic',
@@ -87,13 +99,15 @@ export async function POST(request: Request) {
           imageFileName: imageFileName?.trim() || null,
           videoUrls: processedVideoUrls,
           soundcloudUrl: soundcloudUrl?.trim() || null,
-          slug: slug?.trim() || slugify(title.trim())
+          slug: finalSlug
         };
 
         let work;
         
         // Check if this is an existing work (has a valid database ID)
-        if (id && typeof id === 'number' && existingWorkIds.has(id)) {
+        const isExistingWork = id && typeof id === 'number' && existingWorkIds.has(id);
+
+        if (isExistingWork) {
           // This is an existing work - UPDATE it
           console.log('Updating existing work with ID:', id);
           work = await tx.work.update({
@@ -101,12 +115,19 @@ export async function POST(request: Request) {
             data: workPayload
           });
           receivedWorkIds.add(id);
+          // Remove old slug from tracking set and add new one
+          const oldWork = existingWorks.find(w => w.id === id);
+          if (oldWork?.slug) {
+            existingSlugs.delete(oldWork.slug);
+          }
+          existingSlugs.add(finalSlug);
         } else {
           // This is a new work - CREATE it
           console.log('Creating new work');
           work = await tx.work.create({
             data: workPayload
           });
+          existingSlugs.add(finalSlug);
         }
         
         processedWorks.push(work);
