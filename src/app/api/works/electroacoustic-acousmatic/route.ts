@@ -93,7 +93,7 @@ export async function POST(request: Request) {
         let work;
         
         // Check if this is an existing work (has a valid database ID)
-        if (id && typeof id === 'number' && id < 1000000000 && existingWorkIds.has(id)) {
+        if (id && typeof id === 'number' && existingWorkIds.has(id)) {
           // This is an existing work - UPDATE it
           console.log('Updating existing work with ID:', id);
           work = await tx.work.update({
