@@ -50,7 +50,7 @@ export const Footer = () => {
             </a>
             
             <a
-              href="https://www.youtube.com/@franciscocardoso-composer"
+              href="https://www.youtube.com/@FCA-Composer/videos"
               target="_blank"
               rel="noopener noreferrer"
               className="group relative p-4 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/10"
