@@ -47,6 +47,9 @@ export async function POST(request: Request) {
       const existingWorkIds = new Set(existingWorks.map(w => w.id));
       const receivedWorkIds = new Set<number>();
       const processedWorks = [];
+      
+      // Track slugs being used in this batch to prevent duplicates
+      const usedSlugsInBatch = new Set<string>();
 
       // Process each work
       for (const workData of works) {
@@ -76,6 +79,48 @@ export async function POST(request: Request) {
           ? videoUrls.filter(url => url && url.trim()) 
           : [];
 
+        // Check if this is an existing work (has a valid database ID)
+        const isExistingWork = id && typeof id === 'number' && existingWorkIds.has(id);
+        
+        // Generate or use provided slug
+        let finalSlug = slug?.trim() || slugify(title.trim());
+        
+        // For existing works being updated, get their current slug
+        const currentWorkSlug = isExistingWork 
+          ? existingWorks.find(w => w.id === id)?.slug 
+          : null;
+
+        // Ensure slug is unique across ALL works (not just this category)
+        // Skip the uniqueness check if this is the same work keeping its own slug
+        if (finalSlug !== currentWorkSlug) {
+          let slugCounter = 1;
+          const originalSlug = finalSlug;
+          
+          while (true) {
+            // Check if slug exists in database (excluding current work if updating)
+            const existingWorkWithSlug = await tx.work.findFirst({
+              where: {
+                slug: finalSlug,
+                ...(isExistingWork ? { NOT: { id } } : {})
+              }
+            });
+            
+            // Also check if slug is already used in this batch
+            const usedInBatch = usedSlugsInBatch.has(finalSlug);
+            
+            if (!existingWorkWithSlug && !usedInBatch) {
+              break; // Slug is unique, we can use it
+            }
+            
+            // Slug is taken, try with a counter
+            finalSlug = `${originalSlug}-${slugCounter}`;
+            slugCounter++;
+          }
+        }
+        
+        // Add to used slugs for this batch
+        usedSlugsInBatch.add(finalSlug);
+
         const workPayload = {
           title: title.trim(),
           category: 'solo',
@@ -87,13 +132,12 @@ export async function POST(request: Request) {
           imageFileName: imageFileName?.trim() || null,
           videoUrls: processedVideoUrls,
           soundcloudUrl: soundcloudUrl?.trim() || null,
-          slug: slug?.trim() || slugify(title.trim())
+          slug: finalSlug
         };
 
         let work;
-        
-        // Check if this is an existing work (has a valid database ID)
-        if (id && typeof id === 'number' && id < 1000000000 && existingWorkIds.has(id)) {
+
+        if (isExistingWork) {
           // This is an existing work - UPDATE it
           console.log('Updating existing work with ID:', id);
           work = await tx.work.update({
@@ -103,7 +147,7 @@ export async function POST(request: Request) {
           receivedWorkIds.add(id);
         } else {
           // This is a new work - CREATE it
-          console.log('Creating new work');
+          console.log('Creating new work with slug:', finalSlug);
           work = await tx.work.create({
             data: workPayload
           });
