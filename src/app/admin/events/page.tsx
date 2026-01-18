@@ -14,7 +14,9 @@ import {
   ArrowUp,
   ArrowDown,
   Save,
-  X
+  X,
+  Upload,
+  Loader2
 } from 'lucide-react';
 
 interface Event {
@@ -38,6 +40,7 @@ export default function AdminEventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [formData, setFormData] = useState({
@@ -74,7 +77,186 @@ export default function AdminEventsPage() {
     }
   };
 
-  // Move event functionality (similar to works admin)
+  // File upload handler for poster
+  const handlePosterUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    console.log('Uploading poster:', file.name, file.size, file.type);
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 50MB to match API limit)
+    if (file.size > 50 * 1024 * 1024) {
+      alert('Image must be less than 50MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'image'); // Required by API
+
+      console.log('Sending upload request...');
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      console.log('Upload response status:', response.status);
+      const data = await response.json();
+      console.log('Upload response data:', data);
+
+      if (!response.ok) {
+        throw new Error(data.error || data.details || 'Upload failed');
+      }
+
+      setFormData(prev => ({ ...prev, posterUrl: data.url }));
+      alert('Poster uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading poster:', error);
+      alert(`Failed to upload poster: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // File upload handler for additional images
+  const handleAdditionalImagesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    console.log('Uploading additional images:', files.length, 'files');
+
+    // Validate file types
+    const validFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+    if (validFiles.length === 0) {
+      alert('Please select image files');
+      return;
+    }
+
+    // Validate total file size
+    const totalSize = validFiles.reduce((sum, file) => sum + file.size, 0);
+    if (totalSize > 50 * 1024 * 1024) {
+      alert('Total image size must be less than 50MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const uploadedUrls: string[] = [];
+      let failedCount = 0;
+
+      for (const file of validFiles) {
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('type', 'image'); // Required by API
+
+          console.log(`Uploading ${file.name}...`);
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const data = await response.json();
+          
+          if (!response.ok) {
+            console.error(`Failed to upload ${file.name}:`, data);
+            failedCount++;
+            continue;
+          }
+
+          uploadedUrls.push(data.url);
+          console.log(`Successfully uploaded ${file.name}`);
+        } catch (err) {
+          console.error(`Error uploading ${file.name}:`, err);
+          failedCount++;
+        }
+      }
+
+      if (uploadedUrls.length > 0) {
+        setFormData(prev => ({ 
+          ...prev, 
+          imageUrls: [...prev.imageUrls, ...uploadedUrls] 
+        }));
+      }
+
+      if (failedCount > 0) {
+        alert(`${uploadedUrls.length} image(s) uploaded successfully, ${failedCount} failed.`);
+      } else {
+        alert(`${uploadedUrls.length} image(s) uploaded successfully!`);
+      }
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      alert('Failed to upload images');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // File upload handler for PDF
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    console.log('Uploading PDF:', file.name, file.size, file.type);
+
+    // Validate file type
+    if (file.type !== 'application/pdf') {
+      alert('Please select a PDF file');
+      return;
+    }
+
+    // Validate file size (max 50MB to match API limit)
+    if (file.size > 50 * 1024 * 1024) {
+      alert('PDF must be less than 50MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'pdf'); // Required by API
+
+      console.log('Sending PDF upload request...');
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      console.log('PDF upload response status:', response.status);
+      const data = await response.json();
+      console.log('PDF upload response data:', data);
+
+      if (!response.ok) {
+        throw new Error(data.error || data.details || 'Upload failed');
+      }
+
+      setFormData(prev => ({ ...prev, pdfUrl: data.url }));
+      alert('PDF uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading PDF:', error);
+      alert(`Failed to upload PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Remove an additional image
+  const removeAdditionalImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrls: prev.imageUrls.filter((_, i) => i !== index)
+    }));
+  };
+
   const moveEvent = (index: number, direction: "up" | "down") => {
     const newEvents = [...events];
     const targetIndex = direction === "up" ? index - 1 : index + 1;
@@ -85,12 +267,9 @@ export default function AdminEventsPage() {
     setEvents(newEvents);
   };
 
-  // Save events order to backend
   const saveEventsOrder = async () => {
     setIsSaving(true);
     try {
-      console.log('Saving events:', events);
-      
       const response = await fetch('/api/events', {
         method: 'POST',
         headers: {
@@ -104,11 +283,8 @@ export default function AdminEventsPage() {
         throw new Error(errorData.error || 'Failed to save events order');
       }
 
-      const data = await response.json();
-      console.log('Events saved:', data);
       alert('Events order saved successfully!');
       await fetchEvents();
-      
     } catch (error) {
       console.error('Error saving events order:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -177,7 +353,6 @@ export default function AdminEventsPage() {
   const handleSave = async () => {
     try {
       if (editingEvent) {
-        // Update existing event
         const response = await fetch(`/api/events/${editingEvent.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -188,7 +363,6 @@ export default function AdminEventsPage() {
         
         alert('Event updated successfully!');
       } else if (isAddingNew) {
-        // Create new event
         const response = await fetch('/api/events', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -376,12 +550,125 @@ export default function AdminEventsPage() {
                 rows={2}
               />
             </div>
+
+            {/* Poster Upload Section */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2 text-gray-300">Event Poster</label>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded cursor-pointer transition-colors text-white">
+                  {isUploading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Upload className="w-5 h-5" />
+                  )}
+                  Upload Poster
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePosterUpload}
+                    disabled={isUploading}
+                    className="hidden"
+                  />
+                </label>
+                {formData.posterUrl && (
+                  <div className="flex items-center gap-2">
+                    <img src={formData.posterUrl} alt="Poster" className="w-16 h-16 object-cover rounded" />
+                    <button
+                      onClick={() => setFormData({ ...formData, posterUrl: '' })}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Additional Images Upload Section */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2 text-gray-300">Additional Images</label>
+              <div className="space-y-3">
+                <label className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded cursor-pointer transition-colors text-white w-fit">
+                  {isUploading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Image className="w-5 h-5" />
+                  )}
+                  Upload Images
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleAdditionalImagesUpload}
+                    disabled={isUploading}
+                    className="hidden"
+                  />
+                </label>
+                {formData.imageUrls.length > 0 && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {formData.imageUrls.map((url, index) => (
+                      <div key={index} className="relative group">
+                        <img src={url} alt={`Image ${index + 1}`} className="w-full h-24 object-cover rounded" />
+                        <button
+                          onClick={() => removeAdditionalImage(index)}
+                          className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-4 h-4 text-white" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* PDF Upload Section */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2 text-gray-300">Program PDF</label>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded cursor-pointer transition-colors text-white">
+                  {isUploading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <FileText className="w-5 h-5" />
+                  )}
+                  Upload PDF
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handlePdfUpload}
+                    disabled={isUploading}
+                    className="hidden"
+                  />
+                </label>
+                {formData.pdfUrl && (
+                  <div className="flex items-center gap-2">
+                    <a 
+                      href={formData.pdfUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-blue-400 hover:text-blue-300"
+                    >
+                      <FileText className="w-5 h-5" />
+                      View PDF
+                    </a>
+                    <button
+                      onClick={() => setFormData({ ...formData, pdfUrl: '' })}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="flex gap-4 mt-6">
             <button
               onClick={handleSave}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors text-white"
+              disabled={isUploading}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 rounded transition-colors text-white"
             >
               {editingEvent ? 'Update Event' : 'Create Event'}
             </button>
@@ -409,6 +696,9 @@ export default function AdminEventsPage() {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   Type & Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                  Media
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   Actions
@@ -458,6 +748,28 @@ export default function AdminEventsPage() {
                       }`}>
                         {event.eventType}
                       </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                      {event.posterUrl && (
+                        <span className="flex items-center gap-1">
+                          <FileImage className="w-4 h-4" />
+                          Poster
+                        </span>
+                      )}
+                      {event.imageUrls && event.imageUrls.length > 0 && (
+                        <span className="flex items-center gap-1">
+                          <Image className="w-4 h-4" />
+                          {event.imageUrls.length}
+                        </span>
+                      )}
+                      {event.pdfUrl && (
+                        <span className="flex items-center gap-1">
+                          <FileText className="w-4 h-4" />
+                          PDF
+                        </span>
+                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4">
