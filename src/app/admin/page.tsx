@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Music, Users, FileText, Calendar, ArrowRight, User } from 'lucide-react';
+import { Music, Users, FileText, Calendar, ArrowRight, User, BookOpen } from 'lucide-react';
 
 export default function AdminDashboard() {
   const worksSections = [
@@ -97,6 +97,28 @@ export default function AdminDashboard() {
         </div>
       </section>
 
+      {/* Writings Section */}
+      <section className="mb-12">
+        <div className="flex items-center mb-6">
+          <BookOpen className="w-6 h-6 text-green-500 mr-3" />
+          <h2 className="text-2xl font-bold text-white">Writings Management</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link
+            href="/admin/writings"
+            className="group bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-all duration-200 border border-gray-700 hover:border-green-500/50"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-white group-hover:text-green-500 transition-colors">
+                Manage Writings
+              </h3>
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-500 group-hover:translate-x-1 transition-all" />
+            </div>
+            <p className="text-gray-400 text-sm">Manage articles, essays, and written publications</p>
+          </Link>
+        </div>
+      </section>
 
     </main>
   );

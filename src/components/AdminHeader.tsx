@@ -97,6 +97,15 @@ export const AdminHeader = () => {
           </div>
 
           <Link
+            href="/admin/writings"
+            className={`nav-item ${
+              isActive("/admin/writings") ? "text-[#D3CEAD]" : ""
+            }`}
+          >
+            Writings
+          </Link>
+
+          <Link
             href="/admin/events"
             className={`nav-item ${
               isActive("/admin/events") ? "text-[#D3CEAD]" : ""
@@ -178,6 +187,14 @@ export const AdminHeader = () => {
                 Dashboard
               </Link>
 
+              <Link
+                href="/admin/about"
+                onClick={closeMobileMenu}
+                className="mobile-nav-item"
+              >
+                About
+              </Link>
+
               {/* Mobile Works Section */}
               <div>
                 <button
@@ -240,53 +257,21 @@ export const AdminHeader = () => {
                 )}
               </div>
 
-              {/* Mobile Projects Section */}
-              <div>
-                <button
-                  onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-                  className="mobile-nav-item w-full flex items-center justify-between"
-                >
-                  Projects
-                  <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      isProjectsOpen ? "rotate-180" : ""
-                    }`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-                {isProjectsOpen && (
-                  <div className="ml-4 mt-3 flex flex-col gap-3">
-                    <Link
-                      href="/admin/projects/kaphca-trio"
-                      onClick={closeMobileMenu}
-                      className="mobile-submenu-item"
-                    >
-                      Kaphca Trio
-                    </Link>
-                    <Link
-                      href="/admin/projects/circulo-invencao-musical"
-                      onClick={closeMobileMenu}
-                      className="mobile-submenu-item"
-                    >
-                      Círculo de Invenção Musical
-                    </Link>
-                    <Link
-                      href="/admin/projects/poetry-visual-arts"
-                      onClick={closeMobileMenu}
-                      className="mobile-submenu-item"
-                    >
-                      Poetry and Visual Arts
-                    </Link>
-                  </div>
-                )}
-              </div>
+              <Link
+                href="/admin/writings"
+                onClick={closeMobileMenu}
+                className="mobile-nav-item"
+              >
+                Writings
+              </Link>
+
+              <Link
+                href="/admin/events"
+                onClick={closeMobileMenu}
+                className="mobile-nav-item"
+              >
+                Events
+              </Link>
 
             </div>
           </nav>

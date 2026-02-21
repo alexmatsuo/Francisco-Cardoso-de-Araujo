@@ -114,6 +114,13 @@ export const Header = () => {
           </div>
 
           <Link 
+            href="/writings" 
+            className={`nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}
+          >
+            Writings
+          </Link>
+
+          <Link 
             href="/events" 
             className={`nav-item ${isActive("/events") ? "text-[#D3CEAD]" : ""}`}
           >
@@ -215,6 +222,13 @@ export const Header = () => {
               </div>
             </div>
           </div>
+
+          <Link 
+            href="/writings" 
+            className={`nav-item ${isActive("/writings") ? "text-[#D3CEAD]" : ""}`}
+          >
+            Writings
+          </Link>
 
           <Link 
             href="/events" 
@@ -380,6 +394,9 @@ export const Header = () => {
                   </div>
                 )}
               </div>
+              <Link href="/writings" onClick={closeMobileMenu} className={`mobile-nav-item ${isActive("/events") ? "text-[#D3CEAD]" : ""}`}>
+                Writings
+              </Link>
               <Link href="/events" onClick={closeMobileMenu} className={`mobile-nav-item ${isActive("/events") ? "text-[#D3CEAD]" : ""}`}>
                 Events
               </Link>
