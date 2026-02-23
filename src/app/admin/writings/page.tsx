@@ -10,8 +10,6 @@ import {
   ArrowUp,
   ArrowDown,
   Save,
-  X,
-  Upload,
   Loader2,
   BookOpen
 } from 'lucide-react';
@@ -30,7 +28,6 @@ export default function AdminWritingsPage() {
   const [writings, setWritings] = useState<Writing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [editingWriting, setEditingWriting] = useState<Writing | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [formData, setFormData] = useState({
@@ -57,55 +54,6 @@ export default function AdminWritingsPage() {
       console.error('Error fetching writings:', error);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // File upload handler for PDF
-  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    console.log('Uploading PDF:', file.name, file.size, file.type);
-
-    // Validate file type
-    if (file.type !== 'application/pdf') {
-      alert('Please select a PDF file');
-      return;
-    }
-
-    // Validate file size (max 50MB to match API limit)
-    if (file.size > 50 * 1024 * 1024) {
-      alert('PDF must be less than 50MB');
-      return;
-    }
-
-    setIsUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'pdf'); // Required by API
-
-      console.log('Sending PDF upload request...');
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      console.log('Upload response status:', response.status);
-      const data = await response.json();
-      console.log('Upload response data:', data);
-
-      if (!response.ok) {
-        throw new Error(data.error || data.details || 'Upload failed');
-      }
-
-      setFormData(prev => ({ ...prev, pdfUrl: data.url }));
-      alert('PDF uploaded successfully!');
-    } catch (error) {
-      console.error('Error uploading PDF:', error);
-      alert(`Failed to upload PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
-      setIsUploading(false);
     }
   };
 
@@ -321,43 +269,27 @@ export default function AdminWritingsPage() {
               />
             </div>
 
-            {/* PDF Upload Section */}
+            {/* PDF Link Section */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2 text-gray-300">PDF Document</label>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 rounded cursor-pointer transition-colors text-white">
-                  {isUploading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <FileText className="w-5 h-5" />
-                  )}
-                  Upload PDF
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={handlePdfUpload}
-                    disabled={isUploading}
-                    className="hidden"
-                  />
-                </label>
+              <label className="block text-sm font-medium mb-2 text-gray-300">PDF Link</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="url"
+                  value={formData.pdfUrl}
+                  onChange={(e) => setFormData({ ...formData, pdfUrl: e.target.value })}
+                  className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
+                  placeholder="https://example.com/document.pdf"
+                />
                 {formData.pdfUrl && (
-                  <div className="flex items-center gap-2">
-                    <a 
-                      href={formData.pdfUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-blue-400 hover:text-blue-300"
-                    >
-                      <FileText className="w-5 h-5" />
-                      View PDF
-                    </a>
-                    <button
-                      onClick={() => setFormData({ ...formData, pdfUrl: '' })}
-                      className="text-red-400 hover:text-red-300"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
+                  <a
+                    href={formData.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-blue-400 hover:text-blue-300 whitespace-nowrap"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Preview
+                  </a>
                 )}
               </div>
             </div>
@@ -366,7 +298,7 @@ export default function AdminWritingsPage() {
           <div className="flex gap-4 mt-6">
             <button
               onClick={handleSave}
-              disabled={isUploading || isSaving}
+              disabled={isSaving}
               className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 rounded transition-colors text-white"
             >
               {isSaving ? 'Saving...' : editingWriting ? 'Update Writing' : 'Create Writing'}
