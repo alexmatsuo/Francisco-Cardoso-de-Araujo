@@ -416,6 +416,7 @@ export default function AdminWritingsPage() {
           No writings yet. Click "Add New Writing" to create one.
         </div>
       )}
+      
 
       <div className="mt-6 text-sm text-gray-400">
         Total writings: {writings.length}
