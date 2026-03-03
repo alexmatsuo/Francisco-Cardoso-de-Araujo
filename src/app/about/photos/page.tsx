@@ -7,16 +7,7 @@ import {
   DraggableCardContainer,
 } from "@/components/ui/draggable-card";
 
-interface Photo {
-  id: string;
-  src: any; // For imported images or string for URLs
-  alt: string;
-  caption: string;
-  category?: string;
-}
-
 interface ImageItem {
-  title: string;
   image: string;
   className: string;
 }
@@ -27,42 +18,14 @@ export default function PhotosPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clickTimeouts, setClickTimeouts] = useState<{[key: number]: NodeJS.Timeout}>({});
   
-  const items = [
-    {
-      title: "I",
-      image: "/1.png",
-      className: "absolute top-[5%] left-[5%] rotate-[-8deg]",
-    },
-    {
-      title: "IV",
-      image: "/2.png",
-      className: "absolute top-[5%] left-[75%] rotate-[-12deg]",
-    },
-    {
-      title: "II",
-      image: "/3.png",
-      className: "absolute top-[5%] left-[30%] rotate-[6deg]",
-    },
-    {
-      title: "V",
-      image: "/4.png",
-      className: "absolute top-[40%] left-[20%] rotate-[12deg]",
-    },
-    {
-      title: "VII",
-      image: "/5.png",
-      className: "absolute top-[40%] right-[10%] rotate-[4deg]",
-    },
-    {
-      title: "III",
-      image: "/6.png",
-      className: "absolute top-[5%] left-[52%] rotate-[-6deg]",
-    },
-    {
-      title: "VI",
-      image: "/7.png",
-      className: "absolute top-[40%] left-[45%] rotate-[8deg]",
-    },
+  const items: ImageItem[] = [
+    { image: "/1.png", className: "absolute top-[5%] left-[5%] rotate-[-8deg]" },
+    { image: "/2.png", className: "absolute top-[5%] left-[75%] rotate-[-12deg]" },
+    { image: "/3.png", className: "absolute top-[5%] left-[30%] rotate-[6deg]" },
+    { image: "/4.png", className: "absolute top-[40%] left-[20%] rotate-[12deg]" },
+    { image: "/5.png", className: "absolute top-[40%] right-[10%] rotate-[4deg] z-10" },
+    { image: "/6.png", className: "absolute top-[5%] left-[52%] rotate-[-6deg]" },
+    { image: "/7.png", className: "absolute top-[40%] left-[45%] rotate-[8deg]" },
   ];
 
   const handleImageClick = (item: ImageItem, index: number) => {
@@ -100,14 +63,14 @@ export default function PhotosPage() {
     setClickTimeouts({});
   };
 
-  const downloadImage = async (imageUrl: string, filename: string) => {
+  const downloadImage = async (imageUrl: string) => {
     try {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${filename.replace(/\s+/g, '_').toLowerCase()}.jpg`;
+      link.download = imageUrl.split('/').pop() || 'image.jpg';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -158,7 +121,7 @@ export default function PhotosPage() {
                   >
                     <img
                       src={item.image}
-                      alt={item.title}
+                      alt=""
                       className="pointer-events-none relative z-10 h-80 w-80 object-cover shadow-2xl"
                     />
                     {clickTimeouts[index] && (
@@ -169,7 +132,7 @@ export default function PhotosPage() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      downloadImage(item.image, item.title);
+                      downloadImage(item.image);
                     }}
                     className="absolute top-2 right-2 z-20 bg-black/70 hover:bg-black/90 text-white p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
                   >
@@ -177,10 +140,6 @@ export default function PhotosPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                   </button>
-
-                  <h3 className="mt-4 text-center text-2xl font-bold text-neutral-700 dark:text-neutral-300">
-                    {item.title}
-                  </h3>
                 </div>
               </DraggableCardBody>
             ))}
@@ -189,8 +148,7 @@ export default function PhotosPage() {
 
         {/* Mobile version */}
         <div className="block md:hidden min-h-screen">
-          <div className="px-6 py-8 text-center"></div>
-          <div className="space-y-6 px-4 pb-8">
+          <div className="space-y-6 px-4 py-8">
             {items.map((item, index) => (
               <div 
                 key={index} 
@@ -202,12 +160,9 @@ export default function PhotosPage() {
                 <div className="bg-[#D3CEAD] p-4 shadow-lg">
                   <img
                     src={item.image}
-                    alt={item.title}
+                    alt=""
                     className="w-full h-64 object-cover"
                   />
-                  <h3 className="mt-3 text-center text-lg font-bold text-neutral-700 dark:text-neutral-300">
-                    {item.title}
-                  </h3>
                   {clickTimeouts[index] && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/20"></div>
                   )}
@@ -230,7 +185,7 @@ export default function PhotosPage() {
           >
             <div className="flex justify-end gap-2 mb-4">
               <button
-                onClick={() => downloadImage(selectedImage.image, selectedImage.title)}
+                onClick={() => downloadImage(selectedImage.image)}
                 className="bg-[#D3CEAD] hover:bg-[#C3BE9D] text-white p-3 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110"
                 title="Download image"
               >
@@ -251,7 +206,7 @@ export default function PhotosPage() {
 
             <img
               src={selectedImage.image}
-              alt={selectedImage.title}
+              alt=""
               className="max-w-full max-h-[calc(100vh-200px)] object-contain shadow-2xl"
             />
           </div>
